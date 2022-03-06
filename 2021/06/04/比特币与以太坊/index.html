@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>比特币与以太坊 - Berny&#39;s blog</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+<link rel="stylesheet" href="/css/waline.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+ 
+  
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+    <body data-color-scheme="auto">
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Blog</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">主页</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-codepen nav-item-icon" href="https://codepen.io/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-patreon nav-item-icon" href="https://www.zhihu.com/people/ber-16-41" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-mastodon nav-item-icon" href="https://noc.social/@bernyw" target="_blank">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        <article class="post">
+    <div class="meta">
+        
+        <div class="date" id="date">
+            
+            
+            
+            
+            
+            
+            <span>June</span>
+            
+            
+            
+            
+            
+            
+            
+            <span>4,</span>
+            <span>2021</span>
+        </div>
+        
+
+        <h2 class="title">比特币与以太坊</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="区块链公开课：比特币部分"><a href="#区块链公开课：比特币部分" class="headerlink" title="区块链公开课：比特币部分"></a>区块链公开课：比特币部分</h1><h2 id="01课程简介"><a href="#01课程简介" class="headerlink" title="01课程简介"></a>01课程简介</h2><p>现在仍处于区块链技术的早期阶段</p>
+<p>比特币：基于区块链技术的一种加密货币</p>
+<p>标志性事件：2015年，以太坊的出现，逐渐成为一种主流的加密货币 </p>
+<p>参考资料：</p>
+<p>BitCoin and Cryptocurrency Technologies A Comprehensive Introduction</p>
+<p>以太坊白皮书、黄皮书、源代码</p>
+<p>Solidity文档</p>
+<h2 id="02密码学技术crypto-currency加密货币"><a href="#02密码学技术crypto-currency加密货币" class="headerlink" title="02密码学技术crypto-currency加密货币"></a>02密码学技术crypto-currency加密货币</h2><p> 比特币上的内容都是公开的，包括账户地址、转账金额。其中主要应用到了密码学中的哈希和签名。先对一个massage取哈希，然后再对哈希值签名。</p>
+<p>比特币中的哈希函数叫做SHA-256(Secure Hash Algorithm)</p>
+<p>挖矿就是找一个随机数nonce，nonce与区块的块头里的其他信息和在一起作为输入。计算出的哈希值要小于等于某个指定的目标阈值。H(block header)&lt;=target</p>
+<p>挖矿很难，验证容易</p>
+<p>difficult to solve,but easy to verify</p>
+<h3 id="哈希"><a href="#哈希" class="headerlink" title="哈希"></a>哈希</h3><p>密码学中的哈希原理被称为cryptographic hash function，有两个重要的性质哈希碰撞collision resistance和hiding。结合在一起可以实现digital commitment(digital equivalent of a sealed envelope 数字等效的密封信封)。</p>
+<h4 id="性质一：哈希碰撞collision-resistance"><a href="#性质一：哈希碰撞collision-resistance" class="headerlink" title="性质一：哈希碰撞collision resistance"></a>性质一：哈希碰撞collision resistance</h4><p>哈希碰撞不可避免，主要由于输入空间大于输出空间。所有输入的结果只有2^256种。 </p>
+<p>从哈希值找出两个相同的源数据非常困难，所以只要源数据被篡改，哈希值就会发生变化，从而被检测出。理论上无法找到人为制造collision resistance的方法，只能实践经验。MD5以前认为很安全，但现在已经知道如何人为制造哈希碰撞。</p>
+<h4 id="性质二：hiding"><a href="#性质二：hiding" class="headerlink" title="性质二：hiding"></a>性质二：hiding</h4><p>数据向哈希值的过程是单向，不可逆的。</p>
+<p>条件：需要输入空间足够大，无法蛮力求解；输入分布比较均匀。</p>
+<p>如果输入空间不够大，如股票。可以在后面拼一个随机数再进行哈希H(x||nonce)</p>
+<h4 id="性质三：puzzle-friendly"><a href="#性质三：puzzle-friendly" class="headerlink" title="性质三：puzzle friendly"></a>性质三：puzzle friendly</h4><p>比特币中还需要第三个性质puzzle friendly：想得到某个哈希值，没有什么捷径，只能遍历一个个尝试。故挖矿的过程才可以成为工作量证明proof of work。</p>
+<h4 id="digital-commitment"><a href="#digital-commitment" class="headerlink" title="digital commitment"></a>digital commitment</h4><p>x–&gt;H(x)</p>
+<p>实现原理：将预测值作为输入x，算出的哈希值由于具有hiding的性质可以公布出去。由于collision resistance的性质，预测结果不可篡改。</p>
+<h3 id="签名"><a href="#签名" class="headerlink" title="签名"></a>签名</h3><h4 id="密钥"><a href="#密钥" class="headerlink" title="密钥"></a>密钥</h4><p>日常生活开户：带证件去银行办理(中心化模式：银行)</p>
+<p>比特币开户：用户自己决定开户，不需要任何批准。只需要创立一个公钥和私钥的对(public key, private key)，属去中心化模式asymmetric encryption algorithm。</p>
+<p>对称密钥：发送前与接收后，使用商量好的同一个密钥进行加密解密。缺点是不好分发。</p>
+<p><strong>非对称密钥：</strong>A对B传输信息。A使用B的公钥加密，B收到后使用自己的私钥解密。公钥相当于银行账号，私钥相当于密码。</p>
+<h4 id="签名的作用"><a href="#签名的作用" class="headerlink" title="签名的作用"></a>签名的作用</h4><p>比特币交易信息都是公开的，那么密钥的作用是什么？签名。</p>
+<p>A对B交易比特币。别人如何知道这个交易是由A发起？A在交易时使用自己的私钥签名，其他人收到交易后，再使用A的公钥验证这个签名的正确性。</p>
+<p>完整过程：A发出的时候用A自己的私钥对信息进行签名，然后用B的公钥进行加密，B收到后用B自己的私钥解密看到信息，又可以用A的公钥验证签名。    </p>
+<h2 id="03比特币的数据结构"><a href="#03比特币的数据结构" class="headerlink" title="03比特币的数据结构"></a>03比特币的数据结构</h2><h3 id="hash-pointers"><a href="#hash-pointers" class="headerlink" title="hash pointers"></a>hash pointers</h3><p>存储内容：地址、结构体的哈希值。</p>
+<p>好处：不光可以找到结构体的位置，还可以检测出结构体内容是否被篡改。</p>
+<h3 id="区块链"><a href="#区块链" class="headerlink" title="区块链"></a>区块链</h3><p>比特币最基础的数据结构就是由区块组成的链表。</p>
+<p>与普通链表的区别：用hash指针代替普通指针</p>
+<p>第一个区块：系统中产生的创世纪块genesis block</p>
+<p>最后最近的区块：mast recent block</p>
+<p>链接：hash pointer指向前一个区块</p>
+<p>指向最后区块的hash pointer保存在系统里</p>
+<h4 id="Tamper-evident-log"><a href="#Tamper-evident-log" class="headerlink" title="Tamper-evident log"></a>Tamper-evident log</h4><p>性质：如果篡改了某一个区块，之后的哈希指针都需要修改，导致系统最后保留的哈希也需要修改。所以只要检测最后的哈希值，就能检测出区块链中任何部位的修改。</p>
+<h3 id="Merkle-tree"><a href="#Merkle-tree" class="headerlink" title="Merkle tree"></a>Merkle tree</h3><p>![截屏2021-05-11 下午12.16.08](/Users/berny/Desktop/截屏2021-05-11 下午12.16.08.png)</p>
+<p>Block header：包含这个区块所有交易组成的merkle tree的根哈希值，但没有交易的具体内容</p>
+<p>Block body：含有交易列表</p>
+<h4 id="merkle-tree的作用"><a href="#merkle-tree的作用" class="headerlink" title="merkle tree的作用"></a>merkle tree的作用</h4><ol>
+<li>提供merkle proof：找到根节点到交易的路径。通过路径从而证明merkle tree中包含了某个交易，这种交易被称为proof of membership/inclusion。</li>
+<li></li>
+</ol>
+<h4 id="比特币节点"><a href="#比特币节点" class="headerlink" title="比特币节点"></a>比特币节点</h4><p>节点分为两类：全节点和轻节点</p>
+<p>full node全节点：保存整个区块链内容，Block header+Block body</p>
+<p>light node轻节点：只有Block header，没有参与区块链的构造和维护，只是利用了一些信息进行查询等功能，无法独立验证交易合法性</p>
+<p>Block header：区块的宏观信息。比特币版本，协议，指向前一个区块的hash指针(只算块头)，整个merkle tree的hash，两个与挖矿有关的阈(难度目标阈值target，随机数nonce)</p>
+<p>Block body：交易列表(由merkle tree的hash保证了其无法被篡改)</p>
+<p>![截屏2021-05-17 上午10.34.32](/Users/berny/Desktop/截屏2021-05-17 上午10.34.32.png)</p>
+<p>![截屏2021-05-17 上午10.39.51](/Users/berny/Desktop/区块链学习/学习汇报/img/截屏2021-05-17 上午10.39.51.png)</p>
+<h4 id="验证交易"><a href="#验证交易" class="headerlink" title="验证交易"></a>验证交易</h4><p>轻节点向全节点发送验证请求，得到此交易的merkle proof，通过对merkle proof上的哈希值进行验证，如最终root hash符合，则交易正确。复杂度为O(log(n))。</p>
+<p>如何证明不存在某交易？(比特币中不需要)</p>
+<p>方法一：计算整棵树所有hash值。复杂度为O(n)。</p>
+<p>方法二：对叶节点按照hash值排序，先计算带验证交易的hash值，是否在叶节点中存在。如不存在，找到大小相邻的两个叶节点向上验证，如果整棵树正确，没有被篡改，则确定，交易不存在。复杂度为O(log(n))。</p>
+<h3 id="hash-pointers的其他应用"><a href="#hash-pointers的其他应用" class="headerlink" title="hash pointers的其他应用"></a>hash pointers的其他应用</h3><p>无环都可以，有环会发生循环依赖，不能使用</p>
+<h2 id="04共识协议和系统实现"><a href="#04共识协议和系统实现" class="headerlink" title="04共识协议和系统实现"></a>04共识协议和系统实现</h2><h3 id="问题的产生"><a href="#问题的产生" class="headerlink" title="问题的产生"></a>问题的产生</h3><p>原问题：现需发行一种电子货币，例如央行通过私钥进行签名。</p>
+<p>存在问题：double spending attack。电子货币就是一个加密签名的文件，虽然内容无法伪造，但是可以进行复制，多倍使用。</p>
+<p>改进一：设置编号，央行设置数据库，存储货币的持有人。货币使用后，改变持有人。</p>
+<p>存在问题：中心化，任意两人都要通过央行。</p>
+<h3 id="问题的解决：去中心化"><a href="#问题的解决：去中心化" class="headerlink" title="问题的解决：去中心化"></a>问题的解决：去中心化</h3><p>去中心化，主要需解决两个问题：</p>
+<ol>
+<li>货币由谁发，什么时候发，发多少？由挖矿决定</li>
+<li>怎么验证合法性，防范double spending attack？同样维护一个数据结构，这个币有没有被花过，被谁花过。只不过这个数据结构不是由央行维护，而是由所有用户共同维护——区块链</li>
+</ol>
+<h4 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h4><p>铸币交易：假设一个用户A获得了铸币权，发行了10个比特币。</p>
+<p>交易一：分别给了B和C五个，此过程有A的签名证明A同意。同时此交易指明由来源是铸币交易。</p>
+<p>交易二：B给C两个，给D三个，此过程有B的签名。同时此交易指明来自交易一。</p>
+<p>交易三：C此时有7个比特币，全部给E。此时E指明来源有交易一和交易二。</p>
+<p>指明来源的意义在于：证明钱不是凭空捏造的，同时防范double spending attack。</p>
+<p>交易成功的条件：</p>
+<p>输入部分：转账方A的签名，<strong>转账方A的公钥</strong>，接收方的地址(由B公钥推算)，交易的来源</p>
+<p>输出部分：收款人公钥的哈希</p>
+<p>存在问题：A的公钥如何获得(所有人都需要知道)？<strong>交易中自己给出</strong>，但是如何避免别人使用自己的签名伪造成A的交易呢？<strong>交易的转账方签名，需要与交易来源的输出部分收款人公钥相同</strong>。</p>
+<p>这个过程是通过脚本验证，无错误，则验证成功。</p>
+<h3 id="分布式共识distributed-consensus"><a href="#分布式共识distributed-consensus" class="headerlink" title="分布式共识distributed consensus"></a>分布式共识distributed consensus</h3><p>谁有权发行货币？怎么验证交易的合法性？谁来决定哪些交易应该被写到下一个区块，写入的顺序是如何？如果自己决定，则<strong>无法达成共识</strong>。因此，引出分布式共识。</p>
+<p>例如：分布式哈希表distributed hash table中的共识：key-value</p>
+<p>著名结论一：如果分布式系统是异步的，只要有一个成员数据异常，就无法达成共识</p>
+<p>著名结论二：  分布式系统的三个性能指标，最多只能满足两个。（一致性、可用性、分区错容性）</p>
+<h5 id="Consensus-in-BitCoin比特币中的共识协议"><a href="#Consensus-in-BitCoin比特币中的共识协议" class="headerlink" title="Consensus in BitCoin比特币中的共识协议"></a>Consensus in BitCoin比特币中的共识协议</h5><p>候选块用户半数投票机制：可以适用于联盟链(保证大多数节点是无恶意的)，不适用比特币，生成账户太容易，会造成女巫攻击sybil attack。</p>
+<p>比特币投票机制：计算力</p>
+<p>任何一个账户，在本地都可以组装一个区块，作为候选区块。组装好后就开始尝试各种4 bytes nonce值，使得H(block header)&lt;=target，如果某个节点找到了符合要求的nonce，则获得记账权，可以写入下一个区块。写入后，其他区块通过block header中的信息，进行验证记账权的真伪；通过block body中的交易列表，进行验证所有交易是否合法(签名、路径)。</p>
+<p>何时会拒绝合法区块？通过hash of prev block发现其不在最长合法链。</p>
+<p>区块链也会存在(临时性)分叉：两个节点同时获得记账权，先找到下一个区块的获胜，成功构建区块</p>
+<p>分布式哈希表的共识：所有用户决定的用户表中的内容</p>
+<p>比特币的共识：获得记账权的节点决定的去中心化账本里的内容，其重点在于记账权。争夺记账权的过程，就是<strong>挖矿</strong>mining。争夺记账权的节点就是<strong>矿工</strong>。</p>
+<p>hash rate：每秒钟试多少个nonce数决定投票权重。</p>
+<h3 id="比特币系统实现"><a href="#比特币系统实现" class="headerlink" title="比特币系统实现"></a>比特币系统实现</h3><p>区块链是一个去中心化的账本，以太坊基于account-based ledger模式，系统显示记录每个账户多少个币。比特币用的是基于交易的账本模式transaction-based ledger，每个区块记录的是交易信息，有转账信息，有铸币交易，但是系统上没有显示的记录每个账户有多少钱，需要交易记录来推算。</p>
+<h4 id="UTXO"><a href="#UTXO" class="headerlink" title="UTXO"></a>UTXO</h4><p>比特币的全节点内存中要维护一个UTXO(Unspen Transaction Output)的数据结构：还没有被花出去的交易的输出(一个交易可能有多个输出，没花出去的才会记录)。UTXO集合中的每个元素，要给出产生这个输出的交易的hash值，以及它在这个交易里是第几个输出。作用：检测double spending，检测新交易是否合法，需要查UTXO，想花掉的币一定在UTXO中。</p>
+<h4 id="Block-header"><a href="#Block-header" class="headerlink" title="Block header"></a>Block header</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class CBlockHeader</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">  	// header</span><br><span class="line">  	int32_t nVersion; //版本号</span><br><span class="line">  	uint256 hashPrevBlock; //前一个区块hash</span><br><span class="line">  	uint256 hashMerkleRoot; //merkle root hash</span><br><span class="line">  	uint32_t nTime;  //产生时间4字节</span><br><span class="line">  	uint32_t nBits;  //挖矿时用的目标阈值</span><br><span class="line">  	uint32_t nNonce; //nonce</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>![截屏2021-05-14 下午9.42.52](/Users/berny/Desktop/截屏2021-05-14 下午9.42.52.png)</p>
+<h4 id="Transaction"><a href="#Transaction" class="headerlink" title="Transaction"></a>Transaction</h4><p>  ![截屏2021-05-15 上午9.59.21](/Users/berny/Desktop/截屏2021-05-15 上午9.59.21.png)</p>
+<h3 id="作业"><a href="#作业" class="headerlink" title="作业"></a>作业</h3><p>编程实现一个简单的比特币数据结构(包括区块链和UTXO)</p>
+<p><strong>通常情况下，区块结构分为区块头和区块体。分类之后的区块结构可以用下图表示</strong></p>
+<p><img src="/Users/berny/Desktop/20210328213230569.png" alt="20210328213230569"></p>
+<h4 id="定义区块结构"><a href="#定义区块结构" class="headerlink" title="定义区块结构"></a>定义区块结构</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义简单区块结构</span></span><br><span class="line"><span class="keyword">type</span> Block <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">//版本</span></span><br><span class="line">	Version <span class="keyword">uint64</span></span><br><span class="line">	<span class="comment">//前区块哈希</span></span><br><span class="line">	PrevHash []<span class="keyword">byte</span></span><br><span class="line">	<span class="comment">//Merkel根</span></span><br><span class="line">	MerkelRoot []<span class="keyword">byte</span></span><br><span class="line">	<span class="comment">//时间戳</span></span><br><span class="line">	TimeStamp <span class="keyword">uint64</span></span><br><span class="line">	<span class="comment">//难度值</span></span><br><span class="line">	Difficulty <span class="keyword">uint64</span></span><br><span class="line">	<span class="comment">//随机数</span></span><br><span class="line">	Nonce <span class="keyword">uint64</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//当前区块哈希,正常情况下比特币区块中没有当前区块哈希，我们为了方便做了简化</span></span><br><span class="line">	Hash []<span class="keyword">byte</span></span><br><span class="line">	<span class="comment">//数据</span></span><br><span class="line">	Data []<span class="keyword">byte</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="创建区块函数"><a href="#创建区块函数" class="headerlink" title="创建区块函数"></a>创建区块函数</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewBlock</span> <span class="params">(data <span class="keyword">string</span>, prevBlockHash []<span class="keyword">byte</span>)</span> *<span class="title">Block</span></span>&#123;</span><br><span class="line">	block := Block&#123;</span><br><span class="line">		Version:    <span class="number">00</span>, <span class="comment">//这里的版本号随便为随便填写，以后会完善</span></span><br><span class="line">		PrevHash:   prevBlockHash,</span><br><span class="line">		MerkelRoot: []<span class="keyword">byte</span>&#123;&#125;, <span class="comment">//同上</span></span><br><span class="line">		TimeStamp:  <span class="keyword">uint64</span>(time.Now().Unix()),</span><br><span class="line">		Difficulty: <span class="number">0</span>,  <span class="comment">//同上</span></span><br><span class="line">		Nonce:      <span class="number">0</span>,  <span class="comment">//同上</span></span><br><span class="line">		Hash:       []<span class="keyword">byte</span>&#123;&#125;,</span><br><span class="line">		Data:       []<span class="keyword">byte</span>(data),</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	block.SetHash()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> &amp;block</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="比特币网络"><a href="#比特币网络" class="headerlink" title="比特币网络"></a>比特币网络</h3><p>工作在应用层application layer：BitCoin Block chain</p>
+<p>底层network layer：P2P Overlay Network，无超级节点无主节点，所有节点都平等。</p>
+<p>设计原则：simple，鲁棒性robust，but not efficient</p>
+<p>消息传播：泛洪flooding，且不考虑拓扑结构</p>
+<p>区块大小字节：1M</p>
+<h2 id="05挖矿算法和难度调整"><a href="#05挖矿算法和难度调整" class="headerlink" title="05挖矿算法和难度调整"></a>05挖矿算法和难度调整</h2><h3 id="Progress-free"><a href="#Progress-free" class="headerlink" title="Progress free"></a>Progress free</h3><p>每次尝试一个nonce，可以看作一个Bernoulli trial :a random experiment with binary outcome，大量的Bernoulli trial构成一个Bernoulli process : a sequence of independent Bernoulli trials，可以用Poisson process来近似。 系统产生区块的时间服从指数分布exponential distribution，平均出块时间是10分钟。 </p>
+<p>![截屏2021-05-15 下午4.56.32](/Users/berny/Desktop/截屏2021-05-15 下午4.56.32.png)</p>
+<p>过去的结果对现在无关(失败不影响成功的概率)</p>
+<h3 id="Geometric-series"><a href="#Geometric-series" class="headerlink" title="Geometric series"></a>Geometric series</h3><p>出块奖励每四年(21万个区块)减半，总比特币数量构成一个几何序列。</p>
+<p>21万X50 + 21万X25 + 21万X12.5 + ……</p>
+<p>=21万X50X(1+1/2+1/4+…….)</p>
+<p>=2100万</p>
+<h4 id="Six-confirmation"><a href="#Six-confirmation" class="headerlink" title="Six confirmation"></a>Six confirmation</h4><p>![截屏2021-05-15 下午6.22.41](/Users/berny/Desktop/截屏2021-05-15 下午6.22.41.png)</p>
+<p>M是恶意节点，他支付给A是合法，但想非法获利，就创建一个M–&gt;M的支链，如果此支链最后成为最长合法链，M–&gt;A就会失效。</p>
+<p><strong>如何防范？A多等几个区块，再确认交易。</strong>这样非法支链很难成为最长合法链。</p>
+<p>较为普遍的zero confirmation，交易后，还没写入区块链就确认交易。原因：诚实的节点会按照时间顺序打包交易，本就不容易出现非法支链。购物网站本来从支付到发货，收货，本来就有一定的天然安全时间，使用比特币以外的手段取消发货就行。</p>
+<h3 id="难度调整"><a href="#难度调整" class="headerlink" title="难度调整"></a>难度调整</h3><p>挖矿难度和目标阈值<strong>成反比</strong>，难度最小是1，target很大。</p>
+<h4 id="为何调整挖矿难度"><a href="#为何调整挖矿难度" class="headerlink" title="为何调整挖矿难度"></a>为何调整挖矿难度</h4><p>出块时间太短造成的问题：分叉成为常态，系统安全性无法保证。</p>
+<h4 id="怎么调整挖矿难度"><a href="#怎么调整挖矿难度" class="headerlink" title="怎么调整挖矿难度"></a>怎么调整挖矿难度</h4><p>每隔2016个区块(两周)，要调整挖矿难度(target)。</p>
+<p>target = target X (actual time/expect time)</p>
+<p>四倍限制(1/4～4)</p>
+<p>如果有恶意节点到了规定时间不调整，其他诚实结点验证其nBits域不会通过。</p>
+<p>由于现在挖矿难度加大，可能光调整nonce是不够的，还需要调整CoinBase域。</p>
+<h3 id="挖矿"><a href="#挖矿" class="headerlink" title="挖矿"></a>挖矿</h3><p>在本地组装一个候选区块，一边监听一边挖(nonce)。如果监听到已经有新的区块产生，验证后，停止挖矿，在本地重新组装候选区块。</p>
+<p>memoryless / progress free：由于无记忆性，重新挖不可惜。</p>
+<p><strong>比特币是如何保证安全性的？</strong></p>
+<p>共识机制(大多数矿工是好的) + 密码学(私钥签名)</p>
+<p><strong>挖矿工具(通用到专用)</strong></p>
+<p>家用电脑cpu：大部分内存浪费，cpu大部分部件闲置，硬盘闲置</p>
+<p>GPU(主要用于大规模并行计算)：某些部件也浪费。其他货币有些还在用。</p>
+<p>ASIC芯片：Application Specific Integrated Ciral，专门设计于挖矿计算hash值</p>
+<h3 id="矿池的出现"><a href="#矿池的出现" class="headerlink" title="矿池的出现"></a>矿池的出现</h3><p>矿池 = pool manager+miner+miner+…</p>
+<p>矿工只计算hash值，其他功能都由矿主(监听组织打包)</p>
+<p>优点：解决收入不稳定问题，按贡献大小，工作量证明</p>
+<p>弊端：使得51%攻击变得容易，分叉攻击(回滚交易)，攻击某用户(故意不打包)</p>
+<h2 id="06比特币脚本"><a href="#06比特币脚本" class="headerlink" title="06比特币脚本"></a>06比特币脚本</h2><h3 id="交易实例"><a href="#交易实例" class="headerlink" title="交易实例"></a>交易实例</h3><p>![截屏2021-05-19 上午10.26.11](/Users/berny/Desktop/截屏2021-05-19 上午10.26.11.png)</p>
+<p>基于栈的语言，只访问内存中的堆栈</p>
+<p>![截屏2021-05-20 下午12.10.16](/Users/berny/Desktop/截屏2021-05-20 下午12.10.16.png)</p>
+<p>![截屏2021-05-20 下午12.12.55](/Users/berny/Desktop/截屏2021-05-20 下午12.12.55.png)</p>
+<p>![截屏2021-05-21 上午9.20.47](/Users/berny/Desktop/截屏2021-05-21 上午9.20.47.png)</p>
+<p>![截屏2021-05-21 上午9.57.00](/Users/berny/Desktop/截屏2021-05-21 上午9.57.00.png)</p>
+<h4 id="脚本形式一：P2PK（Pay-to-Public-Key-最简单"><a href="#脚本形式一：P2PK（Pay-to-Public-Key-最简单" class="headerlink" title="脚本形式一：P2PK（Pay to Public Key)最简单"></a>脚本形式一：P2PK（Pay to Public Key)最简单</h4><p>![截屏2021-05-21 上午10.18.24](/Users/berny/Desktop/截屏2021-05-21 上午10.18.24.png)</p>
+<p><strong>直接给出收款人公钥</strong>，CHECKSIG为检查签名的操作</p>
+<h4 id="脚本形式二：P2PKH（Pay-to-Public-Key-Hash-最常用"><a href="#脚本形式二：P2PKH（Pay-to-Public-Key-Hash-最常用" class="headerlink" title="脚本形式二：P2PKH（Pay to Public Key Hash)最常用"></a>脚本形式二：P2PKH（Pay to Public Key Hash)最常用</h4><p>![截屏2021-05-21 上午10.18.42](/Users/berny/Desktop/截屏2021-05-21 上午10.18.42.png)</p>
+<p>输出脚本里没有直接给出收款人的PubKey，而在输入脚本中给出。</p>
+<p>输出脚本中DUP(把栈顶元素复制一遍)，HASH160(栈顶元素弹出来取hash，再压入栈)，EQUALVERIFY(对比两个PubKeyHash是否相等)都是为了验证签名</p>
+<h4 id="脚本形式三：P2SH（Pay-to-Script-Hash"><a href="#脚本形式三：P2SH（Pay-to-Script-Hash" class="headerlink" title="脚本形式三：P2SH（Pay to Script Hash)"></a>脚本形式三：P2SH（Pay to Script Hash)</h4><p>![截屏2021-05-21 上午10.27.08](/Users/berny/Desktop/截屏2021-05-21 上午10.27.08.png)</p>
+<p>输出脚本给出的不是收款人公钥的hash，而是收款人提供的一个叫做redeemScriptHash赎回脚本的hash。</p>
+<p>input script要给出一些签名和一段序列化的redeemScript，验证分如下两步：</p>
+<ol>
+<li>验证序列化redeemScript是否与output script中的hash值匹配</li>
+<li>反序列化并执行redeemScript，验证input script中给出的签名是否正确</li>
+</ol>
+<p>redeemScript的形式：</p>
+<ol>
+<li><p>P2PK</p>
+<p>![截屏2021-05-21 上午10.54.41](/Users/berny/Desktop/截屏2021-05-21 上午10.54.41.png) </p>
+</li>
+<li><p>P2PKH</p>
+</li>
+<li><p><strong>多重签名</strong>(需要n个人中m个人签名)</p>
+<p>![截屏2021-05-22 下午4.59.29](/Users/berny/Desktop/截屏2021-05-22 下午4.59.29.png)</p>
+</li>
+</ol>
+<p>复杂度全给了输出脚本(用户)</p>
+<p> ![截屏2021-05-23 上午9.44.12](/Users/berny/Desktop/截屏2021-05-23 上午9.44.12.png)</p>
+<p>把复杂度转移到输入脚本的RedeemScript中(收款人)</p>
+<h4 id="脚本形式四：Proof-of-Burn"><a href="#脚本形式四：Proof-of-Burn" class="headerlink" title="脚本形式四：Proof of Burn"></a>脚本形式四：Proof of Burn</h4><p>![截屏2021-05-23 上午10.11.41](/Users/berny/Desktop/截屏2021-05-23 上午10.11.41.png)</p>
+<p>销毁比特币的一种方法。获得有些小币种靠销毁比特币，往区块链里写入一些内容(写到return后)。与coinbase域的区别：coinbase只有获得记账权的节点可以写。 </p>
+<h2 id="07比特币分叉"><a href="#07比特币分叉" class="headerlink" title="07比特币分叉"></a>07比特币分叉</h2><p>临时分叉state fork</p>
+<p>分叉攻击forking attack</p>
+<p>协议修改分叉protocol fork：硬分叉hard fork，软分叉soft fork</p>
+<p><strong>硬分叉hard fork</strong></p>
+<p> 老节点不接收新节点，可能有永久性分叉：block size limit：区块变大，分叉后可能各挖各的。chain ID</p>
+<p><strong>软分叉soft fork</strong></p>
+<p>新节点不接受老节点，只会有临时性分叉：对比特币协议加入某些限制，原来合法的交易和区块，在新的协议下不合法。P2SH</p>
+<h2 id="08回顾问答"><a href="#08回顾问答" class="headerlink" title="08回顾问答"></a>08回顾问答</h2><p>转帐交易时接收者不在线怎么办？不需要在线，转账不过是记录一下。</p>
+<p>全节点有没有可能收到一个转账，地址从未听说过？有可能。创建账号只需要本地创建公私钥对，第一次收到钱的时候，其他节点才知道账户的存在。</p>
+<p>私钥丢失怎么办？没办法。</p>
+<p> return既然返回错误，如何写进区块链中？验证的过程是将此交易的输入和上一个交易的输出脚本拼接执行，而ruturn写在当前交易的输出脚本。</p>
+<p>挖矿可不可以偷答案？不能，coinbase tx中有收款人地址</p>
+<p>发布区块的矿工，如何收取交易费？总输入与输出的差额</p>
+<h2 id="09匿名和隐私保护"><a href="#09匿名和隐私保护" class="headerlink" title="09匿名和隐私保护"></a>09匿名和隐私保护</h2><h3 id="匿名性"><a href="#匿名性" class="headerlink" title="匿名性"></a>匿名性</h3><p>与纸币相比，纸币完全匿名</p>
+<p>与银行存款相比，存款非匿名</p>
+<p>与匿名存折比，比特币账本公开，没存折匿名性强：交易可能被分析，多账户可能被关联，账户可能与真实身份关联</p>
+<p>比特币用户如何提高自己的匿名性？</p>
+<p>网络层：IP地址与真实身份有很强关联性，IP地址要保护，多路径转发等方法</p>
+<p>应用层：防止多账户关联(混币交易coin mixing，在线钱包)</p>
+<h3 id="零知识证明"><a href="#零知识证明" class="headerlink" title="零知识证明"></a>零知识证明</h3><p>一方(证明者)向另一方(验证者)证明一个陈述是正确的，而无需透露除该陈述是正确的外的任何信息。</p>
+<p>事例：证明知晓私钥，可以使用签名</p>
+<h3 id="同态隐藏"><a href="#同态隐藏" class="headerlink" title="同态隐藏"></a>同态隐藏</h3><p>性质一：x，y不同，那么他们的加密函数E(x)，E(y)也不同</p>
+<p>性质二：给定E(x)的值，很难返推出x的值</p>
+<p>性质三：给定E(x)，E(y)的值，我们可以很容易计算出某些关于x，y的加密函数值</p>
+<ul>
+<li>同态加法</li>
+<li>同态乘法</li>
+<li>多项式</li>
+</ul>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><p>Alice想证明有一组数x和y使得x+y=7，同时不让bob知道x和y的具体数值。</p>
+<p><strong>证明</strong>：</p>
+<ul>
+<li>Alice把E(x)和E(y)的数值发给Bob</li>
+<li>Bob通过收到的E(x)和E(y)计算出E(x+y)的值</li>
+<li>Bob同时计算E(7)的值，如果E(x+y)=E(7)，那么验证通过</li>
+</ul>
+<h3 id="盲签方法"><a href="#盲签方法" class="headerlink" title="盲签方法"></a>盲签方法</h3><p>例如央行发行一种电子货币，为了防止double spending attack，需要给每一张货币上进行编号，并且维护一个数据库。进而产生一个问题：银行无所不知。故引入盲签方法。</p>
+<ul>
+<li>用户A提供SerialNum，银行在不知道SerialNum的情况下返回签名Token，减少A的存款</li>
+<li>用户A把SerialNum和Token交给B完成交易</li>
+<li>用户B将SerialNum和Token给银行验证，银行验证容果，增加B的存款</li>
+<li>银行无法把A和B联系起来</li>
+<li>中心化</li>
+</ul>
+<h3 id="零币和零钞"><a href="#零币和零钞" class="headerlink" title="零币和零钞"></a>零币和零钞</h3><p>从体系结构设计上，就使用密码学的原理保证匿名性。</p>
+<ul>
+<li>零币和零钞在协议层就融合了匿名化处理，其匿名属性来自密码学保证。</li>
+<li>零币系统中存在基础币和零币，通过基础币和零币的来回转换，消除旧地址和新地址的关联性，其原理类似于混币服务。</li>
+<li>零钞系统使用zK-SNARKs协议，不依赖一种基础币，区块链中只记录交易的存在性和矿，矿工用来验证系统正常运行所需要关键属性的证明。区块链上既不显示交易地址也不显示交易金额，所有交易通过零知识验证的方式进行。</li>
+</ul>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><h3 id="哈希指针如何通过网络进行传输"><a href="#哈希指针如何通过网络进行传输" class="headerlink" title="哈希指针如何通过网络进行传输"></a>哈希指针如何通过网络进行传输</h3><p>哈希指针只有哈希，没有指针。</p>
+<p>全节点一般把区块存储在一个(key, value)的数据库中，key就是区块的哈希，value是区块的内容。只要掌握了最后一个区块的key，通过value获得前一个区块的哈希，就能取出整个区块链。</p>
+<h3 id="区块恋"><a href="#区块恋" class="headerlink" title="区块恋"></a>区块恋</h3><p>有一种做法，情侣将私钥从中截断，每人保留一部分，两段私钥合在一起，就能将钱取出。如果分手，币将永久锁在区块链上。问：如果推广下去，存在的问题？</p>
+<ul>
+<li>任何一个人把私钥丢了，钱都无法取出</li>
+<li>截断私钥的做法，会降低私钥的安全性。私钥256位，如果四个合伙人，三个人商量破解第四人私钥，只需要尝试2^64种可能性。</li>
+<li>分手后，币会永久保存在UTXO中，对矿工不友好。</li>
+</ul>
+<h3 id="分布式共识"><a href="#分布式共识" class="headerlink" title="分布式共识"></a>分布式共识</h3><p>为什么比特币系统能够绕过分布式共识中的那些不可能结论？</p>
+<ul>
+<li>并没有达到真正的共识，有可能分叉和回滚</li>
+<li>理论上不可能的结论，只是在特定的条件下，实际中改改模型，可能就会成立</li>
+</ul>
+<h3 id="比特币的稀缺性"><a href="#比特币的稀缺性" class="headerlink" title="比特币的稀缺性"></a>比特币的稀缺性</h3><p>挖矿的动力：必须降低成本，提高收益</p>
+<p>早期时如何提高收益？挖矿难度低，出块奖励高。</p>
+<p>比特币总量固定，但稀缺的东西是不适合做货币的</p>
+<h3 id="量子计算"><a href="#量子计算" class="headerlink" title="量子计算"></a>量子计算</h3><p>量子计算会不会使得加密货币变得不安全？</p>
+<ul>
+<li>量子计算距离实用还差得很远</li>
+<li>量子计算首先冲击的会是金融业，电子支付</li>
+<li>之后还会有量子加密算法</li>
+<li>比特币使用的非对称加密体系，从私钥可以推出公钥，所以只要把私钥保管好，公钥丢了也无所谓。但如果以后量子计算可以从公钥推出私钥，比特币又加了一层保护，没有用公钥本身，而是用公钥哈希。</li>
+<li>加密和取哈希，是两个不同性质的操作。加密的目的是为了解密，不能丢失信息，保证完整性。而取哈希会造成信息损失，一般是不可逆的。</li>
+<li>比特币中如果仅仅是为了收钱，没必要暴露公钥，只暴露公钥哈希算出的一个地址就行。取钱时，才需要提供公钥，还有私钥生成的签名。即便黑客具有量子计算技术，也很难实时破解。</li>
+<li>为了不暴露公钥，最好每次取钱，都把钱全部取走。</li>
+</ul>
+<h1 id="区块链课程：以太坊部分"><a href="#区块链课程：以太坊部分" class="headerlink" title="区块链课程：以太坊部分"></a>区块链课程：以太坊部分</h1><h2 id="01-ETH-以太坊概述"><a href="#01-ETH-以太坊概述" class="headerlink" title="01 ETH-以太坊概述"></a>01 ETH-以太坊概述</h2><ul>
+<li><p>被称为区块链2.0，针对比特币出现的一些问题进行了改进</p>
+</li>
+<li><p>出块时间从十分钟，调整到十几秒，并基于GOST协议的共识机制</p>
+</li>
+<li><p>memory hard mining puzzle：对内存要求高，而不是计算密集型，在一定程度上限制了ASIC芯片的使用</p>
+</li>
+<li><p>对智能合约的支持：smart contract，去中心化的合约</p>
+</li>
+<li><p>去中心化货币的好处：跨国转账等</p>
+</li>
+<li><p>去中心化合同的好处：跨国合同，打官司不便</p>
+</li>
+</ul>
+<h2 id="02-ETH-账户"><a href="#02-ETH-账户" class="headerlink" title="02 ETH-账户"></a>02 ETH-账户</h2><p>以太坊是基于账户的模型 account-based ledger</p>
+<p><strong>对防范double speding attack有天然的防御作用，但会产生新的replay attack重放攻击</strong></p>
+<p>double speding attack是花钱的人不诚实，同样的钱，花两次</p>
+<p>replay attack是收钱的人不诚实，别人已经给转过钱了，收钱人又广播一遍</p>
+<p>解决方案：加一个交易次数数据，记录此账户有史以来发布过多少次交易，转账时交易次数要成为交易的一部分，一起包含进去，都受到签名的保护。</p>
+<p><strong>以太坊有两类账户</strong></p>
+<ul>
+<li>externally owned accout外部账户：由公私钥控制，包含账户余额balance，交易次数nonce</li>
+<li>smart contract account合约账户：不能主动发起交易，可以在交易中调用其他合约，包含账户余额，调用其他合约次数，代码code，相关状态storage </li>
+</ul>
+<p><strong>为什么创造以太坊</strong></p>
+<p>比特币基于交易，隐私保护好，但账户不稳定，无法达到智能合约的要求。</p>
+<p>智能合约可以实现一些金融衍生品，期货期权等。</p>
+<h2 id="03-ETH-状态树"><a href="#03-ETH-状态树" class="headerlink" title="03 ETH-状态树"></a>03 ETH-状态树</h2><h3 id="addr-–-gt-state"><a href="#addr-–-gt-state" class="headerlink" title="addr –&gt; state"></a>addr –&gt; state</h3><p>账户地址到账户状态的映射：addr –&gt; state</p>
+<p>addr(160bit 表示成40个16进制数)</p>
+<p>state(balance,nonce,code,storage)</p>
+<p>解决方案</p>
+<p>方案一：哈希表</p>
+<p>如何证明余额？merkle tree提供merkle proof，把根哈希值公布，只要根哈希值正确，merkle proof下面的信息就正确。</p>
+<p>产生问题：如果新区块发布，含有新的交易，哈希表必然发生变化，需要重新组织merkle tree。比特币中将新的交易组织成merkle tree，最多只有4000个交易。但以太坊的addr –&gt; state如果使用merkle tree，则要把所有账户构成merkle tree。</p>
+<p>方案二：直接把账户放进merkle tree</p>
+<p>产生问题：merkle tree没有提供一个高效的查找和更新的方法。且账户用不用排序？如果不排序，树不唯一，算出的根哈希值也不一样。比特币中无此问题，因为只有记账权节点说了算。如果排序，新增账户可能重构大半个merkle tree。</p>
+<p>方案三：MPT(merkle tree)</p>
+<p>前提知识：trie树(字典树、前缀树)</p>
+<p>![截屏2021-05-28 上午9.53.27](/Users/berny/Desktop/截屏2021-05-28 上午9.53.27.png)</p>
+<ul>
+<li><p>每个节点的分支取决于key值里每个元素的取值范围</p>
+</li>
+<li><p>trie的查找效率取决于key的长度，键值越长，查询内存的次数越多。以太坊中，账户都是40个16进制数</p>
+</li>
+<li><p>trie不像哈希表可能发生碰撞，只要地址不一样，肯定分到不同分支</p>
+</li>
+<li><p>trie是否按照顺序，都是同一棵树</p>
+</li>
+<li><p>发布新区块，导致个别账户状态改变。trie的更新操作局部性很强，只需访问改变的分支</p>
+</li>
+<li><p><strong>缺点：存储比较浪费，可能某些节点只有一个分支</strong>(可压缩)</p>
+</li>
+</ul>
+<p>Patricia tree(路径压缩的trie树)</p>
+<p>![截屏2021-05-28 上午10.07.21](/Users/berny/Desktop/截屏2021-05-28 上午10.07.21.png)</p>
+<ul>
+<li>新插入单词，路径可能需要扩展</li>
+<li>键值分布比较稀疏时，路径压缩效果比较好</li>
+<li>以太坊地址160位，所以地址空间2^160，非常非常大；以太坊账户数相比就很稀疏  </li>
+</ul>
+<p><strong>Merkle Patricia tree</strong></p>
+<ul>
+<li>所有账户组成一个Patricia tree，用路径压缩提高效率，然后把普通指针换成哈希指针。可以算出根哈希值。</li>
+<li>只要根哈希值不变，树的任何部分都不能变</li>
+<li>merkle proof可以证明账户有多少钱</li>
+<li>证明某个账户不存在</li>
+</ul>
+<p><strong>Modified Merkle Patricia tree</strong></p>
+<p> ![截屏2021-05-28 上午10.51.16](/Users/berny/Desktop/截屏2021-05-28 上午10.51.16.png)</p>
+<p>![截屏2021-05-29 上午10.35.06](/Users/berny/Desktop/截屏2021-05-29 上午10.35.06.png)</p>
+<ul>
+<li>发布新区块时，有些账户状态会发生改变。这些改变不是在原地改，而是新建一些分支。原来的状态保留了下来</li>
+<li>新旧两棵树的大部分节点是共享的，如上图右边树大多指向左边树的节点。只有发生改变的节点需要新建一个分支。</li>
+<li>系统中全节点需要维护的不是一颗MPT，而是每次出现一个区块，都要新建一个MPT。只不过这些状态树中大部分的节点是共享的。</li>
+<li>为什么要保留历史状态？追溯，回滚。以太坊临时分支是常态，经常需要将竞争失败节点的状态回滚，再沿着竞争成功的链推进   </li>
+</ul>
+<p>![截屏2021-06-01 上午10.01.59](/Users/berny/Desktop/截屏2021-06-01 上午10.01.59.png)</p>
+<p>![截屏2021-06-01 上午9.50.16](/Users/berny/Desktop/截屏2021-06-01 上午9.50.16.png)</p>
+<p>![截屏2021-06-01 上午10.01.00](/Users/berny/Desktop/截屏2021-06-01 上午10.01.00.png)</p>
+<ul>
+<li>实现存储还需要进行RLP序列化：对nested array of bytes进行序列化</li>
+</ul>
+<h2 id="04-ETH-交易树和收据树"><a href="#04-ETH-交易树和收据树" class="headerlink" title="04 ETH-交易树和收据树"></a>04 ETH-交易树和收据树</h2><p>以太坊的运行过程可以看成是一个交易驱动的状态机，状态就是账户状态，交易就是账户交易。状态转移是确定性的。比特币也一样，状态是UTXO。</p>
+<p>MPT收据树的节点MPT交易树一一对应，收据树的目的是：考虑到以太坊的智能合约比较复杂，有利于方便的查询某些执行的结果</p>
+<ul>
+<li><p>支持查找操作，通过键值从顶向下。对于状态树键值就是地址，对于交易树和收据树键值就是交易的序号。</p>
+</li>
+<li><p>交易数与收据树都只包含当前区块中的交易，而状态树把所有账户状态都包含。</p>
+</li>
+</ul>
+<h3 id="交易树和收据树的作用"><a href="#交易树和收据树的作用" class="headerlink" title="交易树和收据树的作用"></a>交易树和收据树的作用</h3><ul>
+<li><p>提供 moker proof</p>
+</li>
+<li><p>较复杂的查询操作(需要bloom filter)</p>
+</li>
+</ul>
+<h3 id="bloom-filter"><a href="#bloom-filter" class="headerlink" title="bloom filter"></a>bloom filter</h3><p>bloom filter数据结构可以比较高效的查找某个元素在不在一个比较大的集合中：为集合计算出一个向量，每个元素都取hash后，映射到向量中的某个位置，得到这个集合的摘要。</p>
+<ul>
+<li>如果想知道元素d在不在集合中，用d的hash去摘要找。</li>
+<li>bloom filter有可能因为哈希碰撞，出现false positive</li>
+<li>bloom filter不支持删除元素</li>
+</ul>
+<p>每个交易都会生成一个收据，收据中就包含了一个bloom filter，记录交易的类型，地址等信息  </p>
+<p>每个区块在块头里，也会有一个总的bloom filter，是这个区块里所有bloom filter的并集 </p>
+<h3 id="复杂查询：查询过去10天与某个智能合约有关的所有交易"><a href="#复杂查询：查询过去10天与某个智能合约有关的所有交易" class="headerlink" title="复杂查询：查询过去10天与某个智能合约有关的所有交易"></a>复杂查询：查询过去10天与某个智能合约有关的所有交易</h3><ul>
+<li>先查哪个区块里块头里的bloom filter有我要的交易类型(轻节点就可以完成)</li>
+<li>如果块头bloom filter中没有的话，将这个区块过滤</li>
+<li>如果块头bloom filter中有， 再定位区块中收据树中对应的bloom filter(有可能false positive查询为空)</li>
+<li>从交易中进行确认</li>
+</ul>
+<h3 id="为什么状态树需要所有账户状态"><a href="#为什么状态树需要所有账户状态" class="headerlink" title="为什么状态树需要所有账户状态"></a>为什么状态树需要所有账户状态</h3><ul>
+<li>如果节点只有本节点相关账户状态，则没有一个节点拥有所有账户信息，不再是基于账户里。不能方便查找账户信息。</li>
+</ul>
+<h3 id="block-go代码"><a href="#block-go代码" class="headerlink" title="block.go代码"></a>block.go代码</h3><p>![截屏2021-06-03 下午9.26.50](/Users/berny/Desktop/截屏2021-06-03 下午9.26.50.png)</p>
+<ul>
+<li><p>derive_sha.go中，DeriveSha函数把Transactions和Receipts建为trie，而trie的数据结构是MPT</p>
+<p>![截屏2021-06-03 下午9.32.56](/Users/berny/Desktop/截屏2021-06-03 下午9.32.56.png)</p>
+</li>
+</ul>
+<p>![截屏2021-06-03 下午9.35.03](/Users/berny/Desktop/截屏2021-06-03 下午9.35.03.png)</p>
+<ul>
+<li><p>Receipt的数据结构</p>
+<p>![截屏2021-06-03 下午9.35.53](/Users/berny/Desktop/截屏2021-06-03 下午9.35.53.png)</p>
+<ul>
+<li>如果有一个交易发布，所有全节点都要执行，同步状态</li>
+<li>Status为合约执行状态</li>
+<li></li>
+</ul>
+</li>
+<li><p>header的数据结构</p>
+<p>![截屏2021-06-03 下午9.37.55](/Users/berny/Desktop/截屏2021-06-03 下午9.37.55.png)</p>
+<ul>
+<li><p>GasUsed：本区块消耗所有汽油费总和</p>
+</li>
+<li><p>GasLimit：发布区块要消耗资源，比特币中是大小限制小于1M，以太坊为一个区块中所有能消耗的汽油的上限。每一个矿工可以进行微调上一个区块的1/1024</p>
+</li>
+</ul>
+</li>
+<li><p>header中调用的CreateBloom相关函数，生成bloom filter</p>
+<p>![截屏2021-06-03 下午9.41.24](/Users/berny/Desktop/截屏2021-06-03 下午9.41.24.png)</p>
+</li>
+<li><p>查询bloom filter，bin中有没有感兴趣的Topic</p>
+<p>![截屏2021-06-03 下午10.08.16](/Users/berny/Desktop/截屏2021-06-03 下午10.08.16.png)</p>
+</li>
+</ul>
+<p>看这个topic在bloom filter中对应位置是不是都是1</p>
+<h2 id="05-ETH-GHOST共识机制"><a href="#05-ETH-GHOST共识机制" class="headerlink" title="05 ETH-GHOST共识机制"></a>05 ETH-GHOST共识机制</h2><h3 id="问题矛盾-支链多，费块多"><a href="#问题矛盾-支链多，费块多" class="headerlink" title="问题矛盾(支链多，费块多)"></a>问题矛盾(支链多，费块多)</h3><ul>
+<li><p>由于出块时间短，很容易产生临时分叉，最后没成为最长合法链的区块矿工，得不到出块奖励</p>
+</li>
+<li><p>大矿池可按照自己的链往下挖，更有可能成为最长合法链，恶性循环，对个体户不公平</p>
+</li>
+</ul>
+<h3 id="GHOST协议-初始版本"><a href="#GHOST协议-初始版本" class="headerlink" title="GHOST协议(初始版本)"></a>GHOST协议(初始版本)</h3><p>对费块给予一些奖励，这些费块被称为uncle block</p>
+<p>![截屏2021-06-03 下午11.53.57](/Users/berny/Desktop/截屏2021-06-03 下午11.53.57.png)</p>
+<ul>
+<li>C、D是B的叔父区块</li>
+<li>以太网规定，B发布时，可以把C和D包含进去，这样，C和D也可以获得7/8的出块奖励，B也能额外获得2 * 1/32的出块奖励</li>
+<li>最多包含两个叔父区块</li>
+</ul>
+<h4 id="版本缺陷"><a href="#版本缺陷" class="headerlink" title="版本缺陷"></a>版本缺陷</h4><ol>
+<li>第三个叔父区块怎么办</li>
+<li>包含叔父区块的前提是：挖B的时候，已经知道C、D的存在</li>
+<li>存在矿工因为竞争，专门不包含叔父区块</li>
+</ol>
+<h3 id="修改版本-扩展叔父"><a href="#修改版本-扩展叔父" class="headerlink" title="修改版本(扩展叔父)"></a>修改版本(扩展叔父)</h3><p>![截屏2021-06-04 上午12.06.32](/Users/berny/Desktop/截屏2021-06-04 上午12.06.32.png)</p>
+<ul>
+<li>C、D，同样是E、F的叔父区块，如果B没有包含，E、F也可以包含。</li>
+<li>uncle reward 逐层向前，奖励递减，7/8、6/8、…、2/8，七代以内有共同祖先。这样有利于鼓励尽早进行合并。</li>
+<li>出于解决临时性分叉问题，无法解决其他类型分叉(例如对协议意见不合等)</li>
+<li>叔父区块得不到交易费gas fee</li>
+<li>以太币没有定期出块奖励减半的说法</li>
+<li>包含叔父区块时，不执行叔父区块中的交易，甚至都不检查交易合法性，要查是否满足难度</li>
+<li>分叉后的第一个区块，才能作为叔父区块</li>
+</ul>
+<h3 id="以太坊网站"><a href="#以太坊网站" class="headerlink" title="以太坊网站"></a>以太坊网站</h3><p>![截屏2021-06-04 上午1.19.37](/Users/berny/Desktop/截屏2021-06-04 上午1.19.37.png)</p>
+<p>![截屏2021-06-04 上午1.22.39](/Users/berny/Desktop/截屏2021-06-04 上午1.22.39.png)</p>
+<p>疑问：为什么叔父区块5695159，本区块5695161，能计算出距离是2？</p>
+<h2 id="06-ETH-挖矿算法"><a href="#06-ETH-挖矿算法" class="headerlink" title="06 ETH-挖矿算法"></a>06 ETH-挖矿算法</h2><h3 id="增加内存访问次数，减少ASIC芯片的使用"><a href="#增加内存访问次数，减少ASIC芯片的使用" class="headerlink" title="增加内存访问次数，减少ASIC芯片的使用"></a>增加内存访问次数，减少ASIC芯片的使用</h3><ul>
+<li>memory hard mining puzzle。</li>
+<li>例子：LiteCoin，基于Scrypt，开设一个很大的数组，按照顺序填充一些伪随机数，取值前后有依赖关系，求解的时候，读取的顺序也和前一个数有关。如果数组足够大，那么不存储这个数组，复杂度将会大幅度上升。矿工也可以只存储奇数或偶数，这样内存会减少一半，成为time-memory trade off。缺点：对轻节点来说也是memory hard，验证同样很困难，违背different to solve，but easy to verify。为了照顾轻节点，数组设置为128K，没有达成预期效果。</li>
+</ul>
+<h3 id="ETH解决方案"><a href="#ETH解决方案" class="headerlink" title="ETH解决方案"></a>ETH解决方案</h3><ul>
+<li>两个数据集，一大(1G dataset，DAG)一小(16M cache)，DAG是从cache生成出来的。目的是便于验证。</li>
+<li>轻节点保存16M的cache就可以，矿工保存DAG。这两个数组都是定期增长的，因为计算机内存也是定期增长的。</li>
+<li>cache的生成：从一个种子节点，算出数组第一个元素，依次取hash，填充满cache</li>
+<li>dataset的生成：按照伪随机的顺序，从cache中读取256个元素。这256个元素，算出一个数，作为dataset的第一个数。</li>
+<li>求解puzzle：由block header、nonce算出的哈希，映射到dataset中的某一个位置，作为读取的第一个数，同时读取相邻位置的元素，之后进行运算，算出下一个位置。以此类推64次伪随机读取128个数。</li>
+<li>验证：最后算出的哈希值puzzle，与难度目标阈值比较是否满足。如果不满足，改变nonce。</li>
+</ul>
+<h3 id="ethash算法伪代码"><a href="#ethash算法伪代码" class="headerlink" title="ethash算法伪代码"></a>ethash算法伪代码</h3><h4 id="生成16M的cache"><a href="#生成16M的cache" class="headerlink" title="生成16M的cache"></a>生成16M的cache</h4><p>![截屏2021-06-04 上午8.25.23](/Users/berny/Desktop/截屏2021-06-04 上午8.25.23.png)</p>
+<ol>
+<li>cache中每个元素都是64字节的hash值</li>
+<li>第一个元素是种子seed的hash</li>
+<li>后面每个元素是前一个的hash</li>
+<li>每隔30000个区块会重新生成seed(对原来的seed求hash)，并且利用新的seed生成新的cache。同时cache的大小要增大初始大小的1/128——128K</li>
+</ol>
+<h4 id="通过cache生成dataset中的第i个元素"><a href="#通过cache生成dataset中的第i个元素" class="headerlink" title="通过cache生成dataset中的第i个元素"></a>通过cache生成dataset中的第i个元素</h4><p>![截屏2021-06-04 上午8.31.55](/Users/berny/Desktop/截屏2021-06-04 上午8.31.55.png)</p>
+<ol>
+<li>按照伪随机的顺序读取cache中的256个数</li>
+<li>每次读取的位置，是由上一个数的数值经过计算得到的</li>
+<li>get_int_from_item和make_item是自己定义的，源代码中没有</li>
+<li>get_int_from_item作用：用当前算出的hash值，算出下一个要读取的位置</li>
+<li>make_item作用：用cache中这个位置的数和当前的hash值，计算出下一个hash值</li>
+<li>迭代256轮，最后得出一个64字节的hash，作为大数据集中的第i个元素</li>
+</ol>
+<h4 id="生成dataset中全部元素"><a href="#生成dataset中全部元素" class="headerlink" title="生成dataset中全部元素"></a>生成dataset中全部元素</h4><p>![截屏2021-06-04 上午8.38.00 1](/Users/berny/Desktop/截屏2021-06-04 上午8.38.00 1.png)</p>
+<ul>
+<li>不断调用calc_dataset_item函数</li>
+</ul>
+<h4 id="矿工用于挖矿的函数"><a href="#矿工用于挖矿的函数" class="headerlink" title="矿工用于挖矿的函数"></a>矿工用于挖矿的函数</h4><p>![截屏2021-06-04 上午8.40.45](/Users/berny/Desktop/截屏2021-06-04 上午8.40.45.png)</p>
+<ul>
+<li>header：当前要生成区块的块头</li>
+<li>nonce：当前尝试的nonce</li>
+<li>full_size：大数据集中的元素个数</li>
+<li>dataset：大数据集</li>
+<li>挖矿的过程：首先根据块头信息和当前的nonce，算出初始hash。然后经过64轮循环，每一轮循环读取大数据集中两个相邻的数，读取的位置是由当前hash计算出来的，然后再根据这个位置上的数值来更新当前hash。64循环后返回一个hash，用于与目标阈值对比。</li>
+</ul>
+<h4 id="轻节点用于验证的函数"><a href="#轻节点用于验证的函数" class="headerlink" title="轻节点用于验证的函数"></a>轻节点用于验证的函数</h4><p>![截屏2021-06-04 上午8.41.15](/Users/berny/Desktop/截屏2021-06-04 上午8.41.15.png)</p>
+<ul>
+<li> full_size：大数据集中的元素个数</li>
+<li>cache：验证用16M的cache</li>
+<li>与挖矿过程类似，区别在于每次需要从大数据集中读取元素的时候，因为轻节点没有大数据集，要从cache中重新生成</li>
+</ul>
+<h4 id="矿工挖矿主循环"><a href="#矿工挖矿主循环" class="headerlink" title="矿工挖矿主循环"></a>矿工挖矿主循环</h4><p>![截屏2021-06-04 上午9.01.21](/Users/berny/Desktop/截屏2021-06-04 上午9.01.21.png)</p>
+<ul>
+<li>target：难度目标</li>
+<li>nonce的可能取值是从0到2^64</li>
+<li>对每个nonce利用上面讲的函数计算hash，与难度目标比较。否则循环</li>
+</ul>
+<h4 id="总代码"><a href="#总代码" class="headerlink" title="总代码"></a>总代码</h4><p>![截屏2021-06-04 上午9.04.03](/Users/berny/Desktop/截屏2021-06-04 上午9.04.03.png)</p>
+<h4 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h4><ul>
+<li>以GPU为主，ASIC芯片使用的很少</li>
+</ul>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><ul>
+<li>预期：PoW-&gt;PoS。权益证明，不挖矿，按照所占的权益进行投票</li>
+<li>预挖矿pre-mining：发行货币时，预留一部分货币给开发者</li>
+<li>pre-sale：预留的币通过出售的方法换取资产，用户开发工作</li>
+</ul>
+<h2 id="07-ETH-难度调整"><a href="#07-ETH-难度调整" class="headerlink" title="07 ETH-难度调整"></a>07 ETH-难度调整</h2><p>![截屏2021-06-04 下午6.19.25](/Users/berny/Desktop/截屏2021-06-04 下午6.19.25.png)</p>
+<ul>
+<li>D(H)是本区块的难度，H_i是区块序号</li>
+<li>max中的是基础部分，目的是维持出块时间大概在15s左右（在父区块难度的基础上，加上一些自调整的部分）</li>
+<li>基础部分有下界，最小值D_0 = 131072</li>
+<li>后面的部分称为难度炸弹，主要为了向权益证明过度</li>
+</ul>
+<p>![截屏2021-06-04 下午6.57.01](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-04 下午6.57.01.png)</p>
+<ul>
+<li>x是调整的力度，大小为父区块难度的1/2048</li>
+<li>如果父区块有叔父区块，那么叔父区块也会得到奖励，导致总货币量增加，为了保持稳定，此区块就要增大难度</li>
+<li>一次性下调难度最多是99/2048</li>
+</ul>
+<p>![截屏2021-06-04 下午7.02.26](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-04 下午7.02.26.png)</p>
+<p>![截屏2021-06-08 上午9.32.31](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-08 上午9.32.31.png)</p>
+<ul>
+<li>目的是随着时间推移，难度炸弹威力显现，致使人们迫于难度的增加，都同意转为权益证明</li>
+<li>本来没有共识2，由于难度炸弹威力已经显现，出块时间不断上升，但权益证明机制还没有行之有效的方案。以太坊决定使用fake block number代替block number进行难度炸弹计算。</li>
+</ul>
+<p>![截屏2021-06-08 上午10.28.52](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-08 上午10.28.52.png)</p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><h4 id="Byzantium阶段计算挖矿难度的代码"><a href="#Byzantium阶段计算挖矿难度的代码" class="headerlink" title="Byzantium阶段计算挖矿难度的代码"></a>Byzantium阶段计算挖矿难度的代码</h4><p>![截屏2021-06-08 上午10.30.48](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-08 上午10.30.48.png)</p>
+<ul>
+<li>输入：父区块的时间戳、父区块的难度</li>
+<li>输出：当前挖的区块的难度</li>
+<li>bigTime：当前区块时间戳</li>
+<li>bigParentTime：父区块时间错</li>
+</ul>
+<h3 id="基础部分的计算"><a href="#基础部分的计算" class="headerlink" title="基础部分的计算"></a>基础部分的计算</h3><p>![截屏2021-06-08 上午10.35.02](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-08 上午10.35.02.png)</p>
+<h3 id="难度炸弹的计算"><a href="#难度炸弹的计算" class="headerlink" title="难度炸弹的计算"></a>难度炸弹的计算</h3><p>![截屏2021-06-08 上午10.51.36](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-08 上午10.51.36.png)</p>
+<h2 id="08-ETH-权益证明"><a href="#08-ETH-权益证明" class="headerlink" title="08 ETH-权益证明"></a>08 ETH-权益证明</h2><h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>既然挖矿比拼算力，需要花钱买设备，为什么不直接比钱？省去了挖矿的过程，避免了对环境的污染和能耗。</p>
+<ul>
+<li><p>基于工作量证明的共识系统，维护安全性的资源不是一个闭环： 外界资源可以转换成系统内资源进行攻击。</p>
+</li>
+<li><p>基于权益证明的共识系统。按照你有多少币种的币进行投票，发动攻击的资源只能从系统内部获得。攻击者必须先大量买币(价格会大涨)，可能对开发者还是个好事。</p>
+</li>
+</ul>
+<h3 id="混合模型"><a href="#混合模型" class="headerlink" title="混合模型"></a>混合模型</h3><ul>
+<li>也要挖矿，挖矿的难度和持有币的数量(权益)是相关的。</li>
+<li>产生一个问题，币最多的永远挖矿最容易。解决方法，为了降低难度而投入的币，在使用后会被锁定一段时间，不能够重复使用。</li>
+<li>两边下注的问题nothing at state：出现分叉后，权益证明可以在两条链都下注。如果A链成为最长合法链，B链下注的币不受影响。</li>
+</ul>
+<h3 id="Casper-the-Friendly-Finality-Gadget（FFG）"><a href="#Casper-the-Friendly-Finality-Gadget（FFG）" class="headerlink" title="Casper the Friendly Finality Gadget（FFG）"></a>Casper the Friendly Finality Gadget（FFG）</h3><ul>
+<li>以太网准备使用的权益证明</li>
+<li>过渡阶段也要和工作量证明混合使用，为工作量证明提供Finality</li>
+<li>Finality是一种状态，包含在Finality中的交易不会被取消。而单纯基于工作量证明的交易(挖矿)是有可能被回滚的。</li>
+<li>Validator验证者，要想成为一个Validator必须投入一定的以太币作为保证金。这个保证金在系统中会被锁定。Validator的作用是推动系统达成共识，投票决定哪条链是最长合法链，投票的权重取决于保证金的金额。如果完成相应的职责，可以获得相应的奖励；相反有不良行为，会受到相应的处罚(不作为、两边下注)。每个验证者有一定的任期，任期满后要经过一定的等待期(期间其他节点可以检举揭发不良行为)，等待期结束，用户可以取回保证金和奖励。</li>
+<li>过程类似于数据库中的two-phase commit(第一轮prepare Message，第二轮Commit Message)每挖出50个区块作为一个epoch，决定它能不能成为Finality要进行投票。Casper规定每一轮投票都要得到2/3以上的验证者才能通过。</li>
+<li>实际使用时，不区分两个massage，epoch由100调为50。每个epoch只需要一轮投票，这一轮投票对于上一轮来说，是commit massage；对于下一个epoch来说，是prepare message。连续两轮投票，两轮epoch都得到2/3以上的多数，才算有效</li>
+</ul>
+<p>Casper协议可以给区块链的某种状态做一个检查点，那么这个检查点是不是绝对安全的？通过验证者投票达成的Finality有没有可能被推翻？</p>
+<ul>
+<li>恶意组织如果仅仅是矿工，无法推翻已经达成的Finality</li>
+<li>恶意组织如果包含矿工和验证者，想要攻击成功，必须有大量的验证者两边下注(至少1/3)。这种情况一旦被发现，将有1/3的验证者保证金被没收。</li>
+</ul>
+<h3 id="新权益证明的币种：EOS"><a href="#新权益证明的币种：EOS" class="headerlink" title="新权益证明的币种：EOS"></a>新权益证明的币种：EOS</h3><ul>
+<li>DPOS协议：Delgated Proof of State</li>
+<li>先用投票的方法选出20个超级节点，再由这20个超级节点产生区块</li>
+</ul>
+<h3 id="思考-1"><a href="#思考-1" class="headerlink" title="思考"></a>思考</h3><ul>
+<li>挖矿的消耗和污染其实是有限的，提供了一个把电能转化成钱的手段。</li>
+<li>电是很难存储的，很多发电站在高峰时不够用，在晚上又用不完。电也是很难传输的，很多数据中心建在电比较便宜的地方。很多国家的电网设计是单向的，可以从主电网向偏远地区送电，从偏远地区送电入主电网很难。挖矿把多余的电能转换成加密货币，很多矿厂建立在电力资源丰富的地区，可以有效化解过剩产能，带动当地经济的发展。</li>
+</ul>
+<h2 id="09-ETH-智能合约"><a href="#09-ETH-智能合约" class="headerlink" title="09 ETH-智能合约"></a>09 ETH-智能合约</h2><ul>
+<li>智能合约是运行在区块链上的一段代码，代码的逻辑定义了合约的内容</li>
+<li>智能合约的账户保存了合约当前的运行状态</li>
+<li><ul>
+<li> balance：当前余额</li>
+<li>nonce：交易次数</li>
+<li>code：合约代码</li>
+<li>storage：存储，数据结构是一颗MPT</li>
+</ul>
+</li>
+<li>Solidity是智能合约最常用的语言，语法上与JS相进</li>
+</ul>
+<h3 id="Solidity实例-拍卖"><a href="#Solidity实例-拍卖" class="headerlink" title="Solidity实例(拍卖)"></a>Solidity实例(拍卖)</h3><p>![截屏2021-06-10 上午11.42.29](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-10 上午11.42.29.png)</p>
+<ul>
+<li><p>强类型语言</p>
+</li>
+<li><p>contract类似于C++中的类</p>
+</li>
+<li><p>address类型是特有的</p>
+</li>
+<li><p>event事件，用来记录日志：拍卖的最高出价、出价成功</p>
+</li>
+<li><p>Solidity中的mapping哈希表，不支持遍历</p>
+</li>
+<li><p>Solidity中的数组可以是定长，也可以是变长，用push操作增加元素，length查询长度</p>
+</li>
+<li><p>Solidity构造函数只能有一个，有两种方法：</p>
+<ol>
+<li>定义一个与contract同名的函数，可以有参数，但是不能有返回值</li>
+<li>用constructor构造函数，仅在合约创建时掉用一次</li>
+</ol>
+</li>
+<li><p>function成员函数，这里都是public，说明其他账户可以调用这些函数</p>
+<ul>
+<li>合约账户中接受外部转账的函数，必须标注成payable</li>
+<li>bid()函数是用来竞拍出价的</li>
+<li>withdraw函数：拍卖结束，出价非最高的人，将之前存入合约中的以太币取回</li>
+</ul>
+</li>
+<li><p>特殊的函数fallback()，类似于异常处理</p>
+<p>![截屏2021-06-11 上午11.45.30](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-11 上午11.45.30.png)</p>
+</li>
+</ul>
+<h3 id="外部账户怎么调用智能合约"><a href="#外部账户怎么调用智能合约" class="headerlink" title="外部账户怎么调用智能合约"></a>外部账户怎么调用智能合约</h3><p>与转账类似，创建一个交易，接收地址为智能合约地址，实际上是发起了一次对合约的调用，在数据域data中说明具体调用合约中的哪个函数及其参数的编码值。![截屏2021-06-11 上午10.31.53](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-11 上午10.31.53.png)</p>
+<ul>
+<li>to contract address：被调用的合约地址</li>
+<li>sender address：发起调用的账户地址</li>
+<li>TX data：调用的函数以及参数取值</li>
+<li>value：发起调用时转账的金额</li>
+<li>gas used：交易话费的汽油费</li>
+<li>gas price：汽油的价格</li>
+<li>gas limit：这个交易最多愿意支付多少汽油</li>
+</ul>
+<h3 id="一个合约如何调用另一个合约中的函数"><a href="#一个合约如何调用另一个合约中的函数" class="headerlink" title="一个合约如何调用另一个合约中的函数"></a>一个合约如何调用另一个合约中的函数</h3><ol>
+<li><p>直接调用</p>
+<ul>
+<li>被调用合约报错，发起调用的合约也会回滚</li>
+</ul>
+</li>
+<li><p>使用address.call()函数进行调用</p>
+<p>![截屏2021-06-11 上午10.50.26](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-11 上午10.50.26.png)</p>
+<ul>
+<li>被调用合约报错，call函数返回false，但是发起调用的函数不会抛出异常</li>
+</ul>
+</li>
+<li><p>代理调用delegatecall()</p>
+<ul>
+<li>与address.call()类似，区别在于delegatecall()不需要切换到被调用的合约的环境中去执行，只使用给定地址的代码，其他属性(存储、余额等)都取自当前合约</li>
+</ul>
+</li>
+</ol>
+<h3 id="智能合约的创建和运行"><a href="#智能合约的创建和运行" class="headerlink" title="智能合约的创建和运行"></a>智能合约的创建和运行</h3><h4 id="构建代码"><a href="#构建代码" class="headerlink" title="构建代码"></a>构建代码</h4><p>智能合约的代码写完后，要编译成bytecode</p>
+<h4 id="创建合约"><a href="#创建合约" class="headerlink" title="创建合约"></a>创建合约</h4><p>外部账户发起一个转帐交易到0x0的地址</p>
+<ul>
+<li>转账金额是0，但要支付汽油费</li>
+<li>合约的代码放在data域里</li>
+</ul>
+<h4 id="运行合约-EVM-Ethereum-Virtual-Machine上"><a href="#运行合约-EVM-Ethereum-Virtual-Machine上" class="headerlink" title="运行合约(EVM Ethereum Virtual Machine上)"></a>运行合约(EVM Ethereum Virtual Machine上)</h4><p>通过加一层虚拟机，对智能合约的运行加一个一致性的平台，增强可移植性。256位寻址空间</p>
+<h3 id="汽油费-gas-fee"><a href="#汽油费-gas-fee" class="headerlink" title="汽油费(gas fee)"></a>汽油费(gas fee)</h3><ul>
+<li><p>智能合约是个Turing-complete Programming Model</p>
+</li>
+<li><p>合约调用出现死循环怎么办？算法不可解，把问题推给发起交易的账户</p>
+<p>![截屏2021-06-11 下午12.14.43](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-11 下午12.14.43.png)</p>
+<p>全节点收到智能合约调用时，先利用GasLimit算出可能花掉的最大汽油费，然后一次性的从发起调用的账户上扣除。根据实际执行情况，算出实际汽油费，多退。</p>
+</li>
+<li><p>EVM中不同指令的汽油费不一样，简单的便宜，复杂的或者需要存储状态的指令很贵</p>
+</li>
+<li><p>汽油费扣费过程：全节点在收到交易后，<strong>在本地的数据结构中</strong>扣一次。不会出现执行多次，扣多份的情况。只有在合约执行结束，并且发布到区块上后，本地的修改才会变成外部可见的，才会变成区块链上的共识。 </p>
+</li>
+</ul>
+<h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><ul>
+<li><p>以太坊中的交易具有原子性，如果出现错误不会只执行一部分。</p>
+</li>
+<li><p>错误情况一：实际汽油费超出合约的GasLimit，执行的状态回滚，但已经执行的汽油费不退</p>
+</li>
+<li><p>可以抛出错误的语句：</p>
+<ul>
+<li>assert(bool condition)语句，如果条件不满足就抛出–用于内部错误；</li>
+<li>require(bool condition)语句，如果条件不满足就抛掉–用于输入或外部组件引起的错误</li>
+<li>revert()：只要执行到，无条件抛出异常。终止运行并回滚状态变动</li>
+</ul>
+</li>
+<li><p>智能合约中没有try-catch语句</p>
+</li>
+</ul>
+<h3 id="嵌套调用"><a href="#嵌套调用" class="headerlink" title="嵌套调用"></a>嵌套调用</h3><ul>
+<li>指一个合约调用另一个合约中的函数</li>
+<li>嵌套调用是否连锁式回滚，看调用方法</li>
+<li>一个合约向另一个合约账户转账，没有指明调用哪个函数，仍然可能引起嵌套调用</li>
+</ul>
+<h3 id="先挖矿还是先执行"><a href="#先挖矿还是先执行" class="headerlink" title="先挖矿还是先执行"></a>先挖矿还是先执行</h3><ul>
+<li><p>只有先执行交易，更新三棵树的哈希，才能挖矿</p>
+</li>
+<li><p><strong>没挖到没有补偿，反而要验证新区块正确性，更新树，把交易执行一遍</strong>，这样确实对计算力差的矿工不友好。</p>
+</li>
+<li><p>不可能不验证新区块，会导致状态树无法更新，从此都不能再挖矿</p>
+</li>
+<li><p>发布到区块链上的交易是不是都是成功执行的？不一定，执行错误也要发，才能扣汽油费</p>
+</li>
+<li><p>不支持多线程，多核并行处理。以太坊是一个交易驱动的状态机，必须是确定性的。多核情况，如果内存访问顺序不同，可能结果也不同</p>
+</li>
+</ul>
+<h3 id="智能合约可以获得的区块信息"><a href="#智能合约可以获得的区块信息" class="headerlink" title="智能合约可以获得的区块信息"></a>智能合约可以获得的区块信息</h3><ul>
+<li>block.blockhash(uint blockNumber) returns (bytes32)：给定区块的hash-仅对最近的256个区块有效而不包括当前区块</li>
+<li>block.coinbase(address)：挖出当前区块的地址</li>
+<li>block.difficulty(uint)：当前区块难度</li>
+<li>block.gaslimit(uint)：当前区块gas限额</li>
+<li>block.number(nint)：当前区块号</li>
+<li>block.timestamp(uint)：自unix epoch起始当前区块以秒计的时间戳</li>
+</ul>
+<h3 id="智能合约可以获得的调用信息"><a href="#智能合约可以获得的调用信息" class="headerlink" title="智能合约可以获得的调用信息"></a>智能合约可以获得的调用信息</h3><ul>
+<li>msg.data(bytes)：完整的calldata</li>
+<li>msg.gas(uint)：调用剩余的gas</li>
+<li>msg.sender(address)：信息发送者（当前调用）</li>
+<li>msg.sig(bytes4)：calldata的前4字节（函数标识符）</li>
+<li>msg.value(uint)：随消息发送的wei的数量</li>
+<li>now(uint)：目前区块时间戳（block.timestamp）</li>
+<li>tx.gasprice(uint)：交易的gas的价格</li>
+<li>tx.origin(address)：交易发起者(完全的调用链)</li>
+</ul>
+<h3 id="地址类型"><a href="#地址类型" class="headerlink" title="地址类型"></a>地址类型</h3><p>![截屏2021-06-11 下午5.20.43](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-11 下午5.20.43.png)</p>
+<ul>
+<li>所有智能合约均可显示的转换成地址类型</li>
+<li>这里的address大多是指被调用的合约，被转账的合约</li>
+<li>transfer转账失败会导致连锁回滚，send转账会返回false，call.value也可以转账失败时返回false</li>
+</ul>
+<h3 id="拍卖"><a href="#拍卖" class="headerlink" title="拍卖"></a>拍卖</h3><p>![截屏2021-06-11 下午5.31.59](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-11 下午5.31.59.png)</p>
+<ul>
+<li>require为抛出异常函数，检查某些值正确性</li>
+<li>bids是哈希表，如果第一次出价，bids[msg.sender]=0</li>
+<li>Solidity哈希表不支持遍历，所以需要bidders[]数组把竞拍者进行记录</li>
+</ul>
+<p>![截屏2021-06-11 下午5.32.07](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-11 下午5.32.07.png)</p>
+<ul>
+<li>当前合约把bids[bighestBidder]的金额，给beneficiary受益人</li>
+<li>遍历竞拍者，对于竞拍失败的退款处理</li>
+</ul>
+<p><strong>存在问题</strong></p>
+<p>![截屏2021-06-11 下午5.56.42](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-11 下午5.56.42.png)</p>
+<ul>
+<li><p>这是一个黑客合约账户，只有一个函数。addr为合约地址，将地址转成拍卖合约的一个实例sa，调用bid函数，把msg.value发送过去。</p>
+</li>
+<li><p>有一个黑客外部用户调用这个hack_bid，参与拍卖没有问题，但是退款的时候，退到这个黑客合约账户上的钱，因为没有fall_back函数，会抛出异常，引起拍卖合约连锁式回滚，导致退回转账的操作是失败的(所有都失败)。就好像从来没有执行一样，原子性。以太币永久的取不出来，谁也取不出来！</p>
+</li>
+<li><p>Code is law，智能合约无法更改，但是同样坏处，如果有漏洞，谁也无法修改</p>
+</li>
+</ul>
+<h4 id="修改版本：由投标者自己取回出价"><a href="#修改版本：由投标者自己取回出价" class="headerlink" title="修改版本：由投标者自己取回出价"></a>修改版本：由投标者自己取回出价</h4><p>![截屏2021-06-11 下午6.18.53](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-11 下午6.18.53.png)</p>
+<p>![](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-11 下午6.19.02.png)</p>
+<p><strong>产生问题：重入攻击</strong></p>
+<p>![截屏2021-06-11 下午6.25.24](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-11 下午6.25.24.png)</p>
+<ul>
+<li>关键在于fallback()函数</li>
+<li>清零操作，只有在交易完成后才会执行。</li>
+<li>向黑客合约退钱时，它又调用了withdraw函数，此时withdraw函数并没有清零，就多次退钱</li>
+</ul>
+<p><strong>继续修改</strong>(先清零，转账失败再恢复)</p>
+<p>![截屏2021-06-11 下午6.36.20](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-11 下午6.36.20.png)</p>
+<p><strong>修改方法二：</strong>不实用call.value，而使用send。send转账过去的汽油费只有2500个，不够黑客合约下次调用，只够写一个log</p>
+<h2 id="10-ETH-TheDAO"><a href="#10-ETH-TheDAO" class="headerlink" title="10 ETH-TheDAO"></a>10 ETH-TheDAO</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>重入攻击的真实案例，造成了以太坊的分裂，改写了以太坊历史</p>
+<p>DAO：Decentralized Antonomous Organization去中心化的自治组织</p>
+<p>DAC：Decentralized Antonomous Corporation去中心化的自治公司</p>
+<p>区块链上的DAO是建立在代码基础上的，组织的规章制度是写在代码里的，通过共识协议维护这种规章制度的执行</p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>2016.5：出现了一个致力于众筹投资的DAO，名字叫做TheDAO</p>
+<p>功能：本身是一个众筹智能合约，用户将以太币发给智能合约换取TheDAO的代币。投资项目时大家投票决定，代币越多权重越大。如果项目有了收益，也是按照规章制度进行分配。</p>
+<p>由于新颖的民主投资理念，一开始被高度看好，短短时间筹集到1.5亿美元，但只存活了三个月。</p>
+<h3 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h3><p>用户缺钱，想换钱了怎么办？TheDAO中使用<strong>拆分</strong>，splitDAO。不是单纯取回收益，也是建立子基金的方法childDAO。</p>
+<p>childDAO中心思想：某些小众投资理念的人如果得不到认可，可以从TheDAO中拆分出来成为子基金。拆分前有七天辩论期，可以讨论或者加入。拆分的时候，代币被收回，换成相应数量的以太币，他们就可以投资自己想投的项目。拆分后有28天的锁定期。极端的例子就是取回资金，一个人组成childDAO。</p>
+<p>拆分是民主的进一步体现，本身理念没有错。<strong>但问题出现在splitDAO的代码实现上。</strong></p>
+<h3 id="危机产生"><a href="#危机产生" class="headerlink" title="危机产生"></a>危机产生</h3><p>黑客程序：</p>
+<p>![截屏2021-06-17 下午5.01.47](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-17 下午5.01.47.png)</p>
+<p>账户清零的顺序，导致了黑客发动重入攻击，引起恐慌和以太币价格大跳水。</p>
+<p>社区的意见被分裂为两派：一派认为要回滚交易（28天锁定期）；另一派认为不需要采取补救措施，因为黑客的行为并没有违法，而且TheDAO只是以太坊其中一个合约，回滚违背了区块链的不可篡改性。既然code is low，那么代码中的漏洞也是规则的一部分。It’s not a bug, it’s a feature.</p>
+<h3 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h3><p>以太坊开发团队还是认为需要回滚，如何回滚呢，从何时分叉？</p>
+<p>两步走方案：第一步，锁定黑客账户；第二部，设法把黑客盗走的以太币退回去</p>
+<p>首先软分叉方案：升级软件，所有和TheDAO有关的账户不允许做任何交易，属于新不认同旧，软分叉。但有一个bug，此时不收汽油费，黑客可以不断浪费矿工资源。方案失败。</p>
+<p>其次硬分叉方案：通过一个新合约，把TheDAO上所有资金强制转到一个新合约，新合约只有一个功能就是退钱：把代币退成以太币。旧矿工不认可(没有合法签名就转账了)，新矿工软件升级后默认(192万个区块自动执行)。产生了硬分叉。说实话丧失了去中心化的特点，反而还不如中心化。类似于法院强制执行，还不如法院有法律程序。</p>
+<p>最后，以太坊发布了投票合约，显示大部分人支持硬分叉。但也有少部分认为投票者不够多，并且投票就能说明问题吗？大多数人的意见一定是对的么？旧链的以太币还是有少部分人不断挖矿，成为了ETC：Ethereum classic经典以太坊。</p>
+<p>ETC：一开始造成了混乱，并且不被长期看好。但是一直存活到了今天，增加了chain ID，将分叉前的共同账本进行区分。</p>
+<h3 id="疑问解答"><a href="#疑问解答" class="headerlink" title="疑问解答"></a>疑问解答</h3><p>为什么目的是锁定黑客，但软硬分叉都是针对所有账户？</p>
+<ul>
+<li>智能合约代码不能修改，只改黑客，下回别人还能用</li>
+<li>智能合约存在bug后，就智能作废</li>
+</ul>
+<h2 id="11-ETH-反思"><a href="#11-ETH-反思" class="headerlink" title="11 ETH-反思"></a>11 ETH-反思</h2><h3 id="智能合约的反思"><a href="#智能合约的反思" class="headerlink" title="智能合约的反思"></a>智能合约的反思</h3><ol>
+<li>智能合约真的智能吗？<ul>
+<li>其实只是自动合约，类似于ATM机</li>
+</ul>
+</li>
+<li>智能合约的不可篡改性，是双刃剑</li>
+<li>智能合约发布后，不能阻止对它的调用</li>
+<li>发现合约问题后，你怎么办？<ul>
+<li>通知以太坊团队</li>
+<li>用黑客的方法把剩下的钱转走</li>
+</ul>
+</li>
+<li>有什么是真的不可以篡改的？<ul>
+<li>人是活的，没什么是修改不了的</li>
+</ul>
+</li>
+</ol>
+<h3 id="语言设计的反思"><a href="#语言设计的反思" class="headerlink" title="语言设计的反思"></a>语言设计的反思</h3><ol>
+<li>Solidity语言是返自然的<ul>
+<li>A给B转账，调用的是B的fallback函数</li>
+<li>容易忽视安全漏洞</li>
+</ul>
+</li>
+<li>有人提出应该使用函数式语言，有待探讨</li>
+<li>编写智能合约的语言，应该有什么特点<ul>
+<li>表达能力，图灵完备</li>
+<li>但不能太灵活</li>
+<li>可以通过一些模版写智能合约，可以减少漏洞。和合同模板类似。</li>
+</ul>
+</li>
+<li>开源的好处<ul>
+<li>公信力</li>
+<li>安全，但可能出现Many eyeball fallacy</li>
+</ul>
+</li>
+</ol>
+<h3 id="去中心化的反思"><a href="#去中心化的反思" class="headerlink" title="去中心化的反思"></a>去中心化的反思</h3><ol>
+<li>区块链的很多用户，存在对现实生活中心化的不满意。</li>
+<li>硬分叉的过程也并不是以太坊开发团队说了算，无法强制用户接受结果</li>
+<li>去中心化并不是说全自动化，不能有人为干预，并不是说不能有人为修改。而是说对规则的修改，要用去中心化的方法去完成</li>
+</ol>
+<h3 id="分叉的反思"><a href="#分叉的反思" class="headerlink" title="分叉的反思"></a>分叉的反思</h3><ol>
+<li>分叉并不都是不好的，恰恰是去中心化的理念</li>
+<li>用户不满意，就有选择分叉的权利</li>
+</ol>
+<h3 id="其他的反思"><a href="#其他的反思" class="headerlink" title="其他的反思"></a>其他的反思</h3><ol>
+<li>去中心化和分布式不等价<ul>
+<li>去中心化一定分布式</li>
+<li>分布式平台可以运行一个去中心化应用，也可以中心化</li>
+</ul>
+</li>
+<li>比特币和以太坊都是交易驱动的状态机<ul>
+<li>State machine状态机：系统中几千台机器重复做同一组操作</li>
+<li>不是为了速度快，而是为了容错</li>
+</ul>
+</li>
+</ol>
+<h2 id="12-ETH-美链"><a href="#12-ETH-美链" class="headerlink" title="12 ETH-美链"></a>12 ETH-美链</h2><h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><ul>
+<li><p>美链是一个部署在以太坊上的智能合约，有自己的代币BEC</p>
+</li>
+<li><p>可以自己定义发行规则，每个账户有多少代币也是保存在智能合约的状态变量里</p>
+</li>
+<li><p>ERC 20是以太坊上发行代币的一个标准，规范了所有发行代币的合约应该实现的功能</p>
+</li>
+<li><p>美链中有有一个叫batchTransfer的函数，它的功能是向多个接收者发送代币，然后把这些代币从调用者账户上扣除</p>
+<p>![截屏2021-06-18 下午7.46.49](/Users/berny/Desktop/Code/Markdown/Go语言学习/区块链公开课：比特币部分.assets/截屏2021-06-18 下午7.46.49.png)</p>
+<ul>
+<li>计算总数</li>
+<li>检查代币</li>
+<li>减去总代币</li>
+<li>循环转账</li>
+</ul>
+</li>
+</ul>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>乘法有可能溢出，amount可能是很小的值，减很小，但是转账很大。系统乱套。</p>
+<h3 id="攻击细节"><a href="#攻击细节" class="headerlink" title="攻击细节"></a>攻击细节</h3><ul>
+<li>第0行是16进制地址，每一行32字节，40表示第一个参数出现在64字节的位置</li>
+<li>第1行是value的值，很大，<strong>算出溢出恰好为0</strong></li>
+<li>第2行是数组的具体内容</li>
+<li>接下来两行是两个接收的地址</li>
+</ul>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>暂停提币功能，两天后回滚？？？</p>
+<h3 id="预防措施"><a href="#预防措施" class="headerlink" title="预防措施"></a>预防措施</h3><ul>
+<li>一定要考虑溢出</li>
+<li>safemath库，可以检测溢出</li>
+</ul>
+<h2 id="13-总结"><a href="#13-总结" class="headerlink" title="13 总结"></a>13 总结</h2><h3 id="争议的原因：很多瓶颈并不是区块链的问题"><a href="#争议的原因：很多瓶颈并不是区块链的问题" class="headerlink" title="争议的原因：很多瓶颈并不是区块链的问题"></a>争议的原因：很多瓶颈并不是区块链的问题</h3><p>有人建议把保险理赔放到区块链——提高速度，但理赔的困难在于人工审核，不是转账。</p>
+<p>有人建议把有机蔬菜全过程记录在区块链上，但记录下泪也不能保证买到的蔬菜是有机的。区块链有不可篡改性，但写入时就是假的内容，是无法检测出来的。</p>
+<h3 id="争议二：信任机制"><a href="#争议二：信任机制" class="headerlink" title="争议二：信任机制"></a>争议二：信任机制</h3><p>区块链的目的之一：在互不信任的实体之间建立共识。有人认为在去中心化的世界里，是伪命题</p>
+<ul>
+<li>中心化与去中心化并不是界限分明的</li>
+<li>在一个去中心化的商业模式中，既可以有中心化的成分，也可以有去中心化的成分</li>
+<li>比特币只是一种支付方式，并不是说采用比特币为支付方式的商业模式本身也需要是去中心化的</li>
+</ul>
+<h3 id="争议三：不可篡改性"><a href="#争议三：不可篡改性" class="headerlink" title="争议三：不可篡改性"></a>争议三：不可篡改性</h3><ul>
+<li>转帐交易无法撤销，有人认为是有问题的</li>
+<li>退款并不是回滚，而是在应用层发起新的交易</li>
+</ul>
+<h3 id="争议四：缺乏法律监管"><a href="#争议四：缺乏法律监管" class="headerlink" title="争议四：缺乏法律监管"></a>争议四：缺乏法律监管</h3><p>比特币本来就不应该跟已有的支付方式进行竞争</p>
+<p>已经成熟的支付体系中加入比特币，并没有实际意义。而应该应用于现有支付方式解决的不是很好的领域。</p>
+
+    </div>
+
+    <div class="about">
+        <h1>关于本文</h1>
+        <p>本文作者 Berny Wang, 许可由 <a
+                target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+    </div>
+
+    
+        
+    
+</article>
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h4 class="title">Blog</h4>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/projects" class="item">Projects</a>
+                
+                <a href="/resume" class="item">Resume</a>
+                
+                <a href="/about" class="item">About</a>
+                
+                <a href="/atom.xml" class="item">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Projects</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/rsa-cli" class="item">RSA CLI</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/hexo-theme-cupertino" class="item">Hexo Theme Cupertino</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/a-calendar" class="item">A Calendar</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/auto-mirroring-bucket" class="item">Auto Mirroring Bucket</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Me</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/bernyw" class="item">GitHub</a>
+                
+                <a target="_blank" rel="noopener" href="https://codepen.io/bernyw" class="item">CodePen</a>
+                
+                <a target="_blank" rel="noopener" href="https://www.zhihu.com/people/ber-16-41" class="item">Patreon</a>
+                
+                <a target="_blank" rel="noopener" href="https://noc.social/@bernyw" class="item">Mastodon</a>
+                
+                <a href="mailto:mr.bernyw@outlook.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2022 Berny Wang<br >驱动由 <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+    </body>
+</html>

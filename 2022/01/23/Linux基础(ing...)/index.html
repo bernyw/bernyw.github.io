@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>Linux 基础(ing...) - Berny&#39;s blog</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+<link rel="stylesheet" href="/css/waline.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+ 
+  
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+    <body data-color-scheme="auto">
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Blog</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">主页</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-codepen nav-item-icon" href="https://codepen.io/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-patreon nav-item-icon" href="https://www.zhihu.com/people/ber-16-41" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-mastodon nav-item-icon" href="https://noc.social/@bernyw" target="_blank">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        <article class="post">
+    <div class="meta">
+        
+        <div class="date" id="date">
+            
+            <span>January</span>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <span>23,</span>
+            <span>2022</span>
+        </div>
+        
+
+        <h2 class="title">Linux 基础(ing...)</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="Linux语法"><a href="#Linux语法" class="headerlink" title="Linux语法"></a>Linux语法</h1><h3 id="EOF"><a href="#EOF" class="headerlink" title="EOF"></a>EOF</h3><blockquote>
+<p><strong>EOF</strong>是<strong>END Of File</strong>的缩写，表示<strong>自定义终止符</strong>。</p>
+</blockquote>
+<h4 id="语法格式"><a href="#语法格式" class="headerlink" title="语法格式"></a>语法格式</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;&lt;-EOF        //开始</span><br><span class="line">....</span><br><span class="line">EOF            //结束</span><br></pre></td></tr></table></figure>
+
+<h1 id="Linux常用命令"><a href="#Linux常用命令" class="headerlink" title="Linux常用命令"></a>Linux常用命令</h1><h2 id="00-目录"><a href="#00-目录" class="headerlink" title="00 目录"></a>00 目录</h2><table>
+<thead>
+<tr>
+<th align="left">命令</th>
+<th align="left">作用</th>
+<th align="left">命令</th>
+<th>作用</th>
+<th>命令</th>
+<th>作用</th>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="01-文件管理"><a href="#01-文件管理" class="headerlink" title="01 文件管理"></a>01 文件管理</h2><h3 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h3><blockquote>
+<p>AWK 是一种处理文本文件的语言，是一个强大的文本分析工具。</p>
+<p>之所以叫 AWK 是因为其取了三位创始人 Alfred Aho，Peter Weinberger, 和 Brian Kernighan 的 Family Name 的首字符。</p>
+</blockquote>
+<h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">awk [选项参数] &#x27;script&#x27; var=value file(s)</span><br><span class="line">或</span><br><span class="line">awk [选项参数] -f scriptfile var=value file(s)</span><br></pre></td></tr></table></figure>
+
+<p><strong>选项参数说明：</strong></p>
+<ul>
+<li>-F fs or –field-separator fs<br>指定输入文件折分隔符，fs是一个字符串或者是一个正则表达式，如-F:。</li>
+<li>-v var=value or –asign var=value<br>赋值一个用户定义变量。</li>
+<li>-f scripfile or –file scriptfile<br>从脚本文件中读取awk命令。</li>
+<li>-mf nnn and -mr nnn<br>对nnn值设置内在限制，-mf选项限制分配给nnn的最大块数目；-mr选项限制记录的最大数目。这两个功能是Bell实验室版awk的扩展功能，在标准awk中不适用。</li>
+<li>-W compact or –compat, -W traditional or –traditional<br>在兼容模式下运行awk。所以gawk的行为和标准的awk完全一样，所有的awk扩展都被忽略。</li>
+<li>-W copyleft or –copyleft, -W copyright or –copyright<br>打印简短的版权信息。</li>
+<li>-W help or –help, -W usage or –usage<br>打印全部awk选项和每个选项的简短说明。</li>
+<li>-W lint or –lint<br>打印不能向传统unix平台移植的结构的警告。</li>
+<li>-W lint-old or –lint-old<br>打印关于不能向传统unix平台移植的结构的警告。</li>
+<li>-W posix<br>打开兼容模式。但有以下限制，不识别：/x、函数关键字、func、换码序列以及当fs是一个空格时，将新行作为一个域分隔符；操作符<strong>和</strong>=不能代替^和^=；fflush无效。</li>
+<li>-W re-interval or –re-inerval<br>允许间隔正则表达式的使用，参考(grep中的Posix字符类)，如括号表达式[[:alpha:]]。</li>
+<li>-W source program-text or –source program-text<br>使用program-text作为源代码，可与-f命令混用。</li>
+<li>-W version or –version<br>打印bug报告信息的版本。</li>
+</ul>
+<h3 id="cat"><a href="#cat" class="headerlink" title="cat "></a>cat<span id="cat"> </span></h3><blockquote>
+<p>cat（英文全拼：concatenate）命令用于连接文件并打印到标准输出设备上。</p>
+</blockquote>
+<h4 id="语法格式-1"><a href="#语法格式-1" class="headerlink" title="语法格式"></a>语法格式</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat [-AbeEnstTuv] [--help] [--version] fileName</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明：</strong></p>
+<p><strong>-n 或 –number</strong>：由 1 开始对所有输出的行数编号。</p>
+<p><strong>-b 或 –number-nonblank</strong>：和 -n 相似，只不过对于空白行不编号。</p>
+<p><strong>-s 或 –squeeze-blank</strong>：当遇到有连续两行以上的空白行，就代换为一行的空白行。</p>
+<p><strong>-v 或 –show-nonprinting</strong>：使用 ^ 和 M- 符号，除了 LFD 和 TAB 之外。</p>
+<p><strong>-E 或 –show-ends</strong> : 在每行结束处显示 $。</p>
+<p><strong>-T 或 –show-tabs</strong>: 将 TAB 字符显示为 ^I。</p>
+<p><strong>-A, –show-all</strong>：等价于 -vET；</p>
+<p><strong>-e：</strong>等价于”-vE”选项；</p>
+<p><strong>-t：</strong>等价于”-vT”选项；</p>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 把 textfile1 的文档内容加上行号后输入 textfile2 这个文档里：</span></span><br><span class="line">cat -n textfile1 &gt; textfile2</span><br><span class="line"><span class="meta">#</span><span class="bash"> 把 textfile1 和 textfile2 的文档内容加上行号（空白行不加）之后将内容附加到 textfile3 文档里：</span></span><br><span class="line">cat -b textfile1 textfile2 &gt;&gt; textfile3</span><br><span class="line"><span class="meta">#</span><span class="bash"> 清空 /etc/test.txt 文档内容：</span></span><br><span class="line">cat /dev/null &gt; /etc/test.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="chmod"><a href="#chmod" class="headerlink" title="chmod"></a>chmod</h3><blockquote>
+<p>Linux chmod（英文全拼：change mode）命令是控制用户对文件的权限的命令</p>
+<p>Linux/Unix 的文件调用权限分为三级 : 文件所有者（Owner）、用户组（Group）、其它用户（Other Users）。</p>
+</blockquote>
+<p><img src="https://www.runoob.com/wp-content/uploads/2014/08/file-permissions-rwx.jpg" alt="img"></p>
+<h4 id="语法-1"><a href="#语法-1" class="headerlink" title="语法"></a>语法</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod [-cfvR] [--help] [--version] mode file...</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明：</strong></p>
+<p>mode : 权限设定字串，格式如下 :</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ugoa...][[+-=][rwxX]...][,...]</span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<ul>
+<li>u 表示该文件的拥有者，g 表示与该文件的拥有者属于同一个群体(group)者，o 表示其他以外的人，a 表示这三者皆是。</li>
+<li>+ 表示增加权限、- 表示取消权限、= 表示唯一设定权限。</li>
+<li>r 表示可读取，w 表示可写入，x 表示可执行，X 表示只有当该文件是个子目录或者该文件已经被设定过为可执行。</li>
+</ul>
+<h4 id="符号模式"><a href="#符号模式" class="headerlink" title="符号模式"></a>符号模式</h4><p>使用符号模式可以设置多个项目：who（用户类型），operator（操作符）和 permission（权限），每个项目的设置可以用逗号隔开。 命令 chmod 将修改 who 指定的用户类型对文件的访问权限，用户类型由一个或者多个字母在 who 的位置来说明，如 who 的符号模式表所示:</p>
+<table>
+<thead>
+<tr>
+<th align="left">who</th>
+<th align="left">用户类型</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>u</code></td>
+<td align="left">user</td>
+<td align="left">文件所有者</td>
+</tr>
+<tr>
+<td align="left"><code>g</code></td>
+<td align="left">group</td>
+<td align="left">文件所有者所在组</td>
+</tr>
+<tr>
+<td align="left"><code>o</code></td>
+<td align="left">others</td>
+<td align="left">所有其他用户</td>
+</tr>
+<tr>
+<td align="left"><code>a</code></td>
+<td align="left">all</td>
+<td align="left">所有用户, 相当于 <em>ugo</em></td>
+</tr>
+</tbody></table>
+<p>operator 的符号模式表:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Operator</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>+</code></td>
+<td align="left">为指定的用户类型增加权限</td>
+</tr>
+<tr>
+<td align="left"><code>-</code></td>
+<td align="left">去除指定用户类型的权限</td>
+</tr>
+<tr>
+<td align="left"><code>=</code></td>
+<td align="left">设置指定用户权限的设置，即将用户类型的所有权限重新设置</td>
+</tr>
+</tbody></table>
+<p>permission 的符号模式表:</p>
+<table>
+<thead>
+<tr>
+<th align="left">模式</th>
+<th align="left">名字</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>r</code></td>
+<td align="left">读</td>
+<td align="left">设置为可读权限</td>
+</tr>
+<tr>
+<td align="left"><code>w</code></td>
+<td align="left">写</td>
+<td align="left">设置为可写权限</td>
+</tr>
+<tr>
+<td align="left"><code>x</code></td>
+<td align="left">执行权限</td>
+<td align="left">设置为可执行权限</td>
+</tr>
+<tr>
+<td align="left"><code>X</code></td>
+<td align="left">特殊执行权限</td>
+<td align="left">只有当文件为目录文件，或者其他类型的用户有可执行权限时，才将文件权限设置可执行</td>
+</tr>
+<tr>
+<td align="left"><code>s</code></td>
+<td align="left">setuid/gid</td>
+<td align="left">当文件被执行时，根据who参数指定的用户类型设置文件的setuid或者setgid权限</td>
+</tr>
+<tr>
+<td align="left"><code>t</code></td>
+<td align="left">粘贴位</td>
+<td align="left">设置粘贴位，只有超级用户可以设置该位，只有文件所有者u可以使用该位</td>
+</tr>
+</tbody></table>
+<h4 id="实例-1"><a href="#实例-1" class="headerlink" title="实例"></a>实例</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 将文件 file1.txt 设为所有人皆可读取 :</span></span><br><span class="line">chmod ugo+r file1.txt</span><br><span class="line"><span class="meta">#</span><span class="bash"> 将文件 file1.txt 设为所有人皆可读取 :</span></span><br><span class="line">chmod a+r file1.txt</span><br><span class="line"><span class="meta">#</span><span class="bash"> 为 ex1.py 文件拥有者增加可执行权限:</span></span><br><span class="line">chmod u+x ex1.py</span><br></pre></td></tr></table></figure>
+
+<h3 id="cp"><a href="#cp" class="headerlink" title="cp"></a>cp</h3><blockquote>
+<p>Linux cp（英文全拼：copy file）命令主要用于复制文件或目录。</p>
+</blockquote>
+<h4 id="语法-2"><a href="#语法-2" class="headerlink" title="语法"></a>语法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp [options] source dest</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp [options] source... directory</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明：</strong></p>
+<ul>
+<li>-a：此选项通常在复制目录时使用，它保留链接、文件属性，并复制目录下的所有内容。其作用等于dpR参数组合。</li>
+<li>-d：复制时保留链接。这里所说的链接相当于 Windows 系统中的快捷方式。</li>
+<li>-f：覆盖已经存在的目标文件而不给出提示。</li>
+<li>-i：与 <strong>-f</strong> 选项相反，在覆盖目标文件之前给出提示，要求用户确认是否覆盖，回答 <strong>y</strong> 时目标文件将被覆盖。</li>
+<li>-p：除复制文件的内容外，还把修改时间和访问权限也复制到新文件中。</li>
+<li>-r：若给出的源文件是一个目录文件，此时将复制该目录下所有的子目录和文件。</li>
+<li>-l：不复制文件，只是生成链接文件。</li>
+</ul>
+<h4 id="实例-2"><a href="#实例-2" class="headerlink" title="实例"></a>实例</h4><p>使用指令 <strong>cp</strong> 将当前目录 <strong>test/</strong> 下的所有文件复制到新目录 <strong>newtest</strong> 下，输入如下命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cp –r test/ newtest          </span><br></pre></td></tr></table></figure>
+
+<p>注意：用户使用该指令复制目录时，必须使用参数 <strong>-r</strong> 或者 <strong>-R</strong> 。</p>
+<h3 id="find"><a href="#find" class="headerlink" title="find"></a>find</h3><blockquote>
+<p>Linux find 命令用来在指定目录下查找文件。任何位于参数之前的字符串都将被视为欲查找的目录名。如果使用该命令时，不设置任何参数，则 find 命令将在当前目录下查找子目录与文件。并且将查找到的子目录和文件全部进行显示。</p>
+</blockquote>
+<h4 id="语法-3"><a href="#语法-3" class="headerlink" title="语法"></a>语法</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find   path   -option   [   -print ]   [ -exec   -ok   command ]   &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明</strong> :</p>
+<p>find 根据下列规则判断 path 和 expression，在命令列上第一个 - ( ) , ! 之前的部份为 path，之后的是 expression。如果 path 是空字串则使用目前路径，如果 expression 是空字串则使用 -print 为预设 expression。</p>
+<p>expression 中可使用的选项有二三十个之多，在此只介绍最常用的部份。</p>
+<p>-mount, -xdev : 只检查和指定目录在同一个文件系统下的文件，避免列出其它文件系统中的文件</p>
+<p>-amin n : 在过去 n 分钟内被读取过</p>
+<p>-anewer file : 比文件 file 更晚被读取过的文件</p>
+<p>-atime n : 在过去n天内被读取过的文件</p>
+<p>-cmin n : 在过去 n 分钟内被修改过</p>
+<p>-cnewer file :比文件 file 更新的文件</p>
+<p>-ctime n : 在过去n天内被修改过的文件</p>
+<p>-empty : 空的文件-gid n or -group name : gid 是 n 或是 group 名称是 name</p>
+<p>-ipath p, -path p : 路径名称符合 p 的文件，ipath 会忽略大小写</p>
+<p>-name name, -iname name : 文件名称符合 name 的文件。iname 会忽略大小写</p>
+<p>-size n : 文件大小 是 n 单位，b 代表 512 位元组的区块，c 表示字元数，k 表示 kilo bytes，w 是二个位元组。</p>
+<p>-type c : 文件类型是 c 的文件。</p>
+<p>d: 目录</p>
+<p>c: 字型装置文件</p>
+<p>b: 区块装置文件</p>
+<p>p: 具名贮列</p>
+<p>f: 一般文件</p>
+<p>l: 符号连结</p>
+<p>s: socket</p>
+<p>-pid n : process id 是 n 的文件</p>
+<p>你可以使用 ( ) 将运算式分隔，并使用下列运算。</p>
+<p>exp1 -and exp2</p>
+<p>! expr</p>
+<p>-not expr</p>
+<p>exp1 -or exp2</p>
+<p>exp1, exp2</p>
+<h4 id="实例-3"><a href="#实例-3" class="headerlink" title="实例"></a>实例</h4><p>将当前目录及其子目录下所有文件后缀为 <strong>.c</strong> 的文件列出来:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># find . -name &quot;*.c&quot;</span><br></pre></td></tr></table></figure>
+
+<p>将当前目录及其子目录中的所有文件列出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># find . -type f</span><br></pre></td></tr></table></figure>
+
+<p>将当前目录及其子目录下所有最近 20 天内更新过的文件列出:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># find . -ctime -20</span><br></pre></td></tr></table></figure>
+
+<p>查找 /var/log 目录中更改时间在 7 日以前的普通文件，并在删除之前询问它们：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># find /var/log -type f -mtime +7 -ok rm &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+
+<p>查找当前目录中文件属主具有读、写权限，并且文件所属组的用户和其他用户具有读权限的文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># find . -type f -perm 644 -exec ls -l &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+
+<p>查找系统中所有文件长度为 0 的普通文件，并列出它们的完整路径：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> find / -<span class="built_in">type</span> f -size 0 -<span class="built_in">exec</span> ls -l &#123;&#125; \;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="rm"><a href="#rm" class="headerlink" title="rm"></a>rm</h3><blockquote>
+<p>Linux rm（英文全拼：remove）命令用于删除一个文件或者目录。</p>
+</blockquote>
+<h4 id="语法-4"><a href="#语法-4" class="headerlink" title="语法"></a>语法</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm [options] name...</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数</strong>：</p>
+<ul>
+<li>-i 删除前逐一询问确认。</li>
+<li>-f 即使原档案属性设为唯读，亦直接删除，无需逐一确认。</li>
+<li>-r 将目录及以下之档案亦逐一删除。</li>
+</ul>
+<h3 id="read"><a href="#read" class="headerlink" title="read"></a>read</h3><blockquote>
+<p>Linux read命令用于从标准输入读取数值。</p>
+<p>read 内部命令被用来从标准输入读取单行数据。这个命令可以用来读取键盘输入，当使用重定向的时候，可以读取文件中的一行数据。</p>
+</blockquote>
+<h4 id="语法-5"><a href="#语法-5" class="headerlink" title="语法"></a>语法</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">read [-ers] [-a aname] [-d delim] [-i text] [-n nchars] [-N nchars] [-p prompt] [-t timeout] [-u fd] [name ...]</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明:</strong></p>
+<ul>
+<li>-a 后跟一个变量，该变量会被认为是个数组，然后给其赋值，默认是以空格为分割符。</li>
+<li>-d 后面跟一个标志符，其实只有其后的第一个字符有用，作为结束的标志。</li>
+<li>-p 后面跟提示信息，即在输入前打印提示信息。</li>
+<li>-e 在输入的时候可以使用命令补全功能。</li>
+<li>-n 后跟一个数字，定义输入文本的长度，很实用。</li>
+<li>-r 屏蔽\，如果没有该选项，则\作为一个转义字符，有的话 \就是个正常的字符了。</li>
+<li>-s 安静模式，在输入字符时不再屏幕上显示，例如login时输入密码。</li>
+<li>-t 后面跟秒数，定义输入字符的等待时间。</li>
+<li>-u 后面跟fd，从文件描述符中读入，该文件描述符可以是exec新开启的。</li>
+</ul>
+<h3 id="touch"><a href="#touch" class="headerlink" title="touch"></a>touch</h3><blockquote>
+<p>Linux touch命令用于修改文件或者目录的时间属性，包括存取时间和更改时间。若文件不存在，系统会建立一个新的文件。</p>
+<p>ls -l 可以显示档案的时间记录。</p>
+</blockquote>
+<h4 id="语法-6"><a href="#语法-6" class="headerlink" title="语法"></a>语法</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch [-acfm][-d&lt;日期时间&gt;][-r&lt;参考文件或目录&gt;] [-t&lt;日期时间&gt;][--help][--version][文件或目录…]</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明</strong>：</p>
+<ul>
+<li>a 改变档案的读取时间记录。</li>
+<li>m 改变档案的修改时间记录。</li>
+<li>c 假如目的档案不存在，不会建立新的档案。与 –no-create 的效果一样。</li>
+<li>f 不使用，是为了与其他 unix 系统的相容性而保留。</li>
+<li>r 使用参考档的时间记录，与 –file 的效果一样。</li>
+<li>d 设定时间与日期，可以使用各种不同的格式。</li>
+<li>t 设定档案的时间记录，格式与 date 指令相同。</li>
+<li>–no-create 不会建立新档案。</li>
+<li>–help 列出指令格式。</li>
+<li>–version 列出版本讯息。</li>
+</ul>
+<h3 id="umask"><a href="#umask" class="headerlink" title="umask"></a>umask</h3><blockquote>
+<p>Linux umask命令指定在建立文件时预设的权限掩码。</p>
+<p>umask可用来设定[权限掩码]。[权限掩码]是由3个八进制的数字所组成，将现有的存取权限减掉权限掩码后，即可产生建立文件时预设的权限。</p>
+</blockquote>
+<h5 id="语法-7"><a href="#语法-7" class="headerlink" title="语法"></a>语法</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">umask [-S][权限掩码]</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明</strong>：</p>
+<p>-S 　以文字的方式来表示权限掩码。</p>
+<h4 id="实例-4"><a href="#实例-4" class="headerlink" title="实例"></a>实例</h4><p>使用指令”umask”查看当前权限掩码，则输入下面的命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">umask</span>                         <span class="comment">#获取当前权限掩码</span></span> </span><br></pre></td></tr></table></figure>
+
+<p>执行上面的指令后，输出信息如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0022</span><br></pre></td></tr></table></figure>
+
+<p>接下来，使用指令”mkdir”创建一个目录，并使用指令”ls”获取该目录的详细信息，输入命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir test1                       <span class="comment">#创建目录</span></span>  </span><br><span class="line"><span class="meta">$</span><span class="bash"> ls –d –l test1/                   <span class="comment">#显示目录的详细信息</span></span>  </span><br></pre></td></tr></table></figure>
+
+<p>执行上面的命令后，将显示新创建目录的详细信息，如下所示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drwxr-xr-x 2 rootlocal rootlocal 4096 2011-9-19 21:46 test1/ </span><br></pre></td></tr></table></figure>
+
+<p>注意：在上面的输出信息中，”drwxr-xr-x”=”777-022=755”。</p>
+<h2 id="02-文档编辑"><a href="#02-文档编辑" class="headerlink" title="02 文档编辑"></a>02 文档编辑</h2><h3 id="expr"><a href="#expr" class="headerlink" title="expr"></a>expr</h3><blockquote>
+<p>expr命令是一个手工命令行计数器，用于在UNIX/LINUX下求表达式变量的值，一般用于整数值，也可用于字符串。</p>
+</blockquote>
+<p>语法</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expr 表达式</span><br></pre></td></tr></table></figure>
+
+<p><strong>表达式说明:</strong></p>
+<ul>
+<li>用空格隔开每个项；</li>
+<li>用反斜杠 *<em>\*</em> 放在 shell 特定的字符前面；</li>
+<li>对包含空格和其他特殊字符的字符串要用引号括起来</li>
+</ul>
+<h3 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h3><blockquote>
+<p>Linux grep 命令用于查找文件里符合条件的字符串。</p>
+<p>grep 指令用于查找内容包含指定的范本样式的文件，如果发现某文件的内容符合所指定的范本样式，预设 grep 指令会把含有范本样式的那一列显示出来。若不指定任何文件名称，或是所给予的文件名为 **-**，则 grep 指令会从标准输入设备读取数据。</p>
+</blockquote>
+<h4 id="语法-8"><a href="#语法-8" class="headerlink" title="语法"></a>语法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep [-abcEFGhHilLnqrsvVwxy][-A&lt;显示行数&gt;][-B&lt;显示列数&gt;][-C&lt;显示列数&gt;][-d&lt;进行动作&gt;][-e&lt;范本样式&gt;][-f&lt;范本文件&gt;][--help][范本样式][文件或目录...]</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数</strong>：</p>
+<ul>
+<li><strong>-a 或 –text</strong> : 不要忽略二进制的数据。</li>
+<li><strong>-A&lt;显示行数&gt; 或 –after-context=&lt;显示行数&gt;</strong> : 除了显示符合范本样式的那一列之外，并显示该行之后的内容。</li>
+<li><strong>-b 或 –byte-offset</strong> : 在显示符合样式的那一行之前，标示出该行第一个字符的编号。</li>
+<li><strong>-B&lt;显示行数&gt; 或 –before-context=&lt;显示行数&gt;</strong> : 除了显示符合样式的那一行之外，并显示该行之前的内容。</li>
+<li><strong>-c 或 –count</strong> : 计算符合样式的列数。</li>
+<li><strong>-C&lt;显示行数&gt; 或 –context=&lt;显示行数&gt;或-&lt;显示行数&gt;</strong> : 除了显示符合样式的那一行之外，并显示该行之前后的内容。</li>
+<li><strong>-d &lt;动作&gt; 或 –directories=&lt;动作&gt;</strong> : 当指定要查找的是目录而非文件时，必须使用这项参数，否则grep指令将回报信息并停止动作。</li>
+<li><strong>-e&lt;范本样式&gt; 或 –regexp=&lt;范本样式&gt;</strong> : 指定字符串做为查找文件内容的样式。</li>
+<li><strong>-E 或 –extended-regexp</strong> : 将样式为延伸的正则表达式来使用。</li>
+<li><strong>-f&lt;规则文件&gt; 或 –file=&lt;规则文件&gt;</strong> : 指定规则文件，其内容含有一个或多个规则样式，让grep查找符合规则条件的文件内容，格式为每行一个规则样式。</li>
+<li><strong>-F 或 –fixed-regexp</strong> : 将样式视为固定字符串的列表。</li>
+<li><strong>-G 或 –basic-regexp</strong> : 将样式视为普通的表示法来使用。</li>
+<li><strong>-h 或 –no-filename</strong> : 在显示符合样式的那一行之前，不标示该行所属的文件名称。</li>
+<li><strong>-H 或 –with-filename</strong> : 在显示符合样式的那一行之前，表示该行所属的文件名称。</li>
+<li><strong>-i 或 –ignore-case</strong> : 忽略字符大小写的差别。</li>
+<li><strong>-l 或 –file-with-matches</strong> : 列出文件内容符合指定的样式的文件名称。</li>
+<li><strong>-L 或 –files-without-match</strong> : 列出文件内容不符合指定的样式的文件名称。</li>
+<li><strong>-n 或 –line-number</strong> : 在显示符合样式的那一行之前，标示出该行的列数编号。</li>
+<li><strong>-o 或 –only-matching</strong> : 只显示匹配PATTERN 部分。</li>
+<li><strong>-q 或 –quiet或–silent</strong> : 不显示任何信息。</li>
+<li><strong>-r 或 –recursive</strong> : 此参数的效果和指定”-d recurse”参数相同。</li>
+<li><strong>-s 或 –no-messages</strong> : 不显示错误信息。</li>
+<li><strong>-v 或 –invert-match</strong> : 显示不包含匹配文本的所有行。</li>
+<li><strong>-V 或 –version</strong> : 显示版本信息。</li>
+<li><strong>-w 或 –word-regexp</strong> : 只显示全字符合的列。</li>
+<li><strong>-x –line-regexp</strong> : 只显示全列符合的列。</li>
+<li><strong>-y</strong> : 此参数的效果和指定”-i”参数相同。</li>
+</ul>
+<h3 id="let"><a href="#let" class="headerlink" title="let"></a>let</h3><blockquote>
+<p>let 命令是 BASH 中用于计算的工具，用于执行一个或多个表达式，变量计算中不需要加上 $ 来表示变量。如果表达式中包含了空格或其他特殊字符，则必须引起来。</p>
+</blockquote>
+<h3 id="语法格式-2"><a href="#语法格式-2" class="headerlink" title="语法格式"></a>语法格式</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let arg [arg ...]</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明：</strong></p>
+<p>arg：要执行的表达式</p>
+<p><strong>实例：</strong></p>
+<p>自加操作：<strong>let no++</strong></p>
+<p>自减操作：<strong>let no–</strong></p>
+<p>简写形式 <strong>let no+=10，let no-=20</strong>，分别等同于 <strong>let no=no+10，let no=no-20</strong>。</p>
+<h2 id="03-文件传输"><a href="#03-文件传输" class="headerlink" title="03 文件传输"></a>03 文件传输</h2><h2 id="04-磁盘管理"><a href="#04-磁盘管理" class="headerlink" title="04 磁盘管理"></a>04 磁盘管理</h2><h3 id="cd"><a href="#cd" class="headerlink" title="cd"></a>cd</h3><blockquote>
+<p>Linux cd（英文全拼：change directory）命令用于切换当前工作目录。</p>
+<p>其中 dirName 表示法可为绝对路径或相对路径。若目录名称省略，则变换至使用者的 home 目录 (也就是刚 login 时所在的目录)。</p>
+<p>另外，**~** 也表示为 home 目录 的意思， <strong>.</strong> 则是表示目前所在的目录， <strong>..</strong> 则表示目前目录位置的上一层目录。</p>
+</blockquote>
+<h4 id="语法-9"><a href="#语法-9" class="headerlink" title="语法"></a>语法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd [dirName]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>dirName：要切换的目标目录。</li>
+</ul>
+<h3 id="df"><a href="#df" class="headerlink" title="df"></a>df</h3><blockquote>
+<p>Linux df（英文全拼：disk free） 命令用于显示目前在 Linux 系统上的文件系统磁盘使用情况统计。</p>
+</blockquote>
+<h4 id="语法-10"><a href="#语法-10" class="headerlink" title="语法"></a>语法</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df [选项]... [FILE]...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>文件-a, –all 包含所有的具有 0 Blocks 的文件系统</li>
+<li>文件–block-size={SIZE} 使用 {SIZE} 大小的 Blocks</li>
+<li>文件-h, –human-readable 使用人类可读的格式(预设值是不加这个选项的…)</li>
+<li>文件-H, –si 很像 -h, 但是用 1000 为单位而不是用 1024</li>
+<li>文件-i, –inodes 列出 inode 资讯，不列出已使用 block</li>
+<li>文件-k, –kilobytes 就像是 –block-size=1024</li>
+<li>文件-l, –local 限制列出的文件结构</li>
+<li>文件-m, –megabytes 就像 –block-size=1048576</li>
+<li>文件–no-sync 取得资讯前不 sync (预设值)</li>
+<li>文件-P, –portability 使用 POSIX 输出格式(无论再长都是一行)</li>
+<li>文件–sync 在取得资讯前 sync</li>
+<li>文件-t, –type=TYPE 限制列出文件系统的 TYPE</li>
+<li>文件-T, –print-type 显示文件系统的形式</li>
+<li>文件-x, –exclude-type=TYPE 限制列出文件系统不要显示 TYPE</li>
+<li>文件-v (忽略)</li>
+<li>文件–help 显示这个帮手并且离开</li>
+<li>文件–version 输出版本资讯并且离开</li>
+</ul>
+<h3 id="pwd"><a href="#pwd" class="headerlink" title="pwd"></a>pwd</h3><blockquote>
+<p>Linux pwd（英文全拼：print work directory） 命令用于显示工作目录。</p>
+<p>执行 pwd 指令可立刻得知您目前所在的工作目录的绝对路径名称。</p>
+</blockquote>
+<h4 id="语法-11"><a href="#语法-11" class="headerlink" title="语法"></a>语法</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pwd [--help][--version]</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明：</strong></p>
+<ul>
+<li>–help 在线帮助。</li>
+<li>–version 显示版本信息。</li>
+</ul>
+<h4 id="实例-5"><a href="#实例-5" class="headerlink" title="实例"></a>实例</h4><p>查看当前所在目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pwd</span><br><span class="line"></span><br><span class="line">/root/test           #输出结果</span><br></pre></td></tr></table></figure>
+
+<h3 id="mkdir"><a href="#mkdir" class="headerlink" title="mkdir"></a>mkdir</h3><blockquote>
+<p>Linux mkdir（英文全拼：make directory）命令用于创建目录。</p>
+</blockquote>
+<h4 id="语法-12"><a href="#语法-12" class="headerlink" title="语法"></a>语法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir [-p] dirName</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明</strong>：</p>
+<ul>
+<li>-p 确保目录名称存在，不存在的就建一个。</li>
+</ul>
+<h4 id="实例-6"><a href="#实例-6" class="headerlink" title="实例"></a>实例</h4><p>在工作目录下，建立一个名为 runoob 的子目录 :</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir runoob</span><br></pre></td></tr></table></figure>
+
+<p>在工作目录下的 runoob2 目录中，建立一个名为 test 的子目录。</p>
+<p>若 runoob2 目录原本不存在，则建立一个。（注：本例若不加 -p 参数，且原本 runoob2 目录不存在，则产生错误。）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p runoob2/test</span><br></pre></td></tr></table></figure>
+
+<h2 id="05-磁盘维护"><a href="#05-磁盘维护" class="headerlink" title="05 磁盘维护"></a>05 磁盘维护</h2><h2 id="06-网络通讯"><a href="#06-网络通讯" class="headerlink" title="06 网络通讯"></a>06 网络通讯</h2><h3 id="ping"><a href="#ping" class="headerlink" title="ping "></a>ping<span id="ping"> </span></h3><blockquote>
+<p>Linux ping 命令用于检测主机。</p>
+<p>执行 ping 指令会使用 ICMP 传输协议，发出要求回应的信息，若远端主机的网络功能没有问题，就会回应该信息，因而得知该主机运作正常。</p>
+</blockquote>
+<h4 id="语法-13"><a href="#语法-13" class="headerlink" title="语法"></a>语法</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ping [-dfnqrRv][-c&lt;完成次数&gt;][-i&lt;间隔秒数&gt;][-I&lt;网络界面&gt;][-l&lt;前置载入&gt;][-p&lt;范本样式&gt;][-s&lt;数据包大小&gt;][-t&lt;存活数值&gt;][主机名称或IP地址]</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明</strong>：</p>
+<ul>
+<li>-d 使用Socket的SO_DEBUG功能。</li>
+<li>-c &lt;完成次数&gt; 设置完成要求回应的次数。</li>
+<li>-f 极限检测。</li>
+<li>-i&lt;间隔秒数&gt; 指定收发信息的间隔时间。</li>
+<li>-I&lt;网络界面&gt; 使用指定的网络接口送出数据包。</li>
+<li>-l&lt;前置载入&gt; 设置在送出要求信息之前，先行发出的数据包。</li>
+<li>-n 只输出数值。</li>
+<li>-p&lt;范本样式&gt; 设置填满数据包的范本样式。</li>
+<li>-q 不显示指令执行过程，开头和结尾的相关信息除外。</li>
+<li>-r 忽略普通的Routing Table，直接将数据包送到远端主机上。</li>
+<li>-R 记录路由过程。</li>
+<li>-s&lt;数据包大小&gt; 设置数据包的大小。</li>
+<li>-t&lt;存活数值&gt; 设置存活数值TTL的大小。</li>
+<li>-v 详细显示指令的执行过程。</li>
+<li>-w <deadline> 在 deadline 秒后退出。</li>
+<li>-W <timeout> 在等待 timeout 秒后开始执行。</li>
+</ul>
+<h2 id="07-系统管理"><a href="#07-系统管理" class="headerlink" title="07 系统管理"></a>07 系统管理</h2><h3 id="free"><a href="#free" class="headerlink" title="free"></a>free</h3><blockquote>
+<p>Linux free命令用于显示内存状态。</p>
+<p>free指令会显示内存的使用情况，包括实体内存，虚拟的交换文件内存，共享内存区段，以及系统核心使用的缓冲区等。</p>
+</blockquote>
+<h4 id="语法-14"><a href="#语法-14" class="headerlink" title="语法"></a>语法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">free [-bkmotV][-s &lt;间隔秒数&gt;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明</strong>：</p>
+<ul>
+<li>-b 　以Byte为单位显示内存使用情况。</li>
+<li>-k 　以KB为单位显示内存使用情况。</li>
+<li>-m 　以MB为单位显示内存使用情况。</li>
+<li>-h 　以合适的单位显示内存使用情况，最大为三位数，自动计算对应的单位值。</li>
+<li>-o 　不显示缓冲区调节列。</li>
+<li>-s&lt;间隔秒数&gt; 　持续观察内存使用状况。</li>
+<li>-t 　显示内存总和列。</li>
+<li>-V 　显示版本信息。</li>
+</ul>
+<h3 id="su"><a href="#su" class="headerlink" title="su"></a>su</h3><blockquote>
+<p>Linux su（英文全拼：switch user）命令用于变更为其他使用者的身份，除 root 外，需要键入该使用者的密码。</p>
+</blockquote>
+<h4 id="语法-15"><a href="#语法-15" class="headerlink" title="语法"></a>语法</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su [-fmp] [-c command] [-s shell] [--help] [--version] [-] [USER [ARG]]</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明：</strong></p>
+<ul>
+<li>-f 或 –fast 不必读启动档（如 csh.cshrc 等），仅用于 csh 或 tcsh</li>
+<li>-m -p 或 –preserve-environment 执行 su 时不改变环境变数</li>
+<li>-c command 或 –command=command 变更为帐号为 USER 的使用者并执行指令（command）后再变回原来使用者</li>
+<li>-s shell 或 –shell=shell 指定要执行的 shell （bash csh tcsh 等），预设值为 /etc/passwd 内的该使用者（USER） shell</li>
+<li>–help 显示说明文件</li>
+<li>–version 显示版本资讯</li>
+<li>- -l 或 –login 这个参数加了之后，就好像是重新 login 为该使用者一样，大部份环境变数（HOME SHELL USER等等）都是以该使用者（USER）为主，并且工作目录也会改变，如果没有指定 USER ，内定是 root</li>
+<li>USER 欲变更的使用者帐号</li>
+<li>ARG 传入新的 shell 参数</li>
+</ul>
+<h4 id="实例-7"><a href="#实例-7" class="headerlink" title="实例"></a>实例</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 变更帐号为 root 并在执行 ls 指令后退出变回原使用者</span></span><br><span class="line">su -c ls root</span><br><span class="line"><span class="meta">#</span><span class="bash"> 变更帐号为 root 并传入 -f 参数给新执行的 shell</span></span><br><span class="line">su root -f</span><br><span class="line"><span class="meta">#</span><span class="bash"> 变更帐号为 clsung 并改变工作目录至 clsung 的家目录（home dir）</span></span><br><span class="line">su - clsung</span><br><span class="line"><span class="meta">#</span><span class="bash"> 切换用户</span></span><br><span class="line">hnlinux@runoob.com:~$ whoami //显示当前用户</span><br><span class="line">hnlinux</span><br><span class="line">hnlinux@runoob.com:~$ pwd //显示当前目录</span><br><span class="line">/home/hnlinux</span><br><span class="line">hnlinux@runoob.com:~$ su root //切换到root用户</span><br><span class="line">密码： </span><br><span class="line">root@runoob.com:/home/hnlinux# whoami </span><br><span class="line">root</span><br><span class="line">root@runoob.com:/home/hnlinux# pwd</span><br><span class="line">/home/hnlinux</span><br></pre></td></tr></table></figure>
+
+<h3 id="screen"><a href="#screen" class="headerlink" title="screen"></a>screen</h3><blockquote>
+<p>Linux screen命令用于多重视窗管理程序。</p>
+<p>screen为多重视窗管理程序。此处所谓的视窗，是指一个全屏幕的文字模式画面。通常只有在使用telnet登入主机或是使用老式的终端机时，才有可能用到screen程序。</p>
+</blockquote>
+<h4 id="语法-16"><a href="#语法-16" class="headerlink" title="语法"></a>语法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">screen [-AmRvx -ls -wipe][-d &lt;作业名称&gt;][-h &lt;行数&gt;][-r &lt;作业名称&gt;][-s &lt;shell&gt;][-S &lt;作业名称&gt;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明：</strong></p>
+<ul>
+<li>-A 　将所有的视窗都调整为目前终端机的大小。</li>
+<li>-d&lt;作业名称&gt; 　将指定的screen作业离线。</li>
+<li>-h&lt;行数&gt; 　指定视窗的缓冲区行数。</li>
+<li>-m 　即使目前已在作业中的screen作业，仍强制建立新的screen作业。</li>
+<li>-r&lt;作业名称&gt; 　恢复离线的screen作业。</li>
+<li>-R 　先试图恢复离线的作业。若找不到离线的作业，即建立新的screen作业。</li>
+<li>-s<shell> 　指定建立新视窗时，所要执行的shell。</li>
+<li>-S&lt;作业名称&gt; 　指定screen作业的名称。</li>
+<li>-v 　显示版本信息。</li>
+<li>-x 　恢复之前离线的screen作业。</li>
+<li>-ls或–list 　显示目前所有的screen作业。</li>
+<li>-wipe 　检查目前所有的screen作业，并删除已经无法使用的screen作业。</li>
+</ul>
+<h4 id="实例-8"><a href="#实例-8" class="headerlink" title="实例"></a>实例</h4><p>创建 screen 终端</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># screen //创建 screen 终端</span><br></pre></td></tr></table></figure>
+
+<p>创建 screen 终端 并执行任务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># screen vi ~/main.c //创建 screen 终端 ，并执行 vi命令</span><br></pre></td></tr></table></figure>
+
+<p>离开 screen 终端</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># screen vi ~/main.c //创建 screen 终端 ，并执行 vi命令</span><br><span class="line"></span><br><span class="line">#include </span><br><span class="line"></span><br><span class="line">main ()</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&quot;~/mail.c&quot;       0,0-1    </span><br><span class="line"></span><br><span class="line">在 screen 终端 下 按下 Ctrl+a d键</span><br></pre></td></tr></table></figure>
+
+<p>重新连接离开的 screen 终端</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># screen -ls  //显示已创建的screen终端 </span><br><span class="line">There are screens on:</span><br><span class="line">2433.pts-3.linux    (2013年10月20日 16时48分59秒)    (Detached)</span><br><span class="line">2428.pts-3.linux    (2013年10月20日 16时48分05秒)    (Detached)</span><br><span class="line">2284.pts-3.linux    (2013年10月20日 16时14分55秒)    (Detached)</span><br><span class="line">2276.pts-3.linux    (2013年10月20日 16时13分18秒)    (Detached)</span><br><span class="line">4 Sockets in /var/run/screen/S-root.</span><br><span class="line"></span><br><span class="line"># screen -r 2276 //连接 screen_id 为 2276 的 screen终端</span><br></pre></td></tr></table></figure>
+
+<h3 id="usermod"><a href="#usermod" class="headerlink" title="usermod"></a>usermod</h3><blockquote>
+<p>Linux usermod命令用于修改用户帐号。</p>
+<p>usermod可用来修改用户帐号的各项设定。</p>
+</blockquote>
+<h4 id="语法-17"><a href="#语法-17" class="headerlink" title="语法"></a>语法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usermod [-LU][-c &lt;备注&gt;][-d &lt;登入目录&gt;][-e &lt;有效期限&gt;][-f &lt;缓冲天数&gt;][-g &lt;群组&gt;][-G &lt;群组&gt;][-l &lt;帐号名称&gt;][-s &lt;shell&gt;][-u &lt;uid&gt;][用户帐号]</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明：</strong></p>
+<ul>
+<li>-c&lt;备注&gt; 　修改用户帐号的备注文字。</li>
+<li>-d登入目录&gt; 　修改用户登入时的目录。</li>
+<li>-e&lt;有效期限&gt; 　修改帐号的有效期限。</li>
+<li>-f&lt;缓冲天数&gt; 　修改在密码过期后多少天即关闭该帐号。</li>
+<li>-g&lt;群组&gt; 　修改用户所属的群组。</li>
+<li>-G&lt;群组&gt; 　修改用户所属的附加群组。</li>
+<li>-l&lt;帐号名称&gt; 　修改用户帐号名称。</li>
+<li>-L 　锁定用户密码，使密码无效。</li>
+<li>-s<shell> 　修改用户登入后所使用的shell。</li>
+<li>-u<uid> 　修改用户ID。</li>
+<li>-U 　解除密码锁定。</li>
+</ul>
+<h4 id="实例-9"><a href="#实例-9" class="headerlink" title="实例"></a>实例</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 更改登录目录</span></span><br><span class="line">usermod -d /home/hnlinux root</span><br><span class="line"><span class="meta">#</span><span class="bash"> 改变用户的uid</span></span><br><span class="line">usermod -u 777 root</span><br></pre></td></tr></table></figure>
+
+<h2 id="08-系统设置"><a href="#08-系统设置" class="headerlink" title="08 系统设置"></a>08 系统设置</h2><h3 id="rpm"><a href="#rpm" class="headerlink" title="rpm"></a>rpm</h3><blockquote>
+<p>Linux rpm 命令用于管理套件。</p>
+<p>rpm（英文全拼：redhat package manager） 原本是 Red Hat Linux 发行版专门用来管理 Linux 各项套件的程序，由于它遵循 GPL 规则且功能强大方便，因而广受欢迎。逐渐受到其他发行版的采用。RPM 套件管理方式的出现，让 Linux 易于安装，升级，间接提升了 Linux 的适用度。</p>
+</blockquote>
+<h4 id="语法-18"><a href="#语法-18" class="headerlink" title="语法"></a>语法</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm [-acdhilqRsv][-b&lt;完成阶段&gt;&lt;套间档&gt;+][-e&lt;套件挡&gt;][-f&lt;文件&gt;+][-i&lt;套件档&gt;][-p&lt;套件档&gt;＋][-U&lt;套件档&gt;][-vv][--addsign&lt;套件档&gt;+][--allfiles][--allmatches][--badreloc][--buildroot&lt;根目录&gt;][--changelog][--checksig&lt;套件档&gt;+][--clean][--dbpath&lt;数据库目录&gt;][--dump][--excludedocs][--excludepath&lt;排除目录&gt;][--force][--ftpproxy&lt;主机名称或IP地址&gt;][--ftpport&lt;通信端口&gt;][--help][--httpproxy&lt;主机名称或IP地址&gt;][--httpport&lt;通信端口&gt;][--ignorearch][--ignoreos][--ignoresize][--includedocs][--initdb][justdb][--nobulid][--nodeps][--nofiles][--nogpg][--nomd5][--nopgp][--noorder][--noscripts][--notriggers][--oldpackage][--percent][--pipe&lt;执行指令&gt;][--prefix&lt;目的目录&gt;][--provides][--queryformat&lt;档头格式&gt;][--querytags][--rcfile&lt;配置档&gt;][--rebulid&lt;套件档&gt;][--rebuliddb][--recompile&lt;套件档&gt;][--relocate&lt;原目录&gt;=&lt;新目录&gt;][--replacefiles][--replacepkgs][--requires][--resign&lt;套件档&gt;+][--rmsource][--rmsource&lt;文件&gt;][--root&lt;根目录&gt;][--scripts][--setperms][--setugids][--short-circuit][--sign][--target=&lt;安装平台&gt;+][--test][--timecheck&lt;检查秒数&gt;][--triggeredby&lt;套件档&gt;][--triggers][--verify][--version][--whatprovides&lt;功能特性&gt;][--whatrequires&lt;功能特性&gt;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明：</strong></p>
+<ul>
+<li>-a 　查询所有套件。</li>
+<li>-b&lt;完成阶段&gt;&lt;套件档&gt;+或-t &lt;完成阶段&gt;&lt;套件档&gt;+ 　设置包装套件的完成阶段，并指定套件档的文件名称。</li>
+<li>-c 　只列出组态配置文件，本参数需配合”-l”参数使用。</li>
+<li>-d 　只列出文本文件，本参数需配合”-l”参数使用。</li>
+<li>-e&lt;套件档&gt;或–erase&lt;套件档&gt; 　删除指定的套件。</li>
+<li>-f&lt;文件&gt;+ 　查询拥有指定文件的套件。</li>
+<li>-h或–hash 　套件安装时列出标记。</li>
+<li>-i 　显示套件的相关信息。</li>
+<li>-i&lt;套件档&gt;或–install&lt;套件档&gt; 　安装指定的套件档。</li>
+<li>-l 　显示套件的文件列表。</li>
+<li>-p&lt;套件档&gt;+ 　查询指定的RPM套件档。</li>
+<li>-q 　使用询问模式，当遇到任何问题时，rpm指令会先询问用户。</li>
+<li>-R 　显示套件的关联性信息。</li>
+<li>-s 　显示文件状态，本参数需配合”-l”参数使用。</li>
+<li>-U&lt;套件档&gt;或–upgrade&lt;套件档&gt; 升级指定的套件档。</li>
+<li>-v 　显示指令执行过程。</li>
+<li>-vv 　详细显示指令执行过程，便于排错。</li>
+<li>-addsign&lt;套件档&gt;+ 　在指定的套件里加上新的签名认证。</li>
+<li>–allfiles 　安装所有文件。</li>
+<li>–allmatches 　删除符合指定的套件所包含的文件。</li>
+<li>–badreloc 　发生错误时，重新配置文件。</li>
+<li>–buildroot&lt;根目录&gt; 　设置产生套件时，欲当作根目录的目录。</li>
+<li>–changelog 　显示套件的更改记录。</li>
+<li>–checksig&lt;套件档&gt;+ 　检验该套件的签名认证。</li>
+<li>–clean 　完成套件的包装后，删除包装过程中所建立的目录。</li>
+<li>–dbpath&lt;数据库目录&gt; 　设置欲存放RPM数据库的目录。</li>
+<li>–dump 　显示每个文件的验证信息。本参数需配合”-l”参数使用。</li>
+<li>–excludedocs 　安装套件时，不要安装文件。</li>
+<li>–excludepath&lt;排除目录&gt; 　忽略在指定目录里的所有文件。</li>
+<li>–force 　强行置换套件或文件。</li>
+<li>–ftpproxy&lt;主机名称或IP地址&gt; 　指定FTP代理服务器。</li>
+<li>–ftpport&lt;通信端口&gt; 　设置FTP服务器或代理服务器使用的通信端口。</li>
+<li>–help 　在线帮助。</li>
+<li>–httpproxy&lt;主机名称或IP地址&gt; 　指定HTTP代理服务器。</li>
+<li>–httpport&lt;通信端口&gt; 　设置HTTP服务器或代理服务器使用的通信端口。</li>
+<li>–ignorearch 　不验证套件档的结构正确性。</li>
+<li>–ignoreos 　不验证套件档的结构正确性。</li>
+<li>–ignoresize 　安装前不检查磁盘空间是否足够。</li>
+<li>–includedocs 　安装套件时，一并安装文件。</li>
+<li>–initdb 　确认有正确的数据库可以使用。</li>
+<li>–justdb 　更新数据库，当不变动任何文件。</li>
+<li>–nobulid 　不执行任何完成阶段。</li>
+<li>–nodeps 　不验证套件档的相互关联性。</li>
+<li>–nofiles 　不验证文件的属性。</li>
+<li>–nogpg 　略过所有GPG的签名认证。</li>
+<li>–nomd5 　不使用MD5编码演算确认文件的大小与正确性。</li>
+<li>–nopgp 　略过所有PGP的签名认证。</li>
+<li>–noorder 　不重新编排套件的安装顺序，以便满足其彼此间的关联性。</li>
+<li>–noscripts 　不执行任何安装Script文件。</li>
+<li>–notriggers 　不执行该套件包装内的任何Script文件。</li>
+<li>–oldpackage 　升级成旧版本的套件。</li>
+<li>–percent 　安装套件时显示完成度百分比。</li>
+<li>–pipe&lt;执行指令&gt; 　建立管道，把输出结果转为该执行指令的输入数据。</li>
+<li>–prefix&lt;目的目录&gt; 　若重新配置文件，就把文件放到指定的目录下。</li>
+<li>–provides 　查询该套件所提供的兼容度。</li>
+<li>–queryformat&lt;档头格式&gt; 　设置档头的表示方式。</li>
+<li>–querytags 　列出可用于档头格式的标签。</li>
+<li>–rcfile&lt;配置文件&gt; 　使用指定的配置文件。</li>
+<li>–rebulid&lt;套件档&gt; 　安装原始代码套件，重新产生二进制文件的套件。</li>
+<li>–rebuliddb 　以现有的数据库为主，重建一份数据库。</li>
+<li>–recompile&lt;套件档&gt; 　此参数的效果和指定”–rebulid”参数类似，当不产生套件档。</li>
+<li>–relocate&lt;原目录&gt;=&lt;新目录&gt; 　把本来会放到原目录下的文件改放到新目录。</li>
+<li>–replacefiles 　强行置换文件。</li>
+<li>–replacepkgs 　强行置换套件。</li>
+<li>–requires 　查询该套件所需要的兼容度。</li>
+<li>–resing&lt;套件档&gt;+ 　删除现有认证，重新产生签名认证。</li>
+<li>–rmsource 　完成套件的包装后，删除原始代码。</li>
+<li>–rmsource&lt;文件&gt; 　删除原始代码和指定的文件。</li>
+<li>–root&lt;根目录&gt; 　设置欲当作根目录的目录。</li>
+<li>–scripts 　列出安装套件的Script的变量。</li>
+<li>–setperms 　设置文件的权限。</li>
+<li>–setugids 　设置文件的拥有者和所属群组。</li>
+<li>–short-circuit 　直接略过指定完成阶段的步骤。</li>
+<li>–sign 　产生PGP或GPG的签名认证。</li>
+<li>–target=&lt;安装平台&gt;+ 　设置产生的套件的安装平台。</li>
+<li>–test 　仅作测试，并不真的安装套件。</li>
+<li>–timecheck&lt;检查秒数&gt; 　设置检查时间的计时秒数。</li>
+<li>–triggeredby&lt;套件档&gt; 　查询该套件的包装者。</li>
+<li>–triggers 　展示套件档内的包装Script。</li>
+<li>–verify 　此参数的效果和指定”-q”参数相同。</li>
+<li>–version 　显示版本信息。</li>
+<li>–whatprovides&lt;功能特性&gt; 　查询该套件对指定的功能特性所提供的兼容度。</li>
+<li>–whatrequires&lt;功能特性&gt; 　查询该套件对指定的功能特性所需要的兼容度。</li>
+</ul>
+<h4 id="实例-10"><a href="#实例-10" class="headerlink" title="实例"></a>实例</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 安装软件</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> rpm -hvi dejagnu-1.4.2-10.noarch.rpm</span> </span><br><span class="line">警告：dejagnu-1.4.2-10.noarch.rpm: V3 DSA 签名：NOKEY, key ID db42a60e</span><br><span class="line">准备...           </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">########################################## [100%]</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="09-备份压缩"><a href="#09-备份压缩" class="headerlink" title="09 备份压缩"></a>09 备份压缩</h2><h2 id="10-设备管理"><a href="#10-设备管理" class="headerlink" title="10 设备管理"></a>10 设备管理</h2><h2 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h2><h3 id="bc"><a href="#bc" class="headerlink" title="bc"></a>bc</h3><blockquote>
+<p>bc 命令是任意精度计算器语言，通常在linux下当计算器用。</p>
+<p>它类似基本的计算器, 使用这个计算器可以做基本的数学运算。</p>
+</blockquote>
+<p><strong>常用的运算：</strong></p>
+<ul>
+<li>+ 加法</li>
+<li>- 减法</li>
+<li>* 乘法</li>
+<li>/ 除法</li>
+<li>^ 指数</li>
+<li>% 余数</li>
+</ul>
+<h4 id="语法-19"><a href="#语法-19" class="headerlink" title="语法"></a>语法</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bc(选项)(参数)</span><br></pre></td></tr></table></figure>
+
+<p><strong>选项值</strong></p>
+<ul>
+<li>-i：强制进入交互式模式；</li>
+<li>-l：定义使用的标准数学库</li>
+<li>； -w：对POSIX bc的扩展给出警告信息；</li>
+<li>-q：不打印正常的GNU bc环境信息；</li>
+<li>-v：显示指令版本信息；</li>
+<li>-h：显示指令的帮助信息。</li>
+</ul>
+<p><strong>参数</strong></p>
+<p>文件：指定包含计算任务的文件。</p>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&#x27;scale=2; 6/4&#x27;</span> | bc		<span class="comment"># scale规定小数</span></span></span><br><span class="line">1.50</span><br></pre></td></tr></table></figure>
+
+<h3 id="nohup"><a href="#nohup" class="headerlink" title="nohup"></a>nohup</h3><blockquote>
+<p><strong>nohup</strong> 英文全称 no hang up（不挂起），用于在系统后台不挂断地运行命令，退出终端不会影响程序的运行。</p>
+<p><strong>nohup</strong> 命令，在默认情况下（非重定向时），会输出一个名叫 nohup.out 的文件到当前目录下，如果当前目录的 nohup.out 文件不可写，输出重定向到 <strong>$HOME/nohup.out</strong> 文件中。</p>
+</blockquote>
+<h4 id="语法格式-3"><a href="#语法格式-3" class="headerlink" title="语法格式"></a>语法格式</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup Command [ Arg … ] [　&amp; ]</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明：</strong></p>
+<p><strong>Command</strong>：要执行的命令。</p>
+<p><strong>Arg</strong>：一些参数，可以指定输出文件。</p>
+<p>**&amp;**：让命令在后台执行，终端退出后命令仍旧执行。</p>
+<h4 id="实例-11"><a href="#实例-11" class="headerlink" title="实例"></a>实例</h4><p>以下命令在后台执行 root 目录下的 runoob.sh 脚本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup /root/runoob.sh &amp;</span><br></pre></td></tr></table></figure>
+
+<p>在终端如果看到以下输出说明运行成功：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">appending output to nohup.out</span><br></pre></td></tr></table></figure>
+
+<p>这时我们打开 root 目录 可以看到生成了 nohup.out 文件。</p>
+<p>如果要停止运行，你需要使用以下命令查找到 nohup 运行脚本到 PID，然后使用 kill 命令来删除：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -aux | grep &quot;runoob.sh&quot; </span><br></pre></td></tr></table></figure>
+
+<p>参数说明：</p>
+<ul>
+<li><strong>a</strong> : 显示所有程序</li>
+<li><strong>u</strong> : 以用户为主的格式来显示</li>
+<li><strong>x</strong> : 显示所有程序，不区分终端机</li>
+</ul>
+<p>另外也可以使用 <strong>ps -def | grep “runoob.sh</strong>“ 命令来查找。</p>
+<p>找到 PID 后，就可以使用 kill PID 来删除。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill -9  进程号PID</span><br></pre></td></tr></table></figure>
+
+<p>以下命令在后台执行 root 目录下的 runoob.sh 脚本，并重定向输入到 runoob.log 文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup /root/runoob.sh &gt; runoob.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<p><strong>2&gt;&amp;1</strong> 解释：</p>
+<p>将标准错误 2 重定向到标准输出 &amp;1 ，标准输出 &amp;1 再被重定向输入到 runoob.log 文件中。</p>
+<ul>
+<li>0 – stdin (standard input，标准输入)</li>
+<li>1 – stdout (standard output，标准输出)</li>
+<li>2 – stderr (standard error，标准错误输出)</li>
+</ul>
+<h1 id="Linux-管道"><a href="#Linux-管道" class="headerlink" title="Linux 管道"></a>Linux 管道</h1><p>Shell 还有一种功能，就是可以将两个或者多个命令（程序或者进程）连接到一起，把一个命令的输出作为下一个命令的输入，以这种方式连接的两个或者多个命令就形成了<strong>管道（pipe）</strong>。</p>
+<p>Linux 管道使用竖线<code>|</code>连接多个命令，这被称为管道符。Linux 管道的具体语法格式如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">command1 | command2</span><br><span class="line">command1 | command2 [ | commandN... ]</span><br></pre></td></tr></table></figure>
+
+<p>当在两个命令之间设置管道时，管道符<code>|</code>左边命令的输出就变成了右边命令的输入。只要第一个命令向标准输出写入，而第二个命令是从标准输入读取，那么这两个命令就可以形成一个管道。大部分的 Linux 命令都可以用来形成管道。</p>
+<blockquote>
+<p>这里需要注意，command1 必须有正确输出，而 command2 必须可以处理 command2 的输出结果；而且 command2 只能处理 command1 的正确输出结果，不能处理 command1 的错误信息。</p>
+</blockquote>
+<h2 id="为什么使用管道？"><a href="#为什么使用管道？" class="headerlink" title="为什么使用管道？"></a>为什么使用管道？</h2><p>使用了管道的命令有如下特点：</p>
+<ul>
+<li>命令的语法紧凑并且使用简单。</li>
+<li>通过使用管道，将三个命令串联到一起就完成了远程 mysql 备份的复杂任务。</li>
+<li>从管道输出的标准错误会混合到一起。</li>
+</ul>
+<h2 id="重定向和管道的区别"><a href="#重定向和管道的区别" class="headerlink" title="重定向和管道的区别"></a>重定向和管道的区别</h2><p>乍看起来，管道也有重定向的作用，它也改变了数据输入输出的方向，那么，管道和重定向之间到底有什么不同呢？</p>
+<p>简单地说，重定向操作符&gt;将命令与文件连接起来，用文件来接收命令的输出；而管道符|将命令与命令连接起来，用第二个命令来接收第一个命令的输出。如下所示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">command &gt; file</span><br><span class="line">command1 | command1</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    <div class="about">
+        <h1>关于本文</h1>
+        <p>本文作者 Berny Wang, 许可由 <a
+                target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+    </div>
+
+    
+        
+    
+</article>
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h4 class="title">Blog</h4>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/projects" class="item">Projects</a>
+                
+                <a href="/resume" class="item">Resume</a>
+                
+                <a href="/about" class="item">About</a>
+                
+                <a href="/atom.xml" class="item">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Projects</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/rsa-cli" class="item">RSA CLI</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/hexo-theme-cupertino" class="item">Hexo Theme Cupertino</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/a-calendar" class="item">A Calendar</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/auto-mirroring-bucket" class="item">Auto Mirroring Bucket</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Me</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/bernyw" class="item">GitHub</a>
+                
+                <a target="_blank" rel="noopener" href="https://codepen.io/bernyw" class="item">CodePen</a>
+                
+                <a target="_blank" rel="noopener" href="https://www.zhihu.com/people/ber-16-41" class="item">Patreon</a>
+                
+                <a target="_blank" rel="noopener" href="https://noc.social/@bernyw" class="item">Mastodon</a>
+                
+                <a href="mailto:mr.bernyw@outlook.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2022 Berny Wang<br >驱动由 <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+    </body>
+</html>

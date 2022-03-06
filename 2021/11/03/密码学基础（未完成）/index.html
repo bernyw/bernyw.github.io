@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>密码学基础（未完成） - Berny&#39;s blog</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+<link rel="stylesheet" href="/css/waline.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+ 
+  
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+    <body data-color-scheme="auto">
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Blog</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">主页</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-codepen nav-item-icon" href="https://codepen.io/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-patreon nav-item-icon" href="https://www.zhihu.com/people/ber-16-41" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-mastodon nav-item-icon" href="https://noc.social/@bernyw" target="_blank">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        <article class="post">
+    <div class="meta">
+        
+        <div class="date" id="date">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <span>November</span>
+            
+            
+            <span>3,</span>
+            <span>2021</span>
+        </div>
+        
+
+        <h2 class="title">密码学基础（未完成）</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p> 在开始介绍之前可以先看看三个有趣的问题：</p>
+<p>① <a target="_blank" rel="noopener" href="https://wenku.baidu.com/view/092f8f83f90f76c660371a6f.html">电话抛币协议</a> 这个问题简单描述就是：在没有第三方协助下，通话双方有办法在电话里模拟抛掷一枚公平的硬币吗？</p>
+<p>② <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/5a220e95cee2">百万富翁问题</a> 这个问题简单描述就是：两个百万富翁相比较一下谁更富有，但是不想暴露自己的确切钱数，也不想让第三方知道，要怎么比较呢？</p>
+<p>③ <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43371004/article/details/89946993">零知识证明问题</a> 这个问题简单描述就是：在不泄露任何有用信息的前提下，向验证者证明自己确实知道某一事情。</p>
+<p> 关于这些问题其实网上有很多写得很好的文章，在这里我只是给出一个对其简单解释的文章/课件链接，想要深入了解可以自行搜索。</p>
+<h1 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h1><p> 接下来就对密码学中经常用到的一些字母简单介绍。</p>
+<p> M —— 明文空间；C —— 密文空间；K —— 密钥；E —— 加密算法；D —— 解密算法</p>
+<p> 有E(m)=c；D(c)=m</p>
+<p> 一些常见的人物：</p>
+<p>Alice：协议发起者</p>
+<p>Bob：协议应答者</p>
+<p>Eve：窃听者和可能的攻击者</p>
+<p>Oscar：被动的观察者，仅仅根据从公开信道获得的资料进行破译 Malice</p>
+<p>Mallory：主动的攻击者，可能会拦截数据、篡改信息和冒充合法的通信者。</p>
+<h2 id="1-1-基于公开信道的攻击手段"><a href="#1-1-基于公开信道的攻击手段" class="headerlink" title="1.1 基于公开信道的攻击手段"></a>1.1 <strong>基于公开信道的攻击手段</strong></h2><p><img src="/Users/berny/Desktop/%E5%B9%BF%E8%A5%BF%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6/%E9%A1%B9%E7%9B%AE%E7%BB%84/%E5%8F%AF%E6%90%9C%E7%B4%A2%E5%8A%A0%E5%AF%86/%E8%AE%BA%E6%96%87%E4%B8%8E%E7%AC%94%E8%AE%B0/%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E7%A1%80.assets/IMG_0982.jpg" alt="IMG_0982"></p>
+<p>可以看到有：①<strong>中断</strong> ②<strong>窃听</strong> ③<strong>篡改</strong> ④<strong>伪造</strong> 四种攻击手段。</p>
+<ul>
+<li><p>主动攻击：常常是对数据流的篡改，可以被检测到但难以防范（<strong>中断</strong>、<strong>篡改</strong> 、<strong>伪造</strong>）</p>
+</li>
+<li><p>被动攻击：难以被预测到，但可以用密码学方式来防范（<strong>窃听</strong>）</p>
+</li>
+</ul>
+<h2 id="1-2-密码分析的攻击方式"><a href="#1-2-密码分析的攻击方式" class="headerlink" title="1.2 密码分析的攻击方式"></a>1.2 密码分析的攻击方式</h2><p>根据攻击所能获得的信息资源，可以将其攻击方式分为六类：</p>
+<ol>
+<li><p>唯密文攻击</p>
+<p>唯密文攻击是最容易防范的，密码分析者已知的信息是“<strong>加密算法</strong>”和“<strong>密文</strong>”—<strong>最少的信息量</strong>。攻击者的目的是恢复尽可能多的明文，当然最好是获得消息的加密密钥。</p>
+</li>
+<li><p>已知明文攻击</p>
+<p>已知明文攻击中分析者还得知了“<strong>用与待解的密文同一密钥加密的一个或多个明密文对</strong>”。比较常见的例子是“可能词攻击”，攻击者处理一些特定的信息，他可能知道其中的一些信息，比如电子金融消息往往有标准化的文件头或者标志，一个完整的会计文件放在文件最前面的关键词应该是固定的。这样大大减小了破解的难度，而且在这种环境下我们要求加密一定不能是线性的，否则就可以通过一部分对应关系推出了全局的关系，保密性将不复存在。</p>
+</li>
+<li><p>选择明文攻击</p>
+<p>分析者可以获取“<strong>自行选择的一些明文以及对应的密文（在统一密钥环境下）</strong>”。如果分析者能够通过某种方式获得信源系统，让发送方在发送的消息中插入一端由他选择的信息就可以实现选择明文攻击。一个例子就是差分密码分析（通过分析特定明文差分对相对应密文差分影响来获得尽可能大的密钥。它可以用来攻击任何由迭代一个固定的轮函数的结构的密码以及很多分组密码（包括DES），它是由Biham和Shamir于1991年提出的选择明文攻击。- 来自百度百科）</p>
+</li>
+<li><p>自适应选择明文攻击</p>
+<p>这是比选择明文攻击具有更多权限的攻击方式。<strong>攻击者不仅可以选择一大块明文用来加密获得密文，还可以基于以前的结果修正这个选择，选择另一块余地一块明文相关的明文块。</strong></p>
+</li>
+<li><p>选择密文攻击</p>
+<p>分析者可以<strong>选择获得一些密文以及对应的明文</strong>，这种攻击主要攻击公开密钥密码体制，特别是攻击其<strong>数字签名</strong>。比如，攻击者获得了某个解密机，或者攻击这是在渗透在保密系统内部的员工，可以有一定的权限获得某些密文的原文等。</p>
+</li>
+<li><p>选择密钥攻击</p>
+<p><strong>指密码分析者具有不同的密钥间关系的有关知识。</strong>如在类似于差分密码分析的相关密钥分析中有所应用。</p>
+</li>
+</ol>
+<h2 id="1-3-基于密钥的算法"><a href="#1-3-基于密钥的算法" class="headerlink" title="1.3 基于密钥的算法"></a>1.3 基于密钥的算法</h2><p> 加密和解密算法，根据所使用的密钥的性质，通常分为两类：对称算法和公开密钥算法(非对称)。在实际使用中，加密和解密的密钥可能有所区分，下面两个式子更精确的描述加解密过程：</p>
+<p>​                                                                                y = E<del>k1</del>(x)       （1）</p>
+<p>​                                                                                x = D<del>k2</del>(y)       （2）</p>
+<p>（1）对称密钥密码算法</p>
+<p>加密密钥k1和解密密钥k2相同或相关（k1和k2可以相互推导）。</p>
+<p>主要包含 <strong>序列算法</strong> 和 <strong>分组算法</strong>。</p>
+<ul>
+<li><p>序列算法：一次只对明文中的单个比特（又是对字节）运算。</p>
+</li>
+<li><p>分组算法：对明文中一组比特进行运算。</p>
+</li>
+</ul>
+<p>对称密钥密码算法例子：古典加密体制、DES、AES</p>
+<p>（2）非对称密钥密码算法（公开密钥算法）</p>
+<p>加密密钥k1和解密密钥k2之间没有任何关联。在使用中，通常将加密密钥公开，所有人都可以用这个密钥加密，而只有解密密钥的持有者才可以解密。</p>
+<p> Alice只要知道Bob的公钥，就可以将自己的消息用Bob的公钥进行加密，然后发送给Bob。对于加密后的消息，只有Bob才能够解密。</p>
+<p> 例子：RSA</p>
+<h2 id="1-4-密码协议"><a href="#1-4-密码协议" class="headerlink" title="1.4 密码协议"></a>1.4 密码协议</h2><p>密码协议是应用密码学，解决实际信息系统中信息安全问题的方式。协议是一系列步骤，它包含双方或多方。设计它的目的是要完成一项任务，协议不同于算法和任务，它具有如下<strong>特点</strong>：</p>
+<p>（1）协议中的参与方都必须了解协议，并预先知道所要完成的所有步骤。</p>
+<p>（2）协议中的每个参与方都必须同一并遵守它。</p>
+<p>（3）协议必须是清楚的。每一步都必须明确定义。如进行通信或完成一方或者多方运算，并不会引起误解。</p>
+<p>（4）协议必须是完整的。对每种情况必须规定具体的动作。</p>
+<p>密码协议的<strong>主要目标</strong>：</p>
+<p>密码协议在安全系统中，其关键性目的并不是保证密码算法的不可破译，而是假设密码算法本身是安全的。借助这种安全的密码算法，达到以下四个主要目标：</p>
+<ol>
+<li><p>机密性</p>
+<p>搭线窃听者Eve不能读取到信道上的传输的信息的明文，主要的手段是先加密后传输，由接受者解密。</p>
+</li>
+<li><p>完整性</p>
+<p>接收者Bob需要确认Alice的消息没有被更改过。密码学的散列函数，就提供了检测方法来检测数据是否被攻击者有意无意地修改过。</p>
+</li>
+<li><p>认证性</p>
+<p>接收者Bob需要确认消息确实是Alice发送的，而不是冒名顶替的行为。通常这种认证包含两类：实体认证 和 数据源认证。对消息中所涉及参与方的鉴别，也常用身份鉴别来表示。身份认证主要是确认主体是都合法的参与者；数据源认证主要是确认消息是由他所声称的主体生成和发送的。</p>
+</li>
+<li><p>抗抵赖性</p>
+<p>也称为不可否认性。对于一个已经进行的行为，参与的主体不能否认。即发送者时候不能否认其发送消息的行为，数据接收者不能否认其接收数据的行为。</p>
+</li>
+</ol>
+<h2 id="1-5-密码算法的安全性"><a href="#1-5-密码算法的安全性" class="headerlink" title="1.5 密码算法的安全性"></a>1.5 密码算法的安全性</h2><p>（1）无条件安全（Unconditionally secure）</p>
+<p>无论破译者有多少个密文，他也无法解出相应的明文。即使解出也无法验证正确性。</p>
+<p>（2）计算上安全（Conputationally secure）</p>
+<p>破译代价超出消息本身价值，破译时间超出信息有效期。</p>
+<h2 id="1-6-对加密系统的要求"><a href="#1-6-对加密系统的要求" class="headerlink" title="1.6 对加密系统的要求"></a>1.6 对加密系统的要求</h2><p> （1）系统应该是实际上安全的。截获密文或已知明文对时，要决定密钥或任意明文在计算上不可行的。</p>
+<p> （2）加密解密算法适用于密钥空间中所有元素。</p>
+<p> （3）系统易于实现，使用方便。</p>
+<p> （4）系统的安全性不依赖于对加密体制或加密算法的保密，而是依赖于密钥，即<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%9F%AF%E5%85%8B%E9%9C%8D%E5%A4%AB%E5%8E%9F%E5%88%99/2249887?fr=aladdin">Kerckhoff原则</a>。</p>
+<p> （5）系统的使用不应使通信网络的效率过分降低。</p>
+<h2 id="1-7-采用混淆、扩散和乘积的方法来设计密码"><a href="#1-7-采用混淆、扩散和乘积的方法来设计密码" class="headerlink" title="1.7 采用混淆、扩散和乘积的方法来设计密码"></a>1.7 采用混淆、扩散和乘积的方法来设计密码</h2><p>（1）<strong>混淆</strong></p>
+<p>混淆：<strong>是密文和明文、密钥之间的关系复杂化。</strong></p>
+<p> “混淆”可以隐藏明文、密文、密钥之间的任何关系，好的“混淆”可以使复杂甚至强有力的密码分析工具不得奏效。<strong>最容易的方法是“代替”法。</strong></p>
+<p>（2）<strong>扩散</strong></p>
+<p>扩散：<strong>将每一位明文和密钥的影响扩大到尽可能多的密文位中。</strong></p>
+<p>“扩散”是一种将明文冗余度分散到密文中的方法。即将单个明文或密钥位的影响尽可能扩大到更多地密文中去，不仅将统计关系隐藏起来，也使密码分析者寻求明文冗余度增加了难度。<strong>最简单的“扩散”方法是“置换”法。</strong></p>
+<p>（3）<strong>乘积</strong></p>
+<p>乘积：通过将一个易于实现的具有一定混乱和扩散结构的较弱的密码函数进行多次迭代来产生一个强的密码函数。</p>
+<p>主要思想：通过简单密码的乘积来组合密码体制。</p>
+<h1 id="二、古典密码"><a href="#二、古典密码" class="headerlink" title="二、古典密码"></a>二、古典密码</h1><p><img src="/Users/berny/Desktop/%E5%B9%BF%E8%A5%BF%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6/%E9%A1%B9%E7%9B%AE%E7%BB%84/%E5%8F%AF%E6%90%9C%E7%B4%A2%E5%8A%A0%E5%AF%86/%E8%AE%BA%E6%96%87%E4%B8%8E%E7%AC%94%E8%AE%B0/%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E7%A1%80.assets/IMG_25C6D6137B2D-1.jpeg" alt="IMG_25C6D6137B2D-1"></p>
+<p>古典密码学大体上可以分为 <strong>代换密码</strong> 和 <strong>置换密码</strong>。</p>
+<ul>
+<li><p>代换密码</p>
+<p>构造一个或多个密文字母表，然后用密文字母表中的字母或字母组来代替明文字母或字母组。各字母或字母组的相对位置不变，但其本身改变了。</p>
+</li>
+<li><p>置换密码</p>
+<p>又称换位密码。把明文中的字母重新排序，字母本身不变，但其位置改变了。</p>
+</li>
+</ul>
+<h2 id="2-1-移位密码算法-Shift-Cipher"><a href="#2-1-移位密码算法-Shift-Cipher" class="headerlink" title="2.1 移位密码算法 Shift Cipher"></a>2.1 移位密码算法 Shift Cipher</h2><p>Z26：26个字母集合</p>
+<p>设 M = C = Z26，对任意的 key∈Z26，x∈M，y∈C</p>
+<p>定义e<del>key</del>(x) = x + key (mod 26)</p>
+<p>同时d<del>key</del>(y) = y - key (mod 26)</p>
+<p>注：26个英文字母与模26剩余类集合{0,1,…,25}建立一一对应。</p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202107/1980624-20210731182807824-1149956202.png" alt="img"> </p>
+<p>移位密码很容易受到唯密文的攻击。</p>
+<h3 id="凯撒密码（key-3）"><a href="#凯撒密码（key-3）" class="headerlink" title="凯撒密码（key = 3）"></a>凯撒密码（key = 3）</h3><p>若此时明文为venividivici.则密文为：yhqlylglylfl。若解密只需将密文左移三位即可。</p>
+<h2 id="2-2-仿射密码算法"><a href="#2-2-仿射密码算法" class="headerlink" title="2.2 仿射密码算法"></a>2.2 仿射密码算法</h2><p> <strong>加密函数</strong>取形式为：<strong>e(x) = ax + b (mod 26)</strong>, a,b∈Z26.</p>
+<p> <strong>要求唯一解的充要条件是：gcd(a,26)=1</strong></p>
+<p>注：gcd(a,26)=1表示a和26的最大公因子为1，之所以要求a与26互素，目的是为了保证逆元存在。</p>
+<p>同时，因为a与26互素，所以a可取φ(26)个。φ(26)=φ(2)φ(13)=1×12=12，故a可取12个。</p>
+<p>该算法描述为：</p>
+<p>设 M = C = Z26</p>
+<p> K = {(a,b) ∈ Z26×Z26 ; gcd(a,26)=1}</p>
+<p>对 key=(a,b)∈K, x∈M, y∈C,</p>
+<p>定义 <strong>e<del>key</del>(x) = ax + b (mod 26) 和 d<del>key</del>(y) = a^-1^(y-b) (mod 26).</strong></p>
+<p>在Z26中，满足gcd(a,26)=1的a只有12个值(1,3,5,7,9,11,15,17,19,21,23,25)，因此仿射密码的<strong>密钥空间</strong>大小为12×26=312个。</p>
+<p>对于Z26中与26互素的元素，相应的乘法逆元为：</p>
+<p>  1^-1^ mod 26 = 1        3^-1^ mod 26 = 9           5^-1^ mod 26 = 21        7^-1^ mod 26 = 15</p>
+<p>  9^-1^ mod 26 = 3      11^-1^ mod 26 = 19      15^-1^ mod 26 = 7        17^-1^ mod 26 = 23</p>
+<p>19^-1^ mod 26 = 11    21^-1^ mod 26 = 5        23^-1^ mod 26 = 17      25^-1^ mod 26 = 25</p>
+<h4 id="求逆元过程（以9-1-mod-26-3为例）"><a href="#求逆元过程（以9-1-mod-26-3为例）" class="headerlink" title="求逆元过程（以9^-1^ mod 26 = 3为例）"></a>求逆元过程（以9^-1^ mod 26 = 3为例）</h4><p> 9·9^-1^≡1 (mod 26)</p>
+<p> 9x≡1 (mod 26) 其中x≡9^-1^ (mod 26)</p>
+<p> x = x^-1^+9^-1^·26 (mod 26)</p>
+<p>​    = 9^-1^(1+26) (mod 26)</p>
+<p>​    = 3 (mod 26)</p>
+<p> ∴ 9^-1^ ≡ 3 (mod 26)</p>
+<h4 id="仿射密码算法例子"><a href="#仿射密码算法例子" class="headerlink" title="仿射密码算法例子"></a>仿射密码算法例子</h4><p>设 k=(7,3),注意到7^-1^mod 26 = 15,</p>
+<p>加密函数：e<del>k</del>(x) = 7x + 3 (mod 26)</p>
+<p>解密函数：d<del>k</del>(y) = 15(y-3) (mod 26) = 15x-19 (mod 26)</p>
+<p>易见 d<del>k</del>(e<del>k</del>(x)) = d<del>k</del>(7x + 3) = 15(7x + 3)-19 = x+45-19 = x (mod 26)</p>
+<p>若加密明文为hot，则有如下步骤：</p>
+<p> ① 转换字母h、o、t为数字7、14、19</p>
+<p> ② 然后加密：<img src="https://img2020.cnblogs.com/blog/1980624/202107/1980624-20210731192557079-1047377369.png" alt="img"></p>
+<p>③ 解密有：<img src="https://img2020.cnblogs.com/blog/1980624/202107/1980624-20210731192654144-902922271.png" alt="img"></p>
+<h2 id="2-3-单表代换密码-——-分析"><a href="#2-3-单表代换密码-——-分析" class="headerlink" title="2.3 单表代换密码 —— 分析"></a>2.3 单表代换密码 —— 分析</h2><p> （1）密钥量一般比较小，<strong>难以抵抗穷尽搜索攻击</strong>。</p>
+<p> （2）即使密钥量很大，但因为没有将明文字母的频率隐藏起来，所以也很<strong>容易受到频数分析法的攻击</strong>。</p>
+<h2 id="2-4-单表代换的优缺点"><a href="#2-4-单表代换的优缺点" class="headerlink" title="2.4 单表代换的优缺点"></a>2.4 单表代换的优缺点</h2><p><strong>优点：</strong></p>
+<p>明文字符的形态一般将面目全非。</p>
+<p><strong>缺点：</strong></p>
+<p> a.明文的位置不变</p>
+<p> b.明文字符相同，则密文字符也相同。从而导致：</p>
+<p>  ① 若明文字符被加密成密文字符a,则明文中e的出现次数就是密文中字符a的出现次数；</p>
+<p>  ② 明文的更随关系反映在密文之中。因此，明文字符的统计规律就完全暴露在密文字符的统计规律之中，<strong>形态变但位置不变</strong>。 </p>
+<h2 id="2-5-单表代换密码的统计分析举例"><a href="#2-5-单表代换密码的统计分析举例" class="headerlink" title="2.5 单表代换密码的统计分析举例"></a>2.5 单表代换密码的统计分析举例</h2><p> 密文为：YIFQFMZR…CFWDJNZDIR（共168个字母）</p>
+<p> 分析：∵Z出现20次，出现的频率约为0.12</p>
+<p>∴猜测D(Z)=e</p>
+<p>∵出现至少10次的密文字母为C、D、F、J、M、R、Y,出现频率约在0.06到0.095之间</p>
+<p>∴猜测{D(C),D(D),D(F),D(J),D(M),D(R),D(Y)}={t,z,o,i,n,s,h,r}…</p>
+<p>以此类推</p>
+<p> 不太明白的话可以参考[<a target="_blank" rel="noopener" href="https://wenku.baidu.com/view/290cebd5360cba1aa811da7b.html">2.3_单表代替密码的分析</a>]</p>
+<h2 id="2-6-多表代换密码"><a href="#2-6-多表代换密码" class="headerlink" title="2.6 多表代换密码"></a>2.6 多表代换密码</h2><p>多表代换密码是一系列（两个以上）代换表依次对明文消息的字母进行代换的方法。可以分为：</p>
+<ul>
+<li><p>非周期多表代换密码：代换表是非周期的无限序列。</p>
+</li>
+<li><p>周期多表代换密码：代换表个数有限，重复使用。</p>
+</li>
+</ul>
+<h3 id="2-6-1-维吉尼亚密码-Vigenere-cipher"><a href="#2-6-1-维吉尼亚密码-Vigenere-cipher" class="headerlink" title="2.6.1 维吉尼亚密码 Vigenére cipher"></a>2.6.1 维吉尼亚密码 Vigenére cipher</h3><p>设 m 是某固定的正整数，定义P=C=K=(Z<del>26</del>)^m^,对一个密钥 k=(k<del>1</del>,k<del>2</del>,…,k<del>m</del>),定义</p>
+<ul>
+<li><p><strong>e<del>k</del>(x<del>1</del>,x<del>2</del>,…,x<del>m</del>) = (x<del>1+k1</del>,x<del>2+k2</del>,…,x<del>m+km</del>)</strong></p>
+</li>
+<li><p><strong>d<del>k</del>(y<del>1</del>,y<del>2</del>,…,y<del>m</del>) = (y<del>1-k1</del>,y<del>2-k2</del>,…,y<del>m-km</del>)</strong></p>
+</li>
+</ul>
+<p>且所有的运算都在Z<del>26</del>中。</p>
+<p>简单地说，可以将其描述为如下形式：</p>
+<p>密钥 K=(k<del>1</del>,k<del>2</del>,…,k<del>n</del>),</p>
+<p>明文 P=(p<del>1</del>,p<del>2</del>,…,p<del>n</del>),</p>
+<p>密文 C=(c<del>1</del>,c<del>2</del>,…,c<del>n</del>).</p>
+<p>加密：c<del>i</del>=p<del>i</del>+k<del>i</del> (mod 26)</p>
+<p>解密：p<del>i</del>=c<del>i</del>-k<del>i</del> (mod 26)</p>
+<p>密钥一般是一个单词或一句话去除后面的重复字母后构成。</p>
+<p>本质：多个移位密码</p>
+<p>密钥量：对于n位密钥，密钥量有</p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801095546231-1012634109.png" alt="img"> </p>
+<p>例子:</p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801095829817-1415715892.jpg" alt="img"></p>
+<h3 id="2-6-2-希尔密码-Hill-cipher"><a href="#2-6-2-希尔密码-Hill-cipher" class="headerlink" title="2.6.2 希尔密码 Hill cipher"></a>2.6.2 希尔密码 Hill cipher</h3><p>设m是某个固定的正整数，P=C=(Z<del>26</del>)^m^,又设K={m×m可逆阵，Z<del>26</del>}；对任意k∈K，定义</p>
+<ul>
+<li><p>e<del>k</del>(x) = xk</p>
+</li>
+<li><p>d<del>k</del>(y) = yk^-1^</p>
+</li>
+</ul>
+<p>其中所有的运算都是在Z<del>26</del>中进行。</p>
+<p>其中明文、密文和密钥可以写成如下形式：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801104711191-980575201.png" alt="img"></p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801104731291-2002601842.png" alt="img"></p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801104745469-1094331925.png" alt="img"></p>
+<p> 注意：</p>
+<p>  k必须满足条件：</p>
+<ol>
+<li><p>非奇异矩阵，即|k|≠0，</p>
+</li>
+<li><p>gcd(|k|,26)=1 (mod 26)，即｜k｜与26互质</p>
+</li>
+</ol>
+<p> 加密：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801110318769-1788066755.png" alt="img"></p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801105542665-1669884022.png" alt="img"></p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801105904173-159759624.png" alt="img"></p>
+<p> 解密：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801110333392-2041087162.png" alt="img"></p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801110346936-1342464530.png" alt="img"></p>
+<p> 例子1：<br><img src="/Users/berny/Desktop/%E5%B9%BF%E8%A5%BF%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6/%E9%A1%B9%E7%9B%AE%E7%BB%84/%E5%8F%AF%E6%90%9C%E7%B4%A2%E5%8A%A0%E5%AF%86/%E8%AE%BA%E6%96%87%E4%B8%8E%E7%AC%94%E8%AE%B0/%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E7%A1%80.assets/1980624-20210801100715097-1621225095.jpeg" alt="1980624-20210801100715097-1621225095"></p>
+<p> 例子2：</p>
+<p><img src="/Users/berny/Desktop/%E5%B9%BF%E8%A5%BF%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6/%E9%A1%B9%E7%9B%AE%E7%BB%84/%E5%8F%AF%E6%90%9C%E7%B4%A2%E5%8A%A0%E5%AF%86/%E8%AE%BA%E6%96%87%E4%B8%8E%E7%AC%94%E8%AE%B0/%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E7%A1%80.assets/1980624-20210801110909722-658709920.jpeg" alt="1980624-20210801110909722-658709920"><img src="/Users/berny/Desktop/%E5%B9%BF%E8%A5%BF%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6/%E9%A1%B9%E7%9B%AE%E7%BB%84/%E5%8F%AF%E6%90%9C%E7%B4%A2%E5%8A%A0%E5%AF%86/%E8%AE%BA%E6%96%87%E4%B8%8E%E7%AC%94%E8%AE%B0/%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E7%A1%80.assets/1980624-20210801111036120-1194089426.jpeg" alt="1980624-20210801111036120-1194089426"><img src="/Users/berny/Desktop/%E5%B9%BF%E8%A5%BF%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6/%E9%A1%B9%E7%9B%AE%E7%BB%84/%E5%8F%AF%E6%90%9C%E7%B4%A2%E5%8A%A0%E5%AF%86/%E8%AE%BA%E6%96%87%E4%B8%8E%E7%AC%94%E8%AE%B0/%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E7%A1%80.assets/1980624-20210801111131813-1802260179.jpeg" alt="1980624-20210801111131813-1802260179"></p>
+<p> 介绍完希尔密码后，接下来对希尔密码的<strong>特点</strong>进行介绍：</p>
+<p>（1）完全隐藏了单字母的频数；</p>
+<p>（2）字母和数字的对应可以改成其他方案，使得更不容易被攻击成功；</p>
+<p>（3）能比较好地抵抗频数法的分析，对抗唯密文攻击强度较高。</p>
+<h2 id="2-7-置换密码-Permutation-Cipher-或-Transposition-Cipher"><a href="#2-7-置换密码-Permutation-Cipher-或-Transposition-Cipher" class="headerlink" title="2.7 置换密码 Permutation Cipher 或 Transposition Cipher"></a>2.7 置换密码 Permutation Cipher 或 Transposition Cipher</h2><p>设m是某个固定的正整数，P=C=(Z<del>26</del>)^m^,且K由所有{1,2,…,m}的置换组成，对一个密钥（即一个置换∏），定义</p>
+<p>​                                                        e<del>∏</del>(x<del>1</del>,x<del>2</del>,…,x<del>m</del>) = (x<del>∏(1)</del>,x<del>∏(2)</del>,…,x<del>∏(m)</del>)</p>
+<p>​                                                        d<del>∏</del>(y<del>1</del>,y<del>2</del>,…,y<del>m</del>) = (y<del>∏-1(1)</del>,y<del>∏-1(2)</del>,…,y<del>∏-1(m)</del>)</p>
+<p> 其中 ∏^-1^ 是 ∏ 的逆置换。</p>
+<p> 例子：![1980624-20210801112448728-994628991 (1)](/Users/berny/Desktop/广西师范大学/项目组/可搜索加密/论文与笔记/密码学基础.assets/1980624-20210801112448728-994628991 (1).jpeg)</p>
+<p>在简单对几种古典密码算法进行介绍后，下一节将介绍<strong>密码破译</strong>。</p>
+<h1 id="三、密码破译"><a href="#三、密码破译" class="headerlink" title="三、密码破译"></a>三、密码破译</h1><p>前面介绍了几种古典密码算法（凯撒密码、仿射密码、维吉尼亚密码、希尔密码、置换密码），下面将对其中的几种密码算法站在攻击者的角度进行分析。</p>
+<p>密码破译的<strong>原则</strong>：遵循观察和经验</p>
+<p> <strong>方法</strong>：采用归纳与演绎</p>
+<p> <strong>步骤</strong>：分析、假设、推测和证实</p>
+<p> <strong>三大要素</strong>：</p>
+<p> ① 语言频率特征：如E出现频率最高；</p>
+<p> ② 连接特征：q…u,Iex.</p>
+<p> ③ 重复特征：th,tion,tious.</p>
+<h2 id="3-1-单表代换-——-密码分析"><a href="#3-1-单表代换-——-密码分析" class="headerlink" title="3.1 单表代换 —— 密码分析"></a>3.1 单表代换 —— 密码分析</h2><p>利用<strong>统计数据</strong>获得密码分析。</p>
+<p>例：假设从<strong>仿射密码</strong>获得的密文为：</p>
+<p>FMXVEDKAPHFERBNDKRXRSREFMORUDSDKDVSHVUFEDKAPRKDLYEVLRHHRH.</p>
+<p>通过上面的57个密文字母，就可以分析仿射密码。</p>
+<p>最高频率的密文字母：</p>
+<p>R——8次　　D——7次　　E、H、K——各5次　　F、S、V——各4次</p>
+<p>根据已知的26个英文字母的概率分布表：<br><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801144047515-640493273.png" alt="img"></p>
+<p>　　 E——0.127　　T——0.091　　A——0.082　　O——0.075</p>
+<p>① 假定R是E的加密，D是T的加密</p>
+<p>​    数值化后有：e<del>k</del>(4)=17　　　　d<del>k</del>(19)=3</p>
+<p>​    而加密函数 e<del>k</del>(x)=ax+b.</p>
+<p>​    可以得到两个包含两个未知数的线性方程组：</p>
+<p>​                                                                        4a+b=17</p>
+<p>​                                                                        19a+b=3</p>
+<p>​    解得 a=6,b=19 (mod 26)</p>
+<p>​    <strong>这是一个非法密钥，因为gcd(6,26)=2≠1,所以假设不成立。</strong></p>
+<p>② 假设R是e的加密，E是t的加密，解得 a=13，<strong>gcd(a,26)=13≠1</strong>,故此时假设不成立。</p>
+<p>③ 假设R是e的加密，K是t的加密，此时解得 a=3，b=5.至少这是一个合法密钥。</p>
+<p>​    接着计算 k=(3,5) 时的解密函数，之后对密文进行解密，观察的到的明文是否有意义。</p>
+<p>​    容易验证a=3，b=5是一个有效密钥，解得明文为：</p>
+<p>​     Algorithms are quite general definitions of arithmetic process.</p>
+<h2 id="3-2-多表代换——密码分析"><a href="#3-2-多表代换——密码分析" class="headerlink" title="3.2 多表代换——密码分析"></a>3.2 多表代换——密码分析</h2><h3 id="3-2-1-希尔密码"><a href="#3-2-1-希尔密码" class="headerlink" title="3.2.1 希尔密码"></a>3.2.1 希尔密码</h3><p>对<strong>希尔密码</strong>进行<strong>已知明文</strong>分析。</p>
+<p>希尔密码在唯密文攻击下是很难破解的，但容易被已知明文攻击所攻破。</p>
+<p>假设确定了m的值，且得到至少m对不同的m元组：</p>
+<p>x<del>j</del>=(x<del>1j</del>,x<del>2j</del>,…,x<del>mj</del>),</p>
+<p>y<del>j</del>=(y<del>1j</del>,y<del>2j</del>,…,y<del>mj</del>).(1≤j≤m)</p>
+<p> 已知y<del>j</del>=e<del>k</del>(x<del>j</del>).</p>
+<p> 如果定义两个m×m矩阵，X=(),Y=(),则有矩阵方程Y=Xk,k是未知密钥。</p>
+<p> 例：<img src="/Users/berny/Desktop/%E5%B9%BF%E8%A5%BF%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6/%E9%A1%B9%E7%9B%AE%E7%BB%84/%E5%8F%AF%E6%90%9C%E7%B4%A2%E5%8A%A0%E5%AF%86/%E8%AE%BA%E6%96%87%E4%B8%8E%E7%AC%94%E8%AE%B0/%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E7%A1%80.assets/1980624-20210801150256808-1509077664.jpeg" alt="1980624-20210801150256808-1509077664"></p>
+<h3 id="3-2-2-维吉尼亚密码"><a href="#3-2-2-维吉尼亚密码" class="headerlink" title="3.2.2 维吉尼亚密码"></a>3.2.2 维吉尼亚密码</h3><p>分析维吉尼亚密码的方法：</p>
+<ul>
+<li><p>第一步：确定密钥字的长度m：</p>
+<p>① Kasiski测试法</p>
+<p>② 重合指数法（Coincidence Index）</p>
+<p>…</p>
+</li>
+<li><p>第二步：确定密钥的具体内容</p>
+<p>交互重合指数法、拟重合指数方法</p>
+</li>
+<li><p>第三步：用单表代换密码的解密方法解密</p>
+<p>统计分析方法</p>
+</li>
+</ul>
+<p>下面将对涉及到的各种方法进行简单的介绍。</p>
+<h4 id="（1）Kasiski测试法"><a href="#（1）Kasiski测试法" class="headerlink" title="（1）Kasiski测试法"></a><strong>（1）Kasiski测试法</strong></h4><p>相同的字母序列可能出现在明文的不同地方，这些重复模式是有趣的。因为他们提供了文本里<strong>周期</strong>的信息。</p>
+<p>例子：</p>
+<p>​                                                明文：REQU<strong>EST</strong>S     ADDITIONAL      T<strong>EST</strong></p>
+<p>​                                                密钥： TELE<strong>XTE</strong>L       EXTELEXTEL      E<strong>XTE</strong></p>
+<p>​                                                密文：CAVK<strong>TBL</strong>T    EUQWSQIGEA     L<strong>TBL</strong></p>
+<p>反映了序列EST间隔的字母数（15）为密钥长度（5）的倍数。</p>
+<p>若用给定的m个密钥表<strong>周期地</strong>对明文字母加密，</p>
+<ul>
+<li><p>则当明文中有<strong>两个相同字母组</strong>在明文序列中间隔的字母数为<strong>m的倍数</strong>时，<strong>这两个明文字母组对应的密文字母组必相同</strong>。</p>
+</li>
+<li><p>反过来，若密文中出现两个相同的字母组，它们所对应的明文字母组未必相同，但相同的可能性很大。</p>
+</li>
+</ul>
+<p>如果将密文中相同的字母组找出来，并对其相同的字母数综合研究，找出它们的相同字母数的最大公因子，就有可能提取出有关密钥字的长度m的信息。</p>
+<p>寻找密文中相同的片段时，计算每对相同密文片段对之间的聚类，不妨记为d<del>1</del>,d<del>2</del>,…,d<del>i</del>，若令密钥字的长度为m，则m=gcd(d<del>1</del>,d<del>2</del>,…,d<del>i</del>).</p>
+<p>例子：</p>
+<p>​                                                明文：<strong>CRYPTO</strong> IS SHORT FOR <strong>CRYPTO</strong>GRAPHY</p>
+<p>​                                                密钥：<strong>ABCDEF</strong> AB CDEFA BCD <strong>EFABCD</strong>EFABCD</p>
+<p>​                                                密文：<strong>CSASXT</strong> IT UKSWT GQU <strong>GWYQVR</strong>KWAQJB</p>
+<p>此时，明文中重复的元素在密文中并不重复。</p>
+<p>若将密钥长度6变成4位（ABCDEF-&gt;ABCD）,得到的密文有：</p>
+<p>​                                                                <strong>CSASTP</strong> KV SIQUT GQU <strong>CSASTP</strong>IUAQJB</p>
+<p>此时，卡西斯基试验就能产生效果，对于更长的段落基于此方法更为有效。因为密文中重复的片段很多（退出情况下）。如通过下面的密文就能破译出密钥长度：</p>
+<p>​                                                密文：<strong>DYDUXRMH</strong>TVDV<strong>NQD</strong>QNW<strong>DYDUXRMH</strong>ARTJGW<strong>NQD</strong></p>
+<p>其中，两个<strong>DYDUXRMH</strong>的出现相隔了18个字母，因此可以假定密钥的长度是18的约数，即长度为18、9、6、3或2.而两个<strong>NQD</strong>则相距20个字母，意味着密钥的长度应为20、10、5、4或2.取两者的交集，则可以基本确定密钥的长度为2.</p>
+<h4 id="（2）重合指数法-Coincidence-Index"><a href="#（2）重合指数法-Coincidence-Index" class="headerlink" title="（2）重合指数法 Coincidence Index"></a><strong>（2）重合指数法 Coincidence Index</strong></h4><p>我们可以通过别的参数来描述猜测的密钥长度m是否准确的。当计算某个密文的重合指数（重合概率 Index of Coincidence）时，即相当于求在某个密文中随机无放回地抽取其中的两位，这两位的字母相同的概率。</p>
+<p><strong>定义一</strong> 设X=x<del>1</del>x<del>2</del>…x<del>n</del>是一个长度为n的英文字母串，则X中任意选取两个字母相同的概率定义为<strong>重合指数</strong>，用IC(X)表示。</p>
+<p>设y是一个长度为n的密文，即y=y<del>1</del>y<del>2</del>…y<del>n</del>，其中y<del>i</del>是密文字母，同样来求从中抽取两个字母相同的概率是多少？</p>
+<p>设N<del>A</del>为字母A在这份密文中的频数，N<del>B</del>为字母B在这份密文中的频数，以此类推。</p>
+<p>从n个密文字母中任意抽取两个有：<img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801162905026-1550488863.png" alt="img"></p>
+<p>从 N<del>A</del>个A组成的一对A中有：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801163136924-1320273568.png" alt="img"></p>
+<p>从y中抽到两个字母都为A的概率有：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801163151853-585858295.png" alt="img"></p>
+<p>从y中抽到两个相同字母的概率为：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801163212623-1279557739.png" alt="img"></p>
+<p>这个数据称为这份密文的重合指数，记为IC(Y).</p>
+<p><strong>自然语言：</strong>假设X是英文文献，根据字母A,B,…,Z出现的期望概率P<del>0</del>,P<del>1</del>,…,P<del>25</del>，这两个字母都为A,B,…,Z的概率为P<del>0</del>^2^,P<del>1</del>^2^,…,P<del>25</del>^2^.那么，</p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801163640336-1985792636.png" alt="img"></p>
+<p><strong>随机分布：</strong> 若对随机产生的英文字母序列进行讨论，那么此时每个英文字母出现的期望概率均为1/26，则在Y中任意抽取两个字母相同的概率为</p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801163939996-1327117377.png" alt="img"></p>
+<p> 那么，</p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801163956340-1085326493.png" alt="img"></p>
+<p> 假设我们使用维吉尼亚加密的密文串为Y，将串分割成m个长度相等的子串，分别为Y<del>1</del>,Y<del>2</del>,…,Y<del>m</del>.</p>
+<p> 这样可以以列的形式写出密文，构造出一个m×（n/m）的矩阵。矩阵的每一行对应于子串Y<del>i</del>，1≤i≤m.</p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801164657217-988141073.png" alt="img"></p>
+<p>如果按照上述方法构造，则m实际上就是密钥字的长度，使得每行都是单表代换加密的，不同行是由不同的密钥加密的。于是每一行的重合指数IC(Y<del>i</del>)=0.0687.</p>
+<p>另一方面，如果m不是密钥长度，那么子串Y<del>i</del>看起来更随机，因为它们是通过不同密钥以移位加密方式获得的。随机串的重合指数为IC(Y)=0.0385.</p>
+<p> 0.0687和0.0385差距还是较大的，故可以按这种方法确定密钥字长度。</p>
+<p> 下面来用一个具体的例子进行分析。<br><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801165636363-2001517358.jpg" alt="img"></p>
+<p> 所以，若分组准则m为密钥长度，那么IC(Y)=0.0687，若不为密钥长度，此时每行都是由多个不同字母得来的，重合指数为0.0385.</p>
+<p> 下面用一个经过维吉尼亚加密后的密文来举例。（①Kasiski测试法 ②重合指数法）</p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801170020382-1631581358.jpg" alt="img"></p>
+<p><img src="https://img2020.cnblogs.com/blog/1980624/202108/1980624-20210801170113083-429419715.jpg" alt="img"></p>
+<h4 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h4><ol>
+<li><p>确定密钥字长度</p>
+<p>Kasiski测试法 （估计）</p>
+<p>重合指数法 （验证）</p>
+</li>
+<li><p>确定密钥字</p>
+<p> 交互重合指数</p>
+</li>
+</ol>
+<p> <strong>（1）Kasiski测试法</strong></p>
+<p>​        <strong>原理：</strong></p>
+<p>​         ① 两个相同的明文片段之间的距离如果是密钥长度的倍数，则它们所<strong>对应的密文片段一定相同</strong>。</p>
+<p>​         ② 反之，若密文中出现两个相同的密文片段（长度＞3），则它们对应的明文片段<strong>极有可能相同</strong>，</p>
+<p>​        <strong>应用步骤：</strong></p>
+<p>​         ① 在密文中标出重复的三个或多个字符结构，记下起始位置。</p>
+<p>​         ② 计算<strong>相邻起始点</strong>的距离。</p>
+<p>​         ③ 这些距离若存在某个<strong>公因子</strong>，则很有可能是密钥字长度。</p>
+<p><strong>（2）确定密钥字长度——重合指数法</strong></p>
+<p>​        <strong>原理：</strong></p>
+<p>​        ① 通过比较字符串与自然语言之间的相似性。</p>
+<p>​        ② 如果密文序列是使用单表加密得到的，那么它的重合指数与自然语言的重合指数近似相等。</p>
+<p>​        ③ 否则，它的重合指数与随机分布的重合指数近似相等。</p>
+<p>通过计算IC(Y)一般能确定密钥长度，或验证由Kasiski测试法得到的长度是否正确。</p>
+
+    </div>
+
+    <div class="about">
+        <h1>关于本文</h1>
+        <p>本文作者 Berny Wang, 许可由 <a
+                target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+    </div>
+
+    
+        
+    
+</article>
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h4 class="title">Blog</h4>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/projects" class="item">Projects</a>
+                
+                <a href="/resume" class="item">Resume</a>
+                
+                <a href="/about" class="item">About</a>
+                
+                <a href="/atom.xml" class="item">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Projects</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/rsa-cli" class="item">RSA CLI</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/hexo-theme-cupertino" class="item">Hexo Theme Cupertino</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/a-calendar" class="item">A Calendar</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/auto-mirroring-bucket" class="item">Auto Mirroring Bucket</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Me</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/bernyw" class="item">GitHub</a>
+                
+                <a target="_blank" rel="noopener" href="https://codepen.io/bernyw" class="item">CodePen</a>
+                
+                <a target="_blank" rel="noopener" href="https://www.zhihu.com/people/ber-16-41" class="item">Patreon</a>
+                
+                <a target="_blank" rel="noopener" href="https://noc.social/@bernyw" class="item">Mastodon</a>
+                
+                <a href="mailto:mr.bernyw@outlook.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2022 Berny Wang<br >驱动由 <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+    </body>
+</html>

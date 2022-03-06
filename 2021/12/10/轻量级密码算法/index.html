@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>轻量级密码算法 - Berny&#39;s blog</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+<link rel="stylesheet" href="/css/waline.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+ 
+  
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+    <body data-color-scheme="auto">
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Blog</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">主页</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-codepen nav-item-icon" href="https://codepen.io/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-patreon nav-item-icon" href="https://www.zhihu.com/people/ber-16-41" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-mastodon nav-item-icon" href="https://noc.social/@bernyw" target="_blank">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        <article class="post">
+    <div class="meta">
+        
+        <div class="date" id="date">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <span>December</span>
+            
+            <span>10,</span>
+            <span>2021</span>
+        </div>
+        
+
+        <h2 class="title">轻量级密码算法</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>近年来，物联网技术及其在各行业的应用取得了持续发展。在物联网应用场景中，为了安全地实现众多物联网设备间的信息交互，通常需要以密码算法为基础提供安全的数据传输、设备认证等服务。由于物联网设备大多为传感器、微控制器等计算和存储能力较弱的轻量设备，轻量级密码算法成为了物联网环境下同时满足安全性和性能要求的可选方案之一。</p>
+<h1 id="通用密码算法的缺点"><a href="#通用密码算法的缺点" class="headerlink" title="通用密码算法的缺点"></a>通用密码算法的缺点</h1><p>目前，以AES、DES/3DES等对称密码算法、RSA、ECC等公钥密码算法、SHA系列哈希算法以及SM系列国密算法为代表的各类密码算法已广泛应用于不同行业的信息系统中，用于实现数据机密性、完整性、可用性的安全保护。但是，上述通用密码算法主要考虑主机级应用环境，在设计时优先满足的是安全性要求，未专门针对受限环境进行性能优化，因此，通用密码算法普遍存在着运算效率相对较低等性能局限性。</p>
+<h1 id="轻量级密码算法的优点"><a href="#轻量级密码算法的优点" class="headerlink" title="轻量级密码算法的优点"></a>轻量级密码算法的优点</h1><p>作为一类兼顾安全性和性能的密码算法，轻量级密码算法能够更好地适用于受限环境，其中受限因素主要包括芯片性能、能耗、存储空间、通信带宽、运行时间等软硬件条件，具体的受限应用场景包括<strong>射频识别（RFID）标签、非接触式智能卡应用、健康监测体域网、传感器网络、分布式控制系统等等。</strong></p>
+<p>与传统的通用密码算法相比，轻量级密码算法一般具有吞吐量较低、安全级别适中、性能较高等特点。</p>
+<h1 id="轻量级密码算法的特点"><a href="#轻量级密码算法的特点" class="headerlink" title="轻量级密码算法的特点"></a>轻量级密码算法的特点</h1><p><strong>吞吐量较低：</strong>在受限应用环境中，数据处理的规模通常较小，因此对轻量级密码算法的吞吐量要求较低。</p>
+<p><strong>安全级别适中：</strong>轻量级密码算法的安全强度要求一般为80比特以上，适合对长期安全性要求不高的应用场景（如RFID）。</p>
+<p><strong>性能较高：</strong>轻量级密码算法大多适合采用硬件实现，其目标是在保证一定安全性的前提下尽可能减少存储空间并提高运行效率。</p>
+<h1 id="轻量级密码算法的分类"><a href="#轻量级密码算法的分类" class="headerlink" title="轻量级密码算法的分类"></a>轻量级密码算法的分类</h1><p><strong>分组密码</strong>、公钥密码、<strong>哈希函数</strong>是众多类型的密码算法中最为常用的3类，但由于公钥密码一般基于数学困难问题而非复杂运算结构，因而在算法层面本身的轻量化空间较小。因此，下面对轻量级分组密码和哈希函数进行分别概述。</p>
+<h2 id="（一）轻量级分组密码"><a href="#（一）轻量级分组密码" class="headerlink" title="（一）轻量级分组密码"></a>（一）轻量级分组密码</h2><p>轻量级分组密码算法与传统分组密码算法相比具有以下特性。</p>
+<blockquote>
+<p><strong>分组长度更小：</strong>一些轻量级分组密码算法采用64比特或80比特分组长度，小于AES的128位分组长度。</p>
+<p><strong>密钥长度更小：</strong>为了提高性能，一些轻量级分组密码算法采用小于96比特的密钥长度（例如80比特的PRESENT算法）。但是，目前一般要求分组密码算法的密钥长度至少为112比特（例如采用双56比特密钥的3DES算法）。</p>
+<p><strong>轮函数更简单：</strong>轻量级分组密码算法采用的轮函数通常比传统分组密码算法更为简单，例如采用4比特S盒而非8比特S盒。轮函数的简化可降低对芯片面积的要求，例如PRESENT算法使用的4比特S盒仅需要28个GE（等效门），而AES算法的S盒需要395个GE。</p>
+<p><strong>密钥编排更简单：</strong>轻量级分组密码算法大多采用更简单的密钥编排方法用以即时生成子密钥，可降低内存、延时、能耗的要求。</p>
+</blockquote>
+<p><strong>通用分组密码与轻量级分组密码对比</strong></p>
+<p>![截屏2021-12-10 下午11.04.06](/Users/berny/Desktop/广西师范大学/项目组/轻量级加密/背景.assets/截屏2021-12-10 下午11.04.06.png)</p>
+<h2 id="（二）轻量级哈希函数"><a href="#（二）轻量级哈希函数" class="headerlink" title="（二）轻量级哈希函数"></a>（二）轻量级哈希函数</h2><p>轻量级哈希函数与传统哈希函数相比具有以下特性。</p>
+<blockquote>
+<p><strong>内部状态和输出长度更小：</strong>在对哈希函数的抗碰撞要求较高的情况下，足够大的输出长度十分重要；而在对抗碰撞要求不高的情况下，可以采用更小的内部状态和输出长度。因此，对于轻量级应用环境，可通过减小内部状态长度提高哈希函数性能。</p>
+<p><strong>消息长度更小：</strong>传统的哈希函数可支持较大的输入长度（约264比特），而在轻量级哈希函数的主要应用场景中，输入长度通常较小（约256比特）。因此可对哈希函数进行优化，通过缩短支持的消息长度以降低其他开销，进而适用于轻量级应用场景。</p>
+</blockquote>
+<p>几种典型的通用哈希函数与轻量级哈希函数的对比如表2所示。</p>
+<p><strong>表2 通用哈希函数与轻量级哈希函数对比</strong></p>
+<p>![截屏2021-12-10 下午11.08.32](/Users/berny/Desktop/广西师范大学/项目组/轻量级加密/背景.assets/截屏2021-12-10 下午11.08.32.png)</p>
+<p>![截屏2021-12-10 下午11.08.47](/Users/berny/Desktop/广西师范大学/项目组/轻量级加密/背景.assets/截屏2021-12-10 下午11.08.47.png)</p>
+<h1 id="轻量级密码的标准化"><a href="#轻量级密码的标准化" class="headerlink" title="轻量级密码的标准化"></a>轻量级密码的标准化</h1><p>目前，针对轻量级密码算法的标准化工作主要包括ISO/IEC 29192轻量级密码算法国际标准以及美国国家标准与技术研究院（NIST）轻量级密码算法标准化项目。</p>
+<h2 id="（一）ISO轻量级密码算法国际标准（ISO-IEC-29192）"><a href="#（一）ISO轻量级密码算法国际标准（ISO-IEC-29192）" class="headerlink" title="（一）ISO轻量级密码算法国际标准（ISO/IEC 29192）"></a>（一）ISO轻量级密码算法国际标准（ISO/IEC 29192）</h2><p>ISO于2012至2019年期间发布了一系列轻量级密码算法国际标准，系列标准具体包括分组密码、流密码、非对称密码、哈希函数、消息认证码、广播认证协议、认证加密等，详情如表3所示。</p>
+<p><strong>表3 ISO轻量级密码算法国际标准</strong></p>
+<p>![截屏2021-12-10 下午11.12.04](/Users/berny/Desktop/广西师范大学/项目组/轻量级加密/背景.assets/截屏2021-12-10 下午11.12.04.png)</p>
+<p>在ISO/IEC 29192标准中，轻量级密码算法的受限因素包括芯片面积（Chip area）、能耗（Energy consumption）、程序代码和内存大小（Program code size and RAM size）、通信带宽（Communication bandwidth）、运行时间（Execution time）共5类，安全强度要求至少为80比特（与3DES相当）。</p>
+<h2 id="（二）NIST轻量级密码算法标准化项目"><a href="#（二）NIST轻量级密码算法标准化项目" class="headerlink" title="（二）NIST轻量级密码算法标准化项目"></a>（二）NIST轻量级密码算法标准化项目</h2><p>NIST于2015年启动了轻量级密码算法标准化项目，并于2017年3月发布了《轻量级密码报告》（NISTIR 8114）。根据该报告，传统的通用密码算法适用于服务器、个人电脑、平板电脑，智能手机等设备，而轻量级密码算法适用于嵌入式系统、RFID、传感器网络等环境。</p>
+<p>2018年8月，NIST开始进行轻量级密码算法征集，接受面向软件或硬件受限环境的轻量级认证加密（AEAD）和哈希算法的投稿，并收到了57个算法。NIST分别于2019年4月和2019年8月公布了前两轮候选算法筛选结果，并于2021年3月宣布进入最终轮的10个算法为ASCON、Elephant、GIFT-COFB、Grain128-AEAD、ISAP、Photon-Beetle、Romulus、Sparkle、TinyJambu、Xoodyak，具体进展如表4所示。</p>
+<p>![截屏2021-12-10 下午11.18.31](/Users/berny/Desktop/广西师范大学/项目组/轻量级加密/背景.assets/截屏2021-12-10 下午11.18.31.png)</p>
+<p>下一步，NIST将对最终轮算法进行为期约12个月的标准化工作，最终形成NIST轻量级密码算法标准。</p>
+
+    </div>
+
+    <div class="about">
+        <h1>关于本文</h1>
+        <p>本文作者 Berny Wang, 许可由 <a
+                target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+    </div>
+
+    
+        
+    
+</article>
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h4 class="title">Blog</h4>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/projects" class="item">Projects</a>
+                
+                <a href="/resume" class="item">Resume</a>
+                
+                <a href="/about" class="item">About</a>
+                
+                <a href="/atom.xml" class="item">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Projects</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/rsa-cli" class="item">RSA CLI</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/hexo-theme-cupertino" class="item">Hexo Theme Cupertino</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/a-calendar" class="item">A Calendar</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/auto-mirroring-bucket" class="item">Auto Mirroring Bucket</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Me</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/bernyw" class="item">GitHub</a>
+                
+                <a target="_blank" rel="noopener" href="https://codepen.io/bernyw" class="item">CodePen</a>
+                
+                <a target="_blank" rel="noopener" href="https://www.zhihu.com/people/ber-16-41" class="item">Patreon</a>
+                
+                <a target="_blank" rel="noopener" href="https://noc.social/@bernyw" class="item">Mastodon</a>
+                
+                <a href="mailto:mr.bernyw@outlook.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2022 Berny Wang<br >驱动由 <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+    </body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>属性加密算法(ABE) - Berny&#39;s blog</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+<link rel="stylesheet" href="/css/waline.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+ 
+  
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+    <body data-color-scheme="auto">
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Blog</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">主页</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-codepen nav-item-icon" href="https://codepen.io/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-patreon nav-item-icon" href="https://www.zhihu.com/people/ber-16-41" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-mastodon nav-item-icon" href="https://noc.social/@bernyw" target="_blank">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        <article class="post">
+    <div class="meta">
+        
+        <div class="date" id="date">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <span>October</span>
+            
+            
+            
+            <span>24,</span>
+            <span>2021</span>
+        </div>
+        
+
+        <h2 class="title">属性加密算法(ABE)</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>区块链典型的一个应用场景是资源共享，而在实际应用中，很多参与者的数据很涉及机密，数据所有者并不乐意把自己的数据公开出来。</p>
+<ul>
+<li><p>如果数据明文在链上存证，虽然共享给其他人，但是数据被所有的人都能查看，不存在一点私密性。</p>
+</li>
+<li><p>如果数据所有者将数据使用自己的秘钥加密后在链上存证后，能实现数据的隐私保护，但是不能安全的共享给他人。</p>
+</li>
+</ul>
+<p>比如在金融领域，数据上链可以提高数据本身的安全性，也有利于监管机构从区块链中调取数据进行监管，但是为什么金融领域的区块链应用迟迟推进不下去呢？一个亟待解决的重要问题是，金融公司本身不愿意将数据存在链上。因为这些数据都是相当敏感且重要的，一旦数据外泄，会带来不小的损失。</p>
+<h1 id="二、基于属性的加密技术"><a href="#二、基于属性的加密技术" class="headerlink" title="二、基于属性的加密技术"></a>二、基于属性的加密技术</h1><h2 id="1-相关概念"><a href="#1-相关概念" class="headerlink" title="1. 相关概念"></a>1. 相关概念</h2><h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><p>百度百科中对属性的解释是：“属性就是人类对于一个对象的抽象方面的刻画。由于事物属性的相同或相异，客观世界中就形成了许多不同的事物类。具有相同属性的事物就形成一类，具有不同属性的事物就分别地形成不同的类。</p>
+<p>在ABE中，属性也有着相似的作用。举个例子，JackyLi是A大学信息安全学院的教授，那么“A大学”，“信息安全学院”以及“教授”就是ABE中刻画JackyLi这个人的多个属性，这些属性可以构成一个属性集合，我们可以把它记为集合<code>C_Jacky_Li</code>。</p>
+<h3 id="策略"><a href="#策略" class="headerlink" title="策略"></a>策略</h3><p>一种简单的理解是策略实际即是由属性及它们间关系所组成的一个逻辑表达式。</p>
+<p>例如下式<code>Policy1</code>：</p>
+<p>​                                                                    <code>参与X课题or（信息安全学院andA大学and教授）</code></p>
+<p>这是一条简单的策略，其表达的含义是唯有X课题组的成员或是A大学信息安全学院的教授才能满足其要求。</p>
+<h3 id="属性集合与策略匹配"><a href="#属性集合与策略匹配" class="headerlink" title="属性集合与策略匹配"></a>属性集合与策略匹配</h3><p>使用<code>C_Jacky_Li</code>与<code>Policy1</code>进行说明。</p>
+<ul>
+<li><p><code>C_Jacky_Li</code>集合中没有<code>参与X课题</code>这一属性，故其无法满足策略的前半部分；</p>
+</li>
+<li><p>而策略的后半部分，要求<code>信息安全学院</code>、<code>A大学</code>、<code>教授</code>这三个属性同时出现，而<code>C_Jacky_Li</code>同时包含了这三个属性，所以属性集合匹配策略后半部分</p>
+</li>
+<li><p>由于策略前后两部分是or的关系，故属性集合<code>C_Jacky_Li</code>能够满足策略<code>Policy1</code>，我们称之为属性集合与策略匹配成功。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200310153835797.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01pYTA3MTc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+</li>
+</ul>
+<h2 id="2-什么是ABE？"><a href="#2-什么是ABE？" class="headerlink" title="2. 什么是ABE？"></a>2. 什么是ABE？</h2><p>清楚了ABE中的属性及策略的概念，我们开始解释什么是ABE。抛开严谨的定义，用一句话说明ABE加密算法其实就是看属性集合与策略是否相匹配的一个公钥加密“游戏”。</p>
+<p>简单解释下这句话，首先<strong>ABE是一个公钥加密算法</strong>，既然是公钥加密算法，就有公钥和私钥的概念，每一名参与ABE系统的用户都有一个属于自己的私钥，而加密方在加密数据时使用的则是公钥，在ABE中我们弱化公钥这一概念，称之为<code>公共参数（public parameter）</code>。</p>
+<p>其次，在传统公钥加密中，用户会使用其私钥尝试解密密文，ABE也不例外。</p>
+<p>与传统方法不同的是，<strong>设计者将属性集合与策略嵌入到了用户私钥与密文中</strong>，这样一来，私钥与密文输入解密算法尝试解密的过程，实际也就是属性集合与策略相匹配的过程，倘若能够匹配成功，则算法顺利完成解密操作，用户可成功恢复出明文数据。倘若匹配失败，则用户无法恢复明文，解密失败。</p>
+<h2 id="3-KP-ABE和CP-ABE"><a href="#3-KP-ABE和CP-ABE" class="headerlink" title="3. KP-ABE和CP-ABE"></a>3. KP-ABE和CP-ABE</h2><p>上文中提到了ABE的解密过程中需要进行策略与属性集合匹配的操作，但实际我们并没有说清楚策略和属性集合分别在哪。这也就引出了属性加密算法基本上可以分为的两大类别KP-ABE和CP-ABE。</p>
+<ul>
+<li><p><strong>KP-ABE(key-policy)</strong><br>翻译为密钥策略属性加密。在KP-ABE 方案中，访问控制策略嵌入用户的解密私钥中，属性集合嵌入于密文中。在解密的过程中，用户将嵌入策略的密钥与嵌入属性集合的密文输入解密算法，只有密文所对应的属性值满足用户私钥关联的访问策略时，用户才能成功对加密数据进行解密。<strong>这种设计比较接近静态场景</strong>，此时密文用与其相关的属性加密存放在服务器上，当允许用户得到某些消息时，就分配一个特定的访问结构给用户。如果用户想解密多个文件，那么他必须拥有多个可以满足匹配的秘钥，否则不能解密多个文件。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/8136324-370919ea9ead9b6f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/840/format/webp" alt="img"></p>
+<p>​                                                                                                        KP-ABE应用图</p>
+</li>
+<li><p><strong>CP-ABE(Ciphertext-policy)</strong><br>翻译为密文策略属性加密，在CP-ABE方案中，访问控制策略嵌入在密文中，属性集合嵌入于用户的解密私钥。只有对应属性集合满足加密后的数据才可以进行解密。<strong>这种设计比较接近于现实中的应用场景</strong>，可以假象每个用户根据自身条件或者属性从属性机构得到密钥，然后加密者来制定对消息的访问控制。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/8136324-80d2ba1e0f6bea53.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/841/format/webp" alt="img"></p>
+<p>​                                                                                                        CP-ABE应用图</p>
+<p>帮助理解的话，可以参考Bethencourt发布的工具箱，基本实现了CP-ABE的全部功能。这是链接：<a target="_blank" rel="noopener" href="http://acsc.cs.utexas.edu/cpabe/">john bethencourt</a></p>
+</li>
+</ul>
+<p>CP-ABE与KP-ABE在结构上是一种对偶关系，这也就是为什么往往学者们在提出一个新的CP-ABE方案时，会在同一篇论文中同时再提出一个KP-ABE方案。同样条件与假设下，两类算法的密文密钥结构设计比较好类比与迁移。</p>
+<p>需要注意的一点是，这种相似性仅存在于结构上，<strong>CP-ABE与KP-ABE在应用场景方面有着极大的不同</strong>。</p>
+<ul>
+<li><p>CP-ABE由于策略嵌入密文中，这就意味着，数据拥有者可以通过设定策略去决定拥有哪些属性的人能够访问这份密文，也就相当于对这份数据做了一个粒度可以细化到属性级别的加密访问控制。应用场景一般是公有云上的数据加密存储与细粒度共享。</p>
+</li>
+<li><p>KP-ABE的应用场景则更加偏向于付费视频网站、日志加密管理等等。</p>
+</li>
+</ul>
+<h2 id="4-ABE的优势是什么？"><a href="#4-ABE的优势是什么？" class="headerlink" title="4. ABE的优势是什么？"></a>4. ABE的优势是什么？</h2><p>我们以CP-ABE为例，举一个简单的例子说明ABE相较传统公钥加密算法的优势。</p>
+<p>一个数据拥有者需要将一份明文文件，加密发送给N个不同的用户。</p>
+<ul>
+<li><p>倘若使用传统公钥加密算法，数据拥有者需要首先保存这N个用户的公钥（不考虑公钥证书的情况下），利用这N个不同公钥，使用该份明文文件，加密N次，形成N份不同的密文，分别发送给这个N个用户。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200310153930159.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01pYTA3MTc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+</li>
+<li><p>而使用ABE来完成这项任务则会轻松很多。此时，数据拥有者只需要制定一条仅有这N个用户才能满足的访问策略，接着输入公共参数PP、该条策略U以及明文文件至ABE加密算法，进行加密一次，形成唯一一份密文。得到密文后，数据拥有者将该份密文分别发送给这N个不同用户。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200310153955332.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01pYTA3MTc=,size_16,color_FFFFFF,t_70" alt="什么是ABE什么又叫做用户密钥的属性匹配加密属性"></p>
+</li>
+</ul>
+<p>从加密计算开销与存储开销的角度来看，ABE在该场景下（数据加密共享场景）相较于传统公钥加密算法，有着肉眼可见的性能优势，此处便不再赘述。</p>
+<h2 id="5-双线性映射Bilinear-Pairing"><a href="#5-双线性映射Bilinear-Pairing" class="headerlink" title="5. 双线性映射Bilinear Pairing"></a>5. 双线性映射Bilinear Pairing</h2><p><strong>定义</strong>：一个双线性映射是由两个向量空间上的元素，生成第三个向量空间上一个元素之函数，并且该函数对每个参数都是线性的。</p>
+<p><strong>理解：</strong>若<em>B</em>:<em>V</em>×<em>W</em>→<em>X</em>是一个双线性映射，则V固定，W可变时，W到X的映射是线性的，W固定，V可变时，V到X的映射也是线性的，也就是说保持双线性映射中的任意一个参数固定，另一个参数对X的映射都是线性的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">循环群     : 循環群是指能由單個元素生成的群。即存在一群內的元素g(此元素稱為此群的生成元)，使得群內的每個元素均為g的若干次方</span><br><span class="line">素数阶循环群: 含有素数个元素的循环群</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、论文阅读——Ciphertext-Policy-Attribute-Based-Encryption"><a href="#三、论文阅读——Ciphertext-Policy-Attribute-Based-Encryption" class="headerlink" title="三、论文阅读——Ciphertext-Policy Attribute-Based Encryption"></a>三、论文阅读——Ciphertext-Policy Attribute-Based Encryption</h1><h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>以前基于属性的加密系统使用属性来描述加密数据，并将策略内置到用户密钥中；而在我们的系统中，属性用于描述auser的凭证，加密数据的一方决定了谁可以解密的策略。因此，我们的方法在概念上更接近于传统的访问控制方法，如基于角色的访问控制（RBAC）。此外，我们提供了系统的一个实现，并给出了性能度量。</p>
+<h3 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1  Introduction"></a>1  Introduction</h3><p>在许多情况下，当用户加密敏感数据时，她必须建立一个特定的访问控制策略，以确定谁可以解密这些数据。例如，假设FBI在诺克斯维尔和旧金山的公共腐败正在调查涉及旧金山佬和田纳西国会议员的贿赂指控。</p>
+<p>例如，负责人可以指定访问该信息的以下访问结构：</p>
+<p><code>((“Public  Corruption  Office”AND(“Knoxville”OR“San Francisco”))OR(management-level&gt;5)OR“Name:  CharlieEppes”)</code></p>
+<p>这意味着只有在Knoxville或San Francisco的Public  Corruption  Office工作的代理人才能看到MMO，FBI官员在管理链中非常高，还有一位名叫CharlieEppes的顾问。</p>
+<p>拥有秘密数据的人能够基于对底层数据的特定知识选择访问策略是至关重要的。此外，这个人可能不知道应该能够访问数据的所有其他人的确切身份，但她可能只知道用描述性属性或凭据来描述他们。</p>
+<p>传统上，这种表现性访问控制是通过使用可信服务器在本地存储数据来实现的。服务器被委托作为参考监视器，用于检查用户在访问记录或文件之前是否提供了适当的证书。然而，服务越来越多地以分布式方式跨多台服务器存储数据。跨多个位置复制数据在性能和可靠性方面都具有优势。这种趋势的缺点是使用传统方法越来越难以保证数据的安全性；当数据存储在多个位置时，其中一个被压缩的可能性会显著增加。出于这些原因，我们希望要求敏感数据以加密的形式存储，以便即使服务器受损，敏感数据也将保持私有。大多数现有的公钥加密方法允许一方将数据加密到特定用户，但是，我们无法有效地处理更具表现力的加密访问控制类型，如上述示例。</p>
+<p><strong>我们的贡献。</strong>在这项工作中，我们提供了基于aciphertext策略属性的加密（CP-ABE）的第一个构造来解决这个问题，并给出了这样一个方案的第一个构造。在我们的系统中，<strong>用户的私钥将与任意数量的以字符串表示的属性相关联</strong>。另一方面，当一方在我们的系统中<strong>加密消息时会在属性上指定相关的访问结构</strong>。只有当用户的属性通过密码文本的访问结构时，用户才能解密密码文本。</p>
+<p>在数学层面上，我们系统中的访问结构由一个单调的“access tree”描述，其中访问结构的节点由阈值门和叶子描述属性组成。我们注意到AND可以被构造成n-of-n，OR是1-of-n。此外，我们可以通过将数字范围等更复杂的访问控制转换为小的访问树来处理它们（有关更多详细信息，请参阅实现部分的讨论）</p>
+<p><strong>我们的技术。</strong>我们强调，在CP-ABE中，加密器无法控制谁有权访问她加密的数据，除非她选择数据的描述属性。相反，她必须相信密钥颁发者会颁发适当的密钥来授予或拒绝适当用户的访问权限。在技术层面上，我们必须达到的主要目标是抗污染性：如果多个用户相互勾结，只有当至少一个用户能够自己解密密文时，他们才能解密密文。特别是，回到这个引言开头的例子，假设一个在旧金山恐怖主义办公室工作的联邦调查局特工和一个在纽约公共腐败办公室工作的朋友在一起。我们不希望这些勾结者能够通过结合他们的属性来解密秘密备忘录。在我们的环境中，这种类型的安全是必要的非过程控制。</p>
+<p>我们设计了一种新的私钥随机技术，它使用了一种新的<strong>两级随机屏蔽方法</strong>。这种方法有效地利用了具有<strong>可计算双线性映射</strong>的群，并且是我们在一般双线性群模型[6，28]中给出的安全性证明的关键。最后，我们提供了一个系统的实现来说明我们的系统在实践中表现良好。我们提供了我们的应用编程接口和实现结构的描述。此外，我们还提供了一些优化解密性能的技术，并通过实验测量了我们的性能特征。我们论文的其余部分结构如下。在第2节中，我们讨论了相关的工作。在第3节中，我们给出了定义，并给出了具有可有效计算双线性映射的群的背景。然后我们在第4节给出我们的构造。然后，我们在第5节中介绍我们的实施和性能测量。最后，我们在第6节结束。</p>
+<h3 id="2-Related-Work"><a href="#2-Related-Work" class="headerlink" title="2  Related Work"></a>2  Related Work</h3><h3 id="3-Background"><a href="#3-Background" class="headerlink" title="3  Background"></a>3  Background</h3><p>首先给出了密文策略属性加密（CP-ABE）安全性的形式化定义。接下来，我们将给出关于<strong>双线性映射</strong>的背景信息。正如Goyal等人[15]的工作一样，我们定义了一个访问结构，并在安全定义中使用它。但是，在这些定义中，属性将描述用户，访问结构将用于标记不同的加密数据集。</p>
+<h4 id="3-1-定义"><a href="#3-1-定义" class="headerlink" title="3.1 定义"></a>3.1 定义</h4><p><strong>定义1（访问结构[1]）</strong>让{P1，P2，…，Pn}成为一组参与方。一个集合A⊆2^{P1，P2，…，Pn}是单调的，如果∀B、 C：如果B∈A并且B⊆C则C∈A。访问结构（分别为单调访问结构）是{P1，P2，…，Pn}的非空子集的集合（分别为单调集合），即A⊆2{P1，P2，…，Pn}\{∅}。在A中的集合称为授权集合，不在A中的集合称为未授权集合。</p>
+<p>在我们的上下文中，各方的角色由属性承担。因此，访问结构将包含授权的属性集合。我们将注意力限制在单调的访问结构上。然而，也有可能（效率低下）使用我们的技术实现通用访问结构，方法是将“非属性”作为单独的属性。因此，系统中的属性数量将增加一倍。从现在起，除非另有说明，否则访问结构指的是单调访问结构。</p>
+<p>基于密文策略属性的加密方案由四个基本算法组成：设置、加密、密钥生成和解密。此外，我们允许选择第五个算法委托。</p>
+<p>**Setup.**设置算法只接受隐式安全参数。它输出公共参数PK和主密钥MK.</p>
+<p>**Encrypt(PK,M,A).**加密算法将公共参数PK、消息M和访问结构A作为输入。该算法将加密并生成密文CT，这样只有拥有满足访问结构的一组属性的用户才能解密消息。我们假设密文隐式地包含A。</p>
+<p>**Key Generation(MK,S).**密钥生成算法将主密钥MK和一组描述密钥的属性作为输入。它输出私钥SK.</p>
+<p>**Decrypt(PK,CT,SK).**解密算法将公共参数PK、包含访问策略A的密文CT和私钥SK作为输入，这是一组属性的私钥。如果属性集满足访问结构A，则该算法将解密密文并返回消息M.</p>
+<p>**Delegate(SK，̃S).**该委托算法以某一组属性S的私钥SK，和一个 ̃S⊆S的集合作为输入。它为属性集 ̃S输出一个密钥 ̃SK。</p>
+<p>我们现在描述密文策略ABE方案的安全模型。安全模型允许虚拟机查询无法用于解密质询密文的任何私钥。在CP-ABE中，密文用访问结构标识，私钥用属性标识。因此，在我们的安全定义中，对手将选择对访问结构A*的加密提出质疑，并可以要求任何私钥S，以使S不满足S*。我们现在开始正式的安全游戏。</p>
+<p><strong>Security Model for CP-ABE</strong></p>
+<p><strong>Setup.</strong> 挑战者运行设置算法，并向对手提供公共参数PK。</p>
+<p>**Phase 1.**对手根据属性集S1,…,Sq1重复生成私钥。</p>
+<p>**Challenge.**对手提交两条长度相等的消息M0和M1。此外，对手还提供了一个挑战访问权限A*使得来自第1阶段设置的S1,…,Sq1都不能满足访问结构。挑战者翻转一个随机硬币b，然后在A*下加密Mb为密文CT*，并交给对手。</p>
+<p>**Phase 2.**重复Phase 1，但有一个限制，即没有属性集Sq1+1，…，Sq满足了相应的访问结构的挑战。</p>
+<p><strong>Guess</strong>.对手输出一个对于b的猜测b′</p>
+<p>在这个游戏中，对手A的优势被定义为<code>Pr[b′=b]−1/2</code>。我们注意到，通过允许在阶段1和阶段2中进行解密查询，该模型可以很容易地扩展到处理选择的密文。</p>
+<p><strong>Definition 2</strong>如果所有多项式时间的对手在上述博弈中最多具有可忽略的优势，那么基于密文策略属性的加密方案就是安全的。</p>
+<h4 id="3-2-双线性映射"><a href="#3-2-双线性映射" class="headerlink" title="3.2 双线性映射"></a>3.2 双线性映射</h4><p>我们给出了一些关于具有有效可计算双线性映射的群的事实。</p>
+<p>设G0和G1是素数序p的两个乘法循环群。设g为G0的生成器，e为双线性映射，e：G0×G0→G1。双线性映射具有以下属性：</p>
+<ol>
+<li>双线性：对于所有的u，v∈G0，并且a，b∈Z<del>p</del>，我们有e(u^a^，v^b^)=e(u，v)^ab^.</li>
+<li>非简并性：e(g,g) !=1。</li>
+</ol>
+<p>我们说G0是一个双线性群，如果群操作在G0和双线性映射e:G0×G0→G1两者都是可有效计算的。请注意，映射是对称的，因为e(g^a^ ,g^b^) =e(g,g)^ab^=e(g^b^,g^a^).</p>
+<h3 id="4-Our-Construction"><a href="#4-Our-Construction" class="headerlink" title="4  Our Construction"></a>4  Our Construction</h3><p>在本节中，我们提供了系统的构建。我们首先描述访问树模型和属性，分别描述密文和私钥。接下来，我们给出了方案的描述。最后，我们讨论了安全性、效率和密钥撤销。我们在附录A中提供了我们的安全证明。</p>
+<h4 id="4-1-Our-Model"><a href="#4-1-Our-Model" class="headerlink" title="4.1  Our Model"></a>4.1  Our Model</h4><p>在我们的构造中，私有密钥将被标识为一组描述性属性S。希望加密消息的一方将通过访问树结构指定私有密钥必须满足的策略来解密。树的每个内部节点都是一个阈值门，叶子与属性相关联。(我们注意到这个设置非常具有表现力。例如，我们可以用“AND”和“OR”门来表示一棵树，分别使用2中的2和2中的1。)当且仅当将私有密钥的属性分配给树的节点使树满足时，用户才能用给定的密钥解密密文。我们使用与[15]相同的表示法来描述访问树，尽管在我们的示例中，属性用于标识键(而不是数据)。</p>
+<p>**Access tree T.**设T是表示访问结构的树。树的每个非叶节点代表一个阈值门，由它的子节点和一个阈值描述。如果numx为节点x的子节点数，kx为其阈值，则0&lt; kx≤numx。当kx= 1时，阈值门是OR门，当kx=numx时，阈值门是and门。树的每个叶节点x由一个属性和一个阈值kx= 1来描述。</p>
+<p>为了方便使用访问树，我们定义了几个函数。我们用<code>parent(x)</code>来表示树中节点x的父节点。函数<code>att(x)</code>仅当x是一个叶节点并表示与树中的叶节点x相关联的属性时才被定义。访问树T还定义了每个节点的孩子之间的排序,也就是说,一个节点的孩子从1到num编号。函数index(x)返回这样一个与节点x相关联的数字。其中，索引值以任意方式为给定键唯一地分配给访问结构中的节点。</p>
+<p>**Satisfying an access tree.**设T是根为r的访问树。用Tx表示T根于节点x的子树，因此T与Tr相同。如果一组属性γ满足访问树Tx，则表示为Tx(γ) = 1。我们递归地计算Tx(γ)如下。</p>
+<p>如果x是一个非叶节点，对节点x的所有子节点x ‘求Tx ‘ (γ)当且仅当至少kx子节点返回1时，Tx(γ)返回1。如果x是叶节点，则当且仅当att(x)∈γ时，Tx(γ)返回1。</p>
+<h4 id="4-2-Our-Construction"><a href="#4-2-Our-Construction" class="headerlink" title="4.2  Our Construction"></a>4.2  Our Construction</h4><p>设G0是素数阶p的双线性群，设g是G0的生成元。另外，设e:G0×G0→G1表示双线性映射。一个安全参数，κ，将决定组的大小。我们还定义了对于 i∈Z<del>p</del> 的拉格朗日系数∆i,S和<img src="/Users/berny/Desktop/%E5%B9%BF%E8%A5%BF%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6/%E9%A1%B9%E7%9B%AE%E7%BB%84/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86/CP-ABE/%E8%AE%BA%E6%96%87%E4%B8%8E%E7%AC%94%E8%AE%B0/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86(ABE)/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95(ABE" alt="截屏2021-10-25 下午10.27.04">.assets/截屏2021-10-25 下午10.27.04.png)中元素的集合S。</p>
+<p>我们还将使用一个哈希函数H:{0,1}^*^→G0，我们将其建模为一个随机oracle。这个函数将把任何描述为二进制字符串的属性映射到一个随机的group元素。如下是我们的建设。</p>
+<p>**Setup.**建立算法将选择一个素数阶p的双线性群G<del>0</del>和生成元g，然后选择两个随机指数α，β∈Z<del>p</del>。公开密码匙以下列方式公布：<img src="/Users/berny/Desktop/%E5%B9%BF%E8%A5%BF%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6/%E9%A1%B9%E7%9B%AE%E7%BB%84/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86/CP-ABE/%E8%AE%BA%E6%96%87%E4%B8%8E%E7%AC%94%E8%AE%B0/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86(ABE)/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95(ABE" alt="截屏2021-10-26 上午12.20.27">.assets/截屏2021-10-26 上午12.20.27.png)主密钥MK为 (β，g^α^ ).（注意f只用于委托）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Output(<span class="params">pk_t，mk_t</span>)    </span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">setup</span>(<span class="params">self</span>):</span></span><br><span class="line">	g，gp = group.random(G1)，group.random(G2)</span><br><span class="line">	alpha，beta = group.random(ZR)，group.random(ZR)</span><br><span class="line">	<span class="comment"># initialize pre-processing for generators初始化生成器的预处理</span></span><br><span class="line">	g.initPP(); gp.initPP()</span><br><span class="line"></span><br><span class="line">	h = g ** beta; f = g ** ~beta</span><br><span class="line">	e_gg_alpha = pair(g，gp ** alpha)</span><br><span class="line"></span><br><span class="line">	pk = &#123; <span class="string">&#x27;g&#x27;</span>:g，<span class="string">&#x27;g2&#x27;</span>:gp，<span class="string">&#x27;h&#x27;</span>:h，<span class="string">&#x27;f&#x27;</span>:f，<span class="string">&#x27;e_gg_alpha&#x27;</span>:e_gg_alpha &#125;</span><br><span class="line">	mk = &#123;<span class="string">&#x27;beta&#x27;</span>:beta，<span class="string">&#x27;g2_alpha&#x27;</span>:gp ** alpha &#125;</span><br><span class="line">	<span class="keyword">return</span> (pk，mk)</span><br></pre></td></tr></table></figure>
+
+<p>g(= g1)，gp( = g2)分别是群G1，G2的生成元，由group.random(G1)与group.random(G2)生成。</p>
+<p>α,β是p阶整数集合Z<del>p</del>的随机数，由group.random(ZR)生成. 方法返回pk和mk.</p>
+<p>@Input和@Output函数是修饰器，在函数输入输出前进行类型检查，如果不对则报错，下同.</p>
+<p>**Encrypt(PK,M,T).**加密算法在树访问结构T下加密消息M。算法首先为树T中的每个节点x(包括叶子)选择一个多项式qx。这些多项式按照下面的方式从根节点R开始，以自上而下的方式选择。对于树中的每个节点x，设置多项式q<del>x</del>的次数d<del>x</del>比该节点的阈值k<del>x</del>小1，即d<del>x</del>=k<del>x</del>−1。</p>
+<p>算法从根节点R开始，随机选取 s∈Z<del>p</del>，并设q<del>R</del>(0) =s。然后，随机选取多项式q<del>R</del>的其他点，完全定义多项式q<del>R</del>。<br>对于任何其他节点，设置q<del>x</del>(0) =q<del>parent(x)</del> (index(x))，并随机选择d<del>x</del>其他点来完全定义q<del>x</del>。</p>
+<p>设Y是T中的叶节点集合。然后通过给定树的访问结构T和计算来构造密文.</p>
+<p><img src="/Users/berny/Desktop/%E5%B9%BF%E8%A5%BF%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6/%E9%A1%B9%E7%9B%AE%E7%BB%84/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86/CP-ABE/%E8%AE%BA%E6%96%87%E4%B8%8E%E7%AC%94%E8%AE%B0/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86(ABE)/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95(ABE" alt="截屏2021-10-26 上午12.58.39">.assets/截屏2021-10-26 上午12.58.39.pn)</p>
+<h1 id="四、现有研究"><a href="#四、现有研究" class="headerlink" title="四、现有研究"></a>四、现有研究</h1><p>CP-ABE基于属性的加密运用密码机制保护数据，由数据拥有者规定访问密文的策略，将属性集合与访问资源相关联，数据使用者可以根据自己的授权属性的访问密文信息，该技术适合隐私数据共享等访问类应用。</p>
+<p>CP-ABE由于策略嵌入密文中，这就意味着数据拥有者可以通过设定策略去决定拥有哪些属性的人能够访问这份密文，也就相当于对这份数据做了一个粒度可以细化到属性级别的加密访问控制，CP-ABE的应用场景一般是公有云上的数据加密存储与细粒度共享。</p>
+<h2 id="CP-ABE研究现状总结"><a href="#CP-ABE研究现状总结" class="headerlink" title="CP-ABE研究现状总结"></a>CP-ABE研究现状总结</h2><p>CP-ABE最早的雏形是来源于，2005年，Sahai针对生物特征进行加密的容错性问题中利用双线性对知识，提出的一种模糊基于身份加密的概念.<br>之后引申出ABE的概念，并给出了小规模属性集合，与大规模属性集合的ABE方案，以及基于确定性MBDH假设(Modified Bilinear Diffie - Hellman)对小规模属性集合ABE方案完成安全性证明，和判定性BDH假设(Bilinear Diffie - Hellman)对大规模属性集合的ABE方案完成安全性证明. 局限性在于方案描述能力很弱，只支持门限访问结构. 不能广泛使用.<br><a target="_blank" rel="noopener" href="https://link.springer.com/content/pdf/10.1007%2F11426639_27.pdf">SAHAI A，WATERS B. Fuzzy identity-based encryption[C]//The 24th Annual International Conference on the Theory and Applications of Cryptographic Techniques. 2005: 457-473.</a></p>
+<p>2006年，在Sahai等的基础上，Goyal等首次将ABE划分为KP-ABE和CP-ABE方案，并提出第一个可用的KP-ABE模型. 该方案引入访问结构树，表达能力更强. 提出大规模属性集合的KP-ABE方案，实现可选择性安全模型的安全性证明.<br><a target="_blank" rel="noopener" href="https://eprint.iacr.org/2006/309.pdf">GOYAL V，PANDEY O，SAHAI A，et al. Attribute-based encryption for<br>fine-grained access control of encrypted data[C]//The 13th ACM Conference on Computer and Communications Security. ACM，2006: 89-98.</a></p>
+<p>2007年，Ostrovsky等提出第一个支持NOT操作的访问结构，即支持非单调访问结构的KP-ABE方案. 并且使用线性秘密共享LSSS表示访问结构. 实现可选择安全性.<br><a target="_blank" rel="noopener" href="https://eprint.iacr.org/2007/323.pdf">Rafail Ostrovsky，Amit Sahai，and Brent Waters. 2007. Attribute-based encryption with non-monotonic access structures. In Proceedings of the 14th ACM conference on Computer and communications security (CCS ‘07). Association for Computing Machinery，New York，NY，USA，195–203.</a></p>
+<p>同年，Bethencour等将访问树结构引入密文，提出第一个CP-ABE方案. 局限在于只实现了一般群模型下的安全性证明(启发式安全)，实用性不广.<br><a target="_blank" rel="noopener" href="http://web.cs.ucla.edu/~sahai/work/web/2007%20Publications/SSP2007.pdf">J. Bethencourt，A. Sahai and B. Waters，“Ciphertext-Policy Attribute-Based Encryption,” 2007 IEEE Symposium on Security and Privacy (SP ‘07)，2007，pp. 321-334，doi: 10.1109/SP.2007.11.</a></p>
+<p>再之后，Cheung等提出标准模型下的可证明安全的CP-ABE方案，使用CHK技术进行扩展. 局限在于支持的访问结构简单，表达能力不强，而且密文，公钥太长，效率较低.<br><a target="_blank" rel="noopener" href="https://eprint.iacr.org/2007/183.pdf">Ling Cheung and Calvin Newport. 2007. Provably secure ciphertext policy ABE. In Proceedings of the 14th ACM conference on Computer and communications security (CCS ‘07). Association for Computing Machinery，New York，NY，USA，456–465.</a></p>
+<p>2008年，Waters等发展了Bethencour等的工作，提出一个高效通用访问结构的CP-ABE方案，且实现标准模型的选择安全性.<br><a target="_blank" rel="noopener" href="https://eprint.iacr.org/2008/290.pdf">Waters B. (2011) Ciphertext-Policy Attribute-Based Encryption: An Expressive，Efficient，and Provably Secure Realization. In: Catalano D.，Fazio N.，Gennaro R.，Nicolosi A. (eds) Public Key Cryptography – PKC 2011. PKC 2011.</a></p>
+<p>但这里之前的工作都没有实现适应性安全，所以实际可用性不强.<br>2010年，Lewko等提出将对偶系统加密技术应用到CP-ABE，实现了标准模型下的适应性安全. 不过局限在于方案基于合数阶双线性群，依赖大数分解困难问题作为安全依据，所以效率低下.<br><a target="_blank" rel="noopener" href="https://eprint.iacr.org/2010/110.pdf">Lewko A.，Okamoto T.，Sahai A.，Takashima K.，Waters B. (2010) Fully Secure Functional Encryption: Attribute-Based Encryption and (Hierarchical) Inner Product Encryption. In: Gilbert H. (eds) Advances in Cryptology – EUROCRYPT 2010.</a></p>
+<p>之后，Okamoto和Takashima引入对偶配对向量空间(Dual Pairing Vector Space，DPVS)技术，实现基于素数阶双线性群的CP-ABE方案. 首次做到了效率，安全兼得的效果.<br><a target="_blank" rel="noopener" href="https://eprint.iacr.org/2010/563.pdf">Tatsuaki Okamoto and Katsuyuki Takashima. 2010. Fully secure functional encryption with general relations from the decisional linear assumption. In Proceedings of the 30th annual conference on Advances in cryptology (CRYPTO’10). Springer-Verlag，Berlin，Heidelberg，191–208.</a></p>
+<p>最近，Lewko和Waters提出了将标准模型下选择安全的方案转换为适应性安全的通用方法.<br><a target="_blank" rel="noopener" href="https://eprint.iacr.org/2012/326.pdf">Lewko A.，Waters B. (2012) New Proof Methods for Attribute-Based Encryption: Achieving Full Security through Selective Techniques. In: Safavi-Naini R.，Canetti R. (eds) Advances in Cryptology – CRYPTO 2012. CRYPTO 2012.</a></p>
+<h2 id="撤销性CP-ABE研究现状"><a href="#撤销性CP-ABE研究现状" class="headerlink" title="撤销性CP-ABE研究现状"></a>撤销性CP-ABE研究现状</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>大量用户环境下，通常存在用户身份变化或用户私钥丢失的情况，为了使系统安全，用户正确解密，需要撤销属性并更新私钥. 抵抗用户合谋攻击是CP-ABE方案的基本要求，抵抗撤销用户和未撤销用户的合谋攻击是支持撤销的CP-ABE方案的另一个安全要求.<br>基于属性撤销的影响范围可以将属性撤销分为</p>
+<ul>
+<li>用户撤销: 撤销特定用户所有属性，不影响其他用户</li>
+<li>用户部分属性撤销: 撤销特定用户特定属性，不影响其他用户和该用户其他属性</li>
+<li>系统属性撤销: 撤销特定属性，所有用户都不再拥有该属性权限<br>其中用户部分属性撤销称为属性级用户撤销，是最细粒度的撤销方式.</li>
+</ul>
+<p>基于撤销属性的执行者分为</p>
+<ul>
+<li>直接撤销: 数据拥有者列出撤销用户的范围</li>
+<li>间接撤销: 授权机构周期性更新未撤销用户私钥，只有更新的用户才能解密成功，已撤销用户得不到更新</li>
+</ul>
+<p><img src="/Users/berny/Desktop/%E5%B9%BF%E8%A5%BF%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6/%E9%A1%B9%E7%9B%AE%E7%BB%84/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86/CP-ABE/%E8%AE%BA%E6%96%87%E4%B8%8E%E7%AC%94%E8%AE%B0/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86(ABE)/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95(ABE).assets/20210502101056813.png" alt="20210502101056813"></p>
+<h3 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h3><p><strong>直接撤销研究历程</strong><br>2007年，Ostrovsky等提出第一种直接撤销的CP-ABE方案，在被撤销用户中加入标识”非”，使之不能解密对应数据. 缺陷是效率不高.<br><a target="_blank" rel="noopener" href="https://eprint.iacr.org/2007/323.pdf">Rafail Ostrovsky，Amit Sahai，and Brent Waters. 2007. Attribute-based encryption with non-monotonic access structures. In Proceedings of the 14th ACM conference on Computer and communications security (CCS ‘07). Association for Computing Machinery，New York，NY，USA，195–203.</a></p>
+<p>2009年，Attrapadung等基于广播加密机制提出一种直接撤销CP-ABE方案. 效率高.<br><a target="_blank" rel="noopener" href="https://www.researchgate.net/publication/221425378_Conjunctive_Broadcast_and_Attribute-Based_Encryption">Attrapadung N.，Imai H. (2009) Conjunctive Broadcast and Attribute-Based Encryption. In: Shacham H.，Waters B. (eds) Pairing-Based Cryptography – Pairing 2009.</a></p>
+<p>同年，Attrapadung等又提出一种混合撤销的CP-ABE方案，采用广播加密思想，通过发送者在加密过程中添加撤销列表，实现基于kp-ABE和CP-ABE的属性直接撤销，该方案减少了属性撤销的成本。支持数据拥有者选择直接和间接撤销的方式，但之后不能更改.<br><a target="_blank" rel="noopener" href="https://link.springer.com/chapter/10.1007/978-3-642-10868-6_17">Attrapadung N.，Imai H. (2009) Attribute-Based Encryption Supporting Direct/Indirect Revocation Modes. In: Parker M.G. (eds) Cryptography and Coding. IMACC 2009.</a></p>
+<p>同年，Zhang等提出一种支持与门的CP-ABE方案，支持直接属性撤销. 缺陷是表达力不足.<br><a target="_blank" rel="noopener" href="https://www.researchgate.net/publication/261089326_FDR-ABE_Attribute-Based_Encryption_with_Flexible_and_Direct_Revocation">Zhang，Yinghui &amp; Chen，Xiaofeng &amp; Li，Jin &amp; Li，Hui &amp; Li，Fenghua. (2013). FDR-ABE: Attribute-Based Encryption with Flexible and Direct Revocation. Proceedings - 5th International Conference on Intelligent Networking and Collaborative Systems，INCoS 2013. 38-45. 10.1109/INCoS.2013.16.</a></p>
+<p>2014年，张应辉等提出基于与门访问结构的密文恒定的可撤销CP-ABE方案. 缺陷是表达力不足.<br><a target="_blank" rel="noopener" href="http://www.jcr.cacrnet.org.cn/CN/abstract/abstract57.shtml">张应辉，郑东，李进，李晖 密文长度恒定且属性直接可撤销的基于属性的加密 Journal Article 2014 密码学报 10.13868/j.cnki.jcr.000044 465-480</a></p>
+<p>2017年，Wang等基于合数阶群提出直接撤销的CP-ABE方案. 在标准模型下，基于双系统加密技术证明了该方案的适应性安全.<br><a target="_blank" rel="noopener" href="https://www.researchgate.net/publication/311003750_New_directly_revocable_attribute-based_encryption_scheme_and_its_application_in_cloud_storage_environment">Wang，H.，Zheng，Z.，Wu，L. et al. New directly revocable attribute-based encryption scheme and its application in cloud storage environment. Cluster Comput 20，2385–2392 (2017).</a></p>
+<p>2018年，Liu等提出有效直接撤销CP-ABE方案，通过在密文嵌入撤销列表实现撤销，仅包含撤销用户的未过期私钥，所以撤销列表很短.<br><a target="_blank" rel="noopener" href="https://eprint.iacr.org/2018/330.pdf">Liu J.K.，Yuen T.H.，Zhang P.，Liang K. (2018) Time-Based Direct Revocable Ciphertext-Policy Attribute-Based Encryption with Short Revocation List. In: Preneel B.，Vercauteren F. (eds) Applied Cryptography and Network Security. ACNS 2018.</a></p>
+<p><strong>间接撤销研究历程</strong><br>2006年，Pirretti等提出第一个实现用户间接撤销的CP-ABE方案. 为每个用户属性设置有效期，属性授权周期性发布密钥更新参数，如果属性有效期到了，属性授权停止更新该属性的参数，进而完成属性撤销. 缺陷是要求授权者需要时刻在线进行更新操作，而且拥有者发布密文时需要和授权确定有效期.<br><a target="_blank" rel="noopener" href="https://www.cs.utexas.edu/~bwaters/publications/papers/attr_systems.pdf">Matthew Pirretti，Patrick Traynor，Patrick McDaniel，and Brent Waters. 2006. Secure attribute-based systems. In Proceedings of the 13th ACM conference on Computer and communications security (CCS ‘06). Association for Computing Machinery，New York，NY，USA，99–112.</a></p>
+<p>2007年，Bethencourrt等提出同上相似的方案，不过进行了优化，用属性终止日期代替有效期，将密文与时间关联(密钥也和时间关联)，解密时需要密钥关联时间大于密文关联时间才能成功(终止日期之前). 方案不需要数据拥有者和授权者进行协商有效期，但是仍需要授权者定期更新.<br><a target="_blank" rel="noopener" href="https://www.cs.utexas.edu/~bwaters/publications/papers/cp-abe.pdf">J. Bethencourt，A. Sahai and B. Waters，“Ciphertext-Policy Attribute-Based Encryption,” 2007 IEEE Symposium on Security and Privacy (SP ‘07)，2007，pp. 321-334</a></p>
+<p>2010年，在上面研究的基础上，Liang等为了解决授权者需要定期更新的负担，提出基于二叉树结构实现的用户撤销CP-ABE方案. 通过发布公钥参数更新密钥，不过是定时发布，所以虽然不用授权者实时更新密钥，但是不能立即撤销. 而且需要授权者参与用户撤销，增加了授权者的负担.<br><a target="_blank" rel="noopener" href="http://bbcr.uwaterloo.ca/~x27liang/papers/abe%20with%20revocation.pdf">Liang，Xiaohui &amp; Lu，Rongxing &amp; Lin，Xiaodong. (2010). Ciphertext Policy Attribute Based Encryption with Efficient Revocation.</a></p>
+<p><strong>总结直接撤销和间接撤销的目前存在的问题:</strong><br>(1) 方案只能阻止用户继续访问密钥撤销之后的密文，不能阻止访问撤销之前的密文(因为如果不更新密文，之前的密文的访问结构依然是符合用户密钥属性集的)，所以需要再撤销属性之后更新密文的访问结构(也就是需要更新密文本身). 这个问题称为可撤销存储.<br>(2) 不能实现实时，属性级用户撤销，即没有得到细粒度访问控制方案. 亟待解决.<br>(3) 没有一个方案能够实现性能，表达力，安全性三者得兼. 现在依然需要一个集大成的方案.</p>
+<p><strong>可撤销存储研究历程</strong><br>2012年，Sahai等提出第一个可撤销存储的CP-ABE方案(Revocable-Storage CP-ABE，RS-CP-ABE)，实现用户撤销的同时，实现了时间机制的密文更新. 但是时间是属性集合元素，所以表达力不强，而且密文较长，性能较差.<br><a target="_blank" rel="noopener" href="https://eprint.iacr.org/2012/437.pdf">Sahai A.，Seyalioglu H.，Waters B. (2012) Dynamic Credentials and Ciphertext Delegation for Attribute-Based Encryption. In: Safavi-Naini R.，Canetti R. (eds) Advances in Cryptology – CRYPTO 2012. CRYPTO 2012.</a></p>
+<p>2013年，Lee等提出一种全新的密文更新方案，自我更新加密(Self-Updatable Encryption，SUE)，并实现了同时支持用户撤销和密文更新的RS-CP-ABE方案. 缺陷是在合数阶群下构造，效率很低.<br><a target="_blank" rel="noopener" href="https://www.researchgate.net/publication/264967323_Self-Updatable_Encryption_Time_Constrained_Access_Control_with_Hidden_Attributes_and_Better_Efficiency">Lee K.，Choi S.G.，Lee D.H.，Park J.H.，Yung M. (2013) Self-Updatable Encryption: Time Constrained Access Control with Hidden Attributes and Better Efficiency. In: Sako K.，Sarkar P. (eds) Advances in Cryptology - ASIACRYPT 2013. ASIACRYPT 2013.</a></p>
+<p>2015年，Lee等之后又提出一种素数阶的RS-CP-ABE方案，性能提升了，但是安全性是基于q-type假设进行证明，非常不实用.<br><a target="_blank" rel="noopener" href="https://eprint.iacr.org/2014/231.pdf">Lee，K. Self-updatable encryption with short public parameters and its extensions. Des. Codes Cryptogr. 79，121–161 (2016).</a></p>
+<p><strong>属性级用户撤销研究历程</strong><br>2011年，Hur等提出第一种具有属性级撤销能力的CP-ABE方案，增强了用户访问控制的前向安全和后向安全，但由于KEK密钥是对用户通用的(不同用户没有区别)，所以不能抵抗已撤销用户和未撤销用户的合谋攻击.<br><a target="_blank" rel="noopener" href="https://www.researchgate.net/publication/224193404_Attribute-Based_Access_Control_with_Efficient_Revocation_in_Data_Outsourcing_Systems">Hur，Junbeom &amp; Noh，Dong Kun. (2011). Attribute-Based Access Control with Efficient Revocation in Data Outsourcing Systems. Parallel and Distributed Systems，IEEE Transactions on. 22. 1214 - 1221. 10.1109/TPDS.2010.203.</a></p>
+<p>同年，Yang等提出云存储环境下支持细粒度属性撤销的CP-ABE方案，相对Hur等的工作有所优化，不需要数据拥有者实时在线，不需要云服务器协作访问控制. 但是安全性是基于随机预言模型证明，不够理想.<br><a target="_blank" rel="noopener" href="https://ece.uwaterloo.ca/~kan.yang/paper/C10-AsiaCCS.pdf">Yang，Kan &amp; Jia，Xiaohua &amp; Ren，Kaili. (2013). Attribute-based fine-grained access control with efficient revocation in cloud storage systems. ASIA CCS 2013 - Proceedings of the 8th ACM SIGSAC Symposium on Information，Computer and Communications Security. 523-528. 10.1145/2484313.2484383.</a></p>
+<p>2018年，Xue等基于非单调访问结构提出一种细粒度属性撤销的CP-ABE方案，缺陷是基于合数阶群构造，效率低下.<br><a target="_blank" rel="noopener" href="https://www.researchgate.net/publication/323009670_Efficient_Attribute-based_Encryption_with_Attribute_Revocation_for_Assured_Data_Deletion">Xue，Liang &amp; Yu，Yong &amp; Li，Yannan &amp; Au，Man Ho &amp; Du，Xiaojiang &amp; Yang，Bo. (2018). Efficient Attribute-based Encryption with Attribute Revocation for Assured Data Deletion. Information Sciences. 479. 10.1016/j.ins.2018.02.015.</a></p>
+<p>同年，闫玺玺等提出具有隐私保护和支持用户撤销的CP-ABE方案，但是不能抵抗已撤销用户和未撤销用户的合谋攻击.<br><a target="_blank" rel="noopener" href="http://gb.oversea.cnki.net/KCMS/detail/detail.aspx?filename=XXAQ201706004&dbcode=CJFD&dbname=CJFD2017">闫玺玺，叶青，刘宇; 云环境下支持隐私保护和用户撤销的属性基加密方案，信息网络安全，Netinfo Security</a></p>
+<h2 id="追踪性CP-ABE研究现状"><a href="#追踪性CP-ABE研究现状" class="headerlink" title="追踪性CP-ABE研究现状"></a>追踪性CP-ABE研究现状</h2><p>Trace(PK,T,SK)→(uid,⊥)可以分为验证和追踪两个阶段。 </p>
+<p>1）验证阶段 对需要追踪的私钥SK进行合理性检查，检 查方法是将SK与标准密钥形式进行对比，如果相同，则说明SK有效，否则SK为非法私钥。验证过程如下所示：</p>
+<p><img src="/Users/berny/Desktop/%E5%B9%BF%E8%A5%BF%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6/%E9%A1%B9%E7%9B%AE%E7%BB%84//%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86/CP-ABE/%E8%AE%BA%E6%96%87%E4%B8%8E%E7%AC%94%E8%AE%B0/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86(ABE)/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95(ABE" alt="截屏2021-10-28 上午9.27.09">.assets/截屏2021-10-28 上午9.27.09.png)</p>
+<p>2）追踪阶段 若证明私钥SK是合理的用户私钥，则从追踪列表Ｔ中对追踪因子 k 进行查询，查询成功后输出与 ｋ对应的用户标志 uid ，则说明已经追踪到该用户，若验证阶段没有通过，则说明SK是无效密钥，则输出⊥。</p>
+<h2 id="计算外包CP-ABE研究现状"><a href="#计算外包CP-ABE研究现状" class="headerlink" title="计算外包CP-ABE研究现状"></a>计算外包CP-ABE研究现状</h2><p>利用外包的方式将计算开销大的算法外包给代理，其中涉及到两个代理，允许加密者将加密策略的创建外包给代理（代理A），并根据给定的策略为用户加密消息，同时代理满足以下两个要求：（a）无法知道加密的消息（b）强制执行根据策略指定的属性来加密消息。通过允许代理根据用户的转换密钥属性验证策略，从而允许用户将策略验证外包给另一个半信任代理（代理 B），从而减少了解密工作负载。</p>
+<h2 id="多机构CP-ABE研究现状"><a href="#多机构CP-ABE研究现状" class="headerlink" title="多机构CP-ABE研究现状"></a>多机构CP-ABE研究现状</h2><p>在CP-ABE方案中，中央授权（CA）服务器的安全性成为了整个系统的安全瓶颈，因为一旦中央授权服务器遭受攻击，整个系统将会瘫痪。因此，参考文献［3］最后遗留了一个公开问题，即如何构建一个ABE方案，其中私钥能由多个授权方生成，这样用户可以减少对中央授权服务器的信任。</p>
+<h2 id="CP-ABE-与区块链"><a href="#CP-ABE-与区块链" class="headerlink" title="CP-ABE 与区块链"></a>CP-ABE 与区块链</h2><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>[文献](Wang  SP， Zhang  YL， Zhang  YL.  A  blockchain-based framework for data sharing with fine-grained access control in  decentralized  storage  systems.  IEEE  Access， 2018， 6: 38437–38450. [doi: 10.1109/ACCESS.2018.2851611])[11]提出一种结合分布式文件系统 IPFS、以太坊区块链和基于属性加密的访问控制框架。在此框架下，数据拥有者能够在区块链上通过交易的方式将密钥分发给数据请求者，同时指定访问策略来加密共享数据。此外，作者通过智能合约实现了密文的关键字搜索功能，解决了传统云服务器无法返回搜索结果和容易返回错误结果的问题。</p>
+<p>[Jemel 等人](Jemel  M， Serhrouchni  A.  Decentralized  access  control mechanism  with  temporal  dimension  based  on  blockchain. Proceedings of the IEEE 14th International Conference on Ebusiness Engineering. Shanghai，China. 2017. 177–182.)[12] 在区块链和密文-策略基于属性的加密 (CP-ABE，Ciphetext-Policy Attribute-Based Encryption) 基础上，提出一种名为 Timely CP-ABE with Blockchian 的访问控制方案，通过广播交易将带有时间属性的访问策略发布到区块链，只有在特定时间内用户属性满足访问策略的请求者才能获取解密密钥。该方案适合处理和解决开放共享环境下数据保护所面临的细粒度问题，既有效减少由密钥撤回所带来的开销，又可追踪用户发布和获取数据访问权限的操作记录。然而存在以下不足：</p>
+<p> (1) 区块存储容量有限，难以通过交易的形式实时部署众多的访问策略. </p>
+<p> (2) 数据请求者的属性集合被封装在交易信息，并被广播到全网所有节点公开可见，极易被恶意节点盗用生成正确的用户密钥。</p>
+<p>本文通过借鉴上述方案的优点，提出了一种基于 CP-ABE 和区块链的数据安全共享框架，主要在以下方 面进行改进：</p>
+<p>(1) 摒弃文献[12]基于交易进行权限管理的方式，以采用智能合约部署访问控制代替.。</p>
+<p>(2) 摒弃文献[12]将访问策略和用户属性公开存放在区块的方法，以将其存储在区块链数据库上，并设置访问限制代替.。</p>
+<p>(3) 将数据集元数据发布到区块链上，对数据集进行注册认证，为数据的确权提供保障的同时，供数据请求者发现数据。</p>
+<h3 id="框架相关技术"><a href="#框架相关技术" class="headerlink" title="框架相关技术"></a>框架相关技术</h3><h4 id="2-1-区块链"><a href="#2-1-区块链" class="headerlink" title="2.1 区块链"></a>2.1 区块链</h4><h4 id="2-2-智能合约"><a href="#2-2-智能合约" class="headerlink" title="2.2 智能合约"></a>2.2 智能合约</h4><h4 id="2-3-密文—策略基于属性的加密"><a href="#2-3-密文—策略基于属性的加密" class="headerlink" title="2.3 密文—策略基于属性的加密"></a>2.3 密文—策略基于属性的加密</h4><p>CP-ABE 主要由 4 个多项式算法组成：</p>
+<p><img src="/Users/berny/Desktop/%E5%B9%BF%E8%A5%BF%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6/%E9%A1%B9%E7%9B%AE%E7%BB%84/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86/CP-ABE/%E8%AE%BA%E6%96%87%E4%B8%8E%E7%AC%94%E8%AE%B0/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86(ABE)/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95(ABE" alt="截屏2021-10-28 上午10.53.51">.assets/截屏2021-10-28 上午10.53.51.png)</p>
+<p><img src="/Users/berny/Desktop/%E5%B9%BF%E8%A5%BF%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6/%E9%A1%B9%E7%9B%AE%E7%BB%84/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86/CP-ABE/%E8%AE%BA%E6%96%87%E4%B8%8E%E7%AC%94%E8%AE%B0/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86(ABE)/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95(ABE" alt="截屏2021-10-28 上午10.54.00">.assets/截屏2021-10-28 上午10.54.00.png)</p>
+<h3 id="DOB-框架"><a href="#DOB-框架" class="headerlink" title="DOB 框架"></a>DOB 框架</h3><h4 id="3-1-系统模型"><a href="#3-1-系统模型" class="headerlink" title="3.1 系统模型"></a>3.1 系统模型</h4><p>DOB 框架由数据注册模块、密钥生成模块、策略管理模块和传输模块组成，通过 4个模块的相互协同，实现数据的安全共享。DOB 框架包含 3个实体：</p>
+<ol>
+<li>DO：数据拥有者，实际上是拥有数据的个人或者机构。主要负责发布数据集元数据(到区块链)，设置访问策略，分发密钥和传输基于属性加密的密文。</li>
+<li>DR：拥有部分属性集合的数据请求者，只有属性集合符合访问策略才能拥有访问数据集的权限。</li>
+<li>AC：可信的密钥分发中心，负责生成公开参数，为DO和DR生成和分发密钥。</li>
+</ol>
+<p><strong>3.1.1  数据注册模块</strong></p>
+<p>数据注册模块将数据以相对成熟的元数据标准为核心进行统一描述后，生成包含数据集哈希值、数据集所有者等特定标识字段的元数据，通过智能合约将元数据发布到区块链网络上，供所有节点浏览发现数据集，利用区块日志不可篡改的特性为数据集来源追踪和数字资产确权提供保障。</p>
+<p><strong>3.1.2  密钥生成模块</strong> </p>
+<p>密钥生成模块负责生成加密数据所需的密钥. 数据加密算法一般分为对称加密算法和非对称加密算法。对称加密算法也称为单密钥算法，要求发收信双方在建立通信之前，商定一个用于加解密数据的密钥。非对称加密算法需要公钥和私钥对数据进行加密和解密。相比于非对称加密，对称加密的计算量小，加密速度快，当加密大量数据时其实现效率要比非对称加密高 6–10 倍，但密钥的分发缺乏安全，算法的安全性在很大程度上依赖于密钥。考虑到需要加密的共享数据集数量比较大，为了保证高效的加解密效率，同时有效避免恶意攻击者通过暴力破解的方式获取密钥，<strong>本模块采用对称加密算法 AES-256 加密数据，生成长度为 256 位的密钥，该密钥由一对 256 位随机数进行加法运算后执行哈希算法 SHA256 得出</strong>。密钥管理和分发交由策略管理模块和传输模块处理。</p>
+<p><strong>3.1.3  策略管理模块</strong> </p>
+<p>策略管理模块主要实现密文—策略基于属性的加密. 在此模块里, AC 负责生成系统公钥、系统主密钥和用户密钥. DO负责设置包含时间维度的访问策略，并将密钥和访问策略嵌入到密文中, 密文只有在有效时间内才可被解密. DR 负责将用户密钥用于解密密文以获得密钥. <strong>3.1.4  传输模块</strong> </p>
+<p>传输模块主要利用智能合约设置用户节点的访问权限, 同时运用序列化技术, 实现系统公钥、用户属性、密文和用户密钥等在区块链上的安全高效传输.</p>
+<h4 id="3-2-运作流程"><a href="#3-2-运作流程" class="headerlink" title="3.2 运作流程"></a>3.2 运作流程</h4><p>如图所示, DOB 框架的运作流程为：</p>
+<p><img src="/Users/berny/Desktop/%E5%B9%BF%E8%A5%BF%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6/%E9%A1%B9%E7%9B%AE%E7%BB%84/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86/CP-ABE/%E8%AE%BA%E6%96%87%E4%B8%8E%E7%AC%94%E8%AE%B0/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86(ABE)/%E5%B1%9E%E6%80%A7%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95(ABE" alt="截屏2021-10-28 下午2.34.53">.assets/截屏2021-10-28 下午2.34.53.png)</p>
+<p>① DO 随机生成 256 位密钥对 k1、k2 , 执行哈希算法获得对称加密密钥: k=SHA256(k1 k2 )。</p>
+<p>② DO 调用智能合约在区块链发布数据集元数据。</p>
+<p>③ DR 调用智能合约浏览数据集元数据，查看数据集详细描述信息。</p>
+<p>④ DR 创建一笔交易向 DO 发送访问请求, 访问 请求包括目标数据集标识名和目标数据集 MD5 值.</p>
+<p>⑤ DO 收到访问请求后, 调用智能合约将密钥 k1 存储在链数据库上, 设置访问权限仅对 DR 开放访问. </p>
+<p>⑥ DR 调用智能合约从链数据库中获取密钥 k1 .</p>
+<p>⑦ AC 执行 CP-ABE 初始化算法, 输入安全参数 和属性空间 U, 生成系统公钥 PSK 和系统主密钥 MSK.</p>
+<p>⑧ AC 通过智能合约将系统公钥 PSK 存储在链数 据库上, 将访问权限默认设置为被所有节点账户访问. </p>
+<p>⑨ DO 和 DR 调用智能合约从链数据库获取系统 公钥 PSK. k ′ 2 </p>
+<p>⑩ DO 执行 CP-ABE 加密算法. 输入系统公钥 PSK、 密钥 k2 和访问策略 policy, 生成密文 . 其中, 访问策 略的有效时间 T 设置为: T≥1552312182∪T≤1583848182. k ′ </p>
+<p>⑪ DO 调用智能合约将密文 存储在链数据库上 2 , 添加访问限制仅对 DR 开放. k ′</p>
+<p>⑫ D 2 R 调用智能合约从链数据库获取密文 . </p>
+<p>⑬ DR 调用智能合约将其带有当前时间的属性集 合 A 存储在链数据库上, 并添加访问限制仅对 AC 开放.</p>
+<p>⑭ AC 调用智能合约从链数据库获取属性集合 A.</p>
+<p>⑮ AC 执行 CP-ABE 密钥生成算法, 输入系统主 密钥 MSK, 系统公钥 PSK 和属性集合 A, 生成用户密钥 USK. </p>
+<p>⑯ AC 调用智能合约将 USK 存储在链数据库上, 添加访问限制仅对 DR 开放.</p>
+<p>⑰ DR 调用智能合约从链数据库获取 USK. k ′ 2 ⊕</p>
+<p>⑱ DR 执行 CP-ABE 解密算法, 输入系统公钥 PSK、 用户密钥 USK 和密文 , 若 DR 的属性集合满足密文 中的访问策略 policy, 则自动解密密文获得密钥 k2 , 从 执行哈希运算获得对称加密密钥: k=SHA256(k1 k2 ). 否则, 无权访问数据集.</p>
+<h1 id="五、算法实现"><a href="#五、算法实现" class="headerlink" title="五、算法实现"></a>五、算法实现</h1><h2 id="1-现有实现"><a href="#1-现有实现" class="headerlink" title="1. 现有实现"></a>1. 现有实现</h2><ul>
+<li><p>java</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/stefano81/dcpabe">https://github.com/stefano81/dcpabe</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/TU-Berlin-SNET/jTR-ABE">https://github.com/TU-Berlin-SNET/jTR-ABE</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/junwei-wang/cpabe">https://github.com/junwei-wang/cpabe</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/zlwen/cpabe-java">https://github.com/zlwen/cpabe-java</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/zhangmenghan/CP-ABE">https://github.com/zhangmenghan/CP-ABE</a></li>
+</ol>
+</li>
+<li><p>python</p>
+<ol>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/JHUISI/charm/blob/dev/charm/schemes/abenc/abenc_bsw07.py">https://github.com/JHUISI/charm/blob/dev/charm/schemes/abenc/abenc_bsw07.py</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/JHUISI/charm/blob/dev/charm/schemes/abenc/bsw07.py">https://github.com/JHUISI/charm/blob/dev/charm/schemes/abenc/bsw07.py</a></p>
+<p>From: “Ciphertext-Policy Attribute-Based Encryption”.</p>
+<p>Published in: 2007</p>
+</li>
+<li></li>
+</ol>
+</li>
+<li><p>go</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/zrynuaa/cpabe06">https://github.com/zrynuaa/cpabe06</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kidkidkid/cpabe-code">https://github.com/kidkidkid/cpabe-code</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Eleven-Z/cpabe-go">https://github.com/Eleven-Z/cpabe-go</a></li>
+</ol>
+</li>
+</ul>
+<h2 id="2-支持用户属性可撤销和恢复的CP-ABE的算法实现步骤"><a href="#2-支持用户属性可撤销和恢复的CP-ABE的算法实现步骤" class="headerlink" title="2. 支持用户属性可撤销和恢复的CP-ABE的算法实现步骤"></a>2. 支持用户属性可撤销和恢复的CP-ABE的算法实现步骤</h2><p>CP-ABE主要由7个步骤组成，前两步均在证书颁发中心(CA)执行，并存储PK\MK\UK：</p>
+<ol>
+<li><strong>初始化Setup：</strong>初始化算法为随机化算法，初始化仅生成系统公钥PK、系统主秘钥MSK。</li>
+<li><strong>撤销机构初始化：</strong>输入参数为PK，生成一个素数域P，为每个属性att计算list=1。算法输出初始化的P，map&lt;userGID,prime&gt;及map&lt;att,list&gt;，list并不是我们常见的list，而是一个大数，且为素数，用来记录是否被撤销。</li>
+<li><strong>秘钥生成KeyGen</strong>：可信授权中心根据PK、MK和数据请求者提交的属性集合S，为数据请求者生成与属性集合关联的用户秘钥UK。在素数域中为用户申请一个素数prime，从P中删除这个prime，保证不同用户获取的prime不一样，然后素数存入映射表map&lt;userGID,prime&gt;中。</li>
+<li><strong>加密Encrypt：</strong>加密算法（随机化算法）输入参数为PK、待加密消息M、访问策略关联的访问控制结构，输出基于属性加密的密文</li>
+<li><strong>解密Decrypt：</strong>解密为确定化算法，由数据请求者执行。解密分为两个步骤，第一步：访问策略树的叶子节点，令i=att(x)，x表示密文策略访问树的叶子节点，(函数att(x)返回节点x所对应的属性)，如果i∈S，算法获取该属性对应的撤销列表list并取模list%prime。若值不为0，表明该用户未被撤销，若为0，表示已被撤销，解密结束；第二步：当第一步验证通过后，算法输入UK、密文M，如果属性集合满足访问策略，算法可成功解密密文M。</li>
+<li><strong>用户属性撤销：</strong>算法输入参数为属性att，属性对应的撤销列表list、用户user及用户对应的素数prime。当用户user被撤销属性att时，DO分别从映射表map＜user，prime＞和map＜att，list＞取出用户对应的素数prime及属性对应的撤销列表list，并计算list’=list×prime。属性att对应的撤销列表更新为list’。</li>
+<li><strong>用户属性恢复：</strong>算法输入参数为属性att，属性对应的撤销列表list、用户user及用户对应的素数prime。用户被撤销可能是暂时的，当用户user重新拥有属性att时，DO分别从映射表map＜user，prime＞和map＜att，list＞取出用户对应的素数prime及属性对应的撤销列表list，并计算list’=list÷prime。属性att对应的撤销列表更新为list’。</li>
+</ol>
+<h2 id="用户和秘钥管理"><a href="#用户和秘钥管理" class="headerlink" title="用户和秘钥管理"></a>用户和秘钥管理</h2><h3 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h3><p>用户拥有的基本信息（最小数据集合）：</p>
+<ul>
+<li>GID（CA提供或业务方提供，但要保证全局唯一性）</li>
+<li>CP-ABE用户属性（业务方提供）</li>
+<li>唯一素数（CA用户注册单元提供）</li>
+<li>私钥（CA用户私钥生成单元产生）</li>
+</ul>
+<p>用户提交信息（GID、CP-ABE用户属性、唯一素数）到CA，申请注册和生成用户私钥，用户私钥存在CA中，CA提供接口查询用户和用户私钥获取。</p>
+<h3 id="策略更改"><a href="#策略更改" class="headerlink" title="策略更改"></a>策略更改</h3><p>在实际工程应用中，撤销方案尽量选择复杂度低、计算开销小、实现简单的方案。因此，本设计中采用的策略撤销方案：通过固定长度的撤销列表记录撤销用户，撤销过程不必更新系统及相关用户的秘钥，可大大降低撤销所引起的计算开销。</p>
+<h3 id="撤销"><a href="#撤销" class="headerlink" title="撤销"></a>撤销</h3><p>用户属性撤销：算法输入参数为属性att，属性对应的撤销列表list、用户user及用户对应的素数prime。当用户user被撤销属性att时，DO分别从映射表map＜user，prime＞和map＜att，list＞取出用户对应的素数prime及属性对应的撤销列表list，并计算list’=list×prime。属性att对应的撤销列表更新为list’。</p>
+
+    </div>
+
+    <div class="about">
+        <h1>关于本文</h1>
+        <p>本文作者 Berny Wang, 许可由 <a
+                target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+    </div>
+
+    
+        
+    
+</article>
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h4 class="title">Blog</h4>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/projects" class="item">Projects</a>
+                
+                <a href="/resume" class="item">Resume</a>
+                
+                <a href="/about" class="item">About</a>
+                
+                <a href="/atom.xml" class="item">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Projects</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/rsa-cli" class="item">RSA CLI</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/hexo-theme-cupertino" class="item">Hexo Theme Cupertino</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/a-calendar" class="item">A Calendar</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/auto-mirroring-bucket" class="item">Auto Mirroring Bucket</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Me</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/bernyw" class="item">GitHub</a>
+                
+                <a target="_blank" rel="noopener" href="https://codepen.io/bernyw" class="item">CodePen</a>
+                
+                <a target="_blank" rel="noopener" href="https://www.zhihu.com/people/ber-16-41" class="item">Patreon</a>
+                
+                <a target="_blank" rel="noopener" href="https://noc.social/@bernyw" class="item">Mastodon</a>
+                
+                <a href="mailto:mr.bernyw@outlook.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2022 Berny Wang<br >驱动由 <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+    </body>
+</html>

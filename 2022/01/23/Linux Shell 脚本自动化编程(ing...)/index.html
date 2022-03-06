@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>Linux Shell 脚本自动化编程(ing...) - Berny&#39;s blog</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+<link rel="stylesheet" href="/css/waline.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+ 
+  
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+    <body data-color-scheme="auto">
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Blog</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">主页</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-codepen nav-item-icon" href="https://codepen.io/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-patreon nav-item-icon" href="https://www.zhihu.com/people/ber-16-41" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-mastodon nav-item-icon" href="https://noc.social/@bernyw" target="_blank">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        <article class="post">
+    <div class="meta">
+        
+        <div class="date" id="date">
+            
+            <span>January</span>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <span>23,</span>
+            <span>2022</span>
+        </div>
+        
+
+        <h2 class="title">Linux Shell 脚本自动化编程(ing...)</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="Linux-Shell-脚本自动化编程"><a href="#Linux-Shell-脚本自动化编程" class="headerlink" title="Linux Shell 脚本自动化编程"></a>Linux Shell 脚本自动化编程</h1><p>学习时间：一周（1.22-1.29）</p>
+<p>学习目标：区块链中台</p>
+<p>学习方式：视频课+实战项目</p>
+<h2 id="Shell概览（解释器）"><a href="#Shell概览（解释器）" class="headerlink" title="Shell概览（解释器）"></a>Shell概览（解释器）</h2><p>Shell难点不在语法结构，而在于业务场景下的各种管理命令</p>
+<ol>
+<li>自动化批量系统初始化程序（update，软件安装，时区设置，安全策略…）</li>
+<li>自动化批量软件部署程序（LAMP，LNMP，Tomcat，LVS，Nginx）</li>
+<li>管理应用程序（KVM，集群管理扩容，MySQL部署）</li>
+<li>日志分析处理程序（grep，awk）</li>
+<li>自动化备份恢复程序（MySQL完全备份/增量备份 + Crond）</li>
+<li>自动化管理程序（批量远程修改密码，软件升级，配置更新）</li>
+<li>自动化信息采集及监控程序（收集系统/应用状态信息，CPU，Mem，Disk，Net，TCP Status，Apache和MySQL的健康状态）</li>
+<li>……</li>
+</ol>
+<blockquote>
+<p>vim ping01.sh 单行脚本</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> <span class="string">&quot;shebang&quot;</span>定义以下程序用什么解释器执行，有shebang的可以直接./ping01.sh执行</span></span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 正常输出</span></span><br><span class="line">ping -c1 https://bernyw.github.io/ &amp;&amp; echo &quot;my blog is up&quot; || echo &quot;my blog is down&quot;  </span><br><span class="line"><span class="meta">#</span><span class="bash"> 不输出ping的结果</span></span><br><span class="line">ping -c1 https://bernyw.github.io/ &amp;&gt;/dev/null &amp;&amp; echo &quot;my blog is up&quot; || echo &quot;my blog is down&quot; </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>执行.sh的三种方法</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 子shell中执行</span></span><br><span class="line">bash ping01.sh</span><br><span class="line">sh ping01.sh</span><br><span class="line"><span class="meta">#</span><span class="bash"> 赋予权限，然后在子shell中执行</span></span><br><span class="line">chmod +x ping01.sh</span><br><span class="line">./ping01.sh </span><br><span class="line"><span class="meta">#</span><span class="bash"> 当前shell中执行</span></span><br><span class="line">source ping01.sh</span><br><span class="line">. ping01.sh</span><br></pre></td></tr></table></figure>
+
+<p>程序语言执行：</p>
+<p>C                    —— 编译 —— 二进制机器吗（CPU）</p>
+<p>Java               —— 编译 —— 字节码（Java虚拟机 JDK）</p>
+<p>Shell              —— 解释（/usr/bin/bash）</p>
+<p>perl                —— 解释（/usr/bin/perl）</p>
+<p>expect           —— 解释（/usr/bin/expect）</p>
+<p>Python          —— 解释</p>
+<p>​                       —— 编译 —— 字节码（Python虚拟机）</p>
+<blockquote>
+<p>Bash中调用Python代码</p>
+</blockquote>
+<p>思路：同一个.sh文件中，将python部分重定向给python解释器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">ping -c1 www.baidu.com &amp;&gt;/dev/null &amp;&amp; echo &quot;www.baidu.com is up&quot; || echo &quot;ww    ww.baidu.com is down&quot;</span><br><span class="line"></span><br><span class="line">/usr/bin/python &lt;&lt;-EOF</span><br><span class="line">print &quot;hello word!&quot;</span><br><span class="line">EOF       </span><br><span class="line"><span class="meta">#</span><span class="bash"> EOF是END Of File的缩写，表示自定义终止符。</span></span><br><span class="line">echo &quot;hello bash&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Bash-Shell"><a href="#Bash-Shell" class="headerlink" title="Bash Shell"></a>Bash Shell</h2><h3 id="shell特点"><a href="#shell特点" class="headerlink" title="shell特点"></a>shell特点</h3><ol>
+<li><p>命令和文件自动补齐</p>
+</li>
+<li><p>命令历史记忆功能 </p>
+<table>
+<thead>
+<tr>
+<th align="left">命令</th>
+<th align="left">作用</th>
+<th align="left">命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">上下键</td>
+<td align="left">历史命令</td>
+<td align="left"><code> !$</code></td>
+<td>上一个命令最后一个参数</td>
+</tr>
+<tr>
+<td align="left"><code> !number</code></td>
+<td align="left">执行第number行命令</td>
+<td align="left"><code>!!</code></td>
+<td>上一个命令</td>
+</tr>
+<tr>
+<td align="left"><code> !string</code></td>
+<td align="left">执行最近的string开头的命令</td>
+<td align="left"><code>^R</code></td>
+<td>搜索历史命令</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>别名功能 alias、unaries、~username/.bashrc、\cp -rf /etc/hosts</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/betterquan/p/11456820.html#:~:text=shell%E5%91%BD%E4%BB%A4%E8%A1%8C%E2%80%94%E2%80%94%E5%BF%AB%E6%8D%B7%E9%94%AE%201%20Ctrl%20%2B%20a%20%EF%BC%9A%E7%A7%BB%E5%88%B0%E5%91%BD%E4%BB%A4%E8%A1%8C%E9%A6%96%202%20Ctrl,Backspace%EF%BC%9A%E4%B8%8E%20Ctrl%20%2B%20w%20~~%E7%9B%B8%E5%90%8C~~%E7%B1%BB%E4%BC%BC%EF%BC%8C%E5%88%86%E9%9A%94%E7%AC%A6%E6%9C%89%E4%BA%9B%E5%B7%AE%E5%88%AB%20%5B%E6%84%9F%E8%B0%A2%20rezilla%20%E6%8C%87%E6%AD%A3%5D">快捷键</a></p>
+<table>
+<thead>
+<tr>
+<th align="left">命令</th>
+<th align="left">作用</th>
+<th align="left">命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>^R</code></td>
+<td align="left">搜索历史命令</td>
+<td align="left"><code> ^L</code></td>
+<td>清屏</td>
+</tr>
+<tr>
+<td align="left"><code> ^D</code></td>
+<td align="left">退出登陆</td>
+<td align="left"><code>^U</code></td>
+<td>从光标处删除至命令行首</td>
+</tr>
+<tr>
+<td align="left"><code> ^A</code></td>
+<td align="left">光标移动到命令最前</td>
+<td align="left"><code>^K</code></td>
+<td>从光标处删除至命令行尾</td>
+</tr>
+<tr>
+<td align="left"><code>^E</code></td>
+<td align="left">光标移动到命令最后</td>
+<td align="left"><code>^S</code></td>
+<td>阻止屏幕输出</td>
+</tr>
+<tr>
+<td align="left"><code>^Q</code></td>
+<td align="left">允许屏幕输出</td>
+<td align="left"></td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>前后台作业控制</p>
+<table>
+<thead>
+<tr>
+<th align="left">命令</th>
+<th align="left">作用</th>
+<th align="left">命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code> &amp;</code></td>
+<td align="left">用在一个命令的最后，可以把这个命令放到后台执行</td>
+<td align="left"><code> bg %&lt;u&gt;作业号&lt;/u&gt;</code></td>
+<td>把程序调度到后台执行</td>
+</tr>
+<tr>
+<td align="left"><code> nohup</code></td>
+<td align="left">不挂起</td>
+<td align="left"><code>fg %&lt;u&gt;作业号&lt;/u&gt;</code></td>
+<td>把进程调回到控制台运行</td>
+</tr>
+<tr>
+<td align="left"><code> ^C</code></td>
+<td align="left">杀掉前台进程</td>
+<td align="left"><code>kill %3</code></td>
+<td>杀死进程</td>
+</tr>
+<tr>
+<td align="left"><code>^Z</code></td>
+<td align="left">将一个正在前台执行的命令放到后台，并且暂停</td>
+<td align="left"><code>jobs</code></td>
+<td>查看任务</td>
+</tr>
+<tr>
+<td align="left"><code>screen</code></td>
+<td align="left"></td>
+<td align="left"></td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/5956.html">输入输出重定向</a></p>
+<table>
+<thead>
+<tr>
+<th align="left">命令</th>
+<th align="left">作用</th>
+<th align="left">命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code> 0,1,2</code></td>
+<td align="left">标准输入,标准输出,标准错误信息</td>
+<td align="left"><code> 2&gt;&amp;1</code></td>
+<td>将标准错误重定向到标准输出</td>
+</tr>
+<tr>
+<td align="left"><code> &gt;</code></td>
+<td align="left">输出重定向，覆盖</td>
+<td align="left"><code>&amp;&gt;</code></td>
+<td>混合输出重定向</td>
+</tr>
+<tr>
+<td align="left"><code> &gt;&gt;</code></td>
+<td align="left">输出重定向，追加</td>
+<td align="left"><code>cat &lt; /etc/hosts</code></td>
+<td>将<code>/etc/hosts</code>文件重定向到cat命令输出</td>
+</tr>
+<tr>
+<td align="left"><code>2&gt;</code></td>
+<td align="left">错误输出</td>
+<td align="left"><code>cat &lt; /etc/hosts &gt;/etc/hosts1</code></td>
+<td>相当于copy</td>
+</tr>
+<tr>
+<td align="left"><code>2&gt;&gt;</code></td>
+<td align="left">错误追加</td>
+<td align="left"><code>cat &lt;&lt; EOF</code></td>
+<td>把输入的内容重定向给cat去执行</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"><code>cat &gt;file1 &lt;&lt; EOF</code></td>
+<td>输入的内容重定向给file1</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>管道 ｜tee</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ip addr |grep &#x27;inet&#x27; |grep eth0</span><br><span class="line">ip addr |grep &#x27;inet&#x27; |tee test |grep eth0 覆盖</span><br><span class="line">ip addr |grep &#x27;inet&#x27; |tee -a test |grep eth0 -a 追加</span><br><span class="line"></span><br><span class="line">df |grep &#x27;/$&#x27;		# $ 表示行尾,/$ 表示行尾为/</span><br><span class="line">df |tee df.txt |grep &#x27;/$&#x27;</span><br><span class="line"></span><br><span class="line">date &gt; date.txt</span><br><span class="line">date |tee date.txt</span><br></pre></td></tr></table></figure></li>
+<li><p>命令排序</p>
+<table>
+<thead>
+<tr>
+<th align="left">命令</th>
+<th align="left">作用</th>
+<th align="left">注意</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code> ;</code></td>
+<td align="left">在一行中将命令分割，不具备逻辑判断</td>
+<td align="left">如果 ; 前命令失败，后面的不会执行</td>
+</tr>
+<tr>
+<td align="left"><code> &amp;&amp;</code></td>
+<td align="left">在一行中将命令分割，前正确则执行后面</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">`</td>
+<td align="left"></td>
+<td align="left">`</td>
+</tr>
+</tbody></table>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ls /home/111/222/333/444 || mkdir -p /home/111/222/333/444</span><br><span class="line">ping -c1 www.baidu.com &amp;&gt;/dev/null &amp;&amp; echo up || echo down</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：</p>
+<p>command &amp;                                  后台执行</p>
+<p>command &amp;&gt;/dev/null                混合重定向</p>
+<p>command1 &amp;&amp; command2       命令排序，逻辑判断</p>
+</blockquote>
+</li>
+<li><p>shell通配符（元字符）<code>表示的不是本意</code></p>
+<table>
+<thead>
+<tr>
+<th align="left">命令</th>
+<th align="left">作用</th>
+<th align="left">例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code> *</code></td>
+<td align="left">匹配任意多个字符</td>
+<td align="left"><code>ls in*</code>, <code>rm rf *.pdf</code>, <code>find / -iname &quot;-eth0&quot;</code></td>
+</tr>
+<tr>
+<td align="left"><code> ?</code></td>
+<td align="left">匹配任意一个字符</td>
+<td align="left">touch love loove live l7ve; ll l?ve</td>
+</tr>
+<tr>
+<td align="left"><code> []</code></td>
+<td align="left">匹配括号中任意一个字符</td>
+<td align="left">[abc],[a-z],[0-9],[a-zA-Z0-9],[^a-zA-Z0-9]<br />  <code>ll l[io]ve</code>, <code>ll l[^a-z]ve</code>, <code>ll /dev/sd[a-z]</code></td>
+</tr>
+<tr>
+<td align="left"><code>()</code></td>
+<td align="left">在子shell中执行</td>
+<td align="left"><code>(cd /boot; ls)</code>,<code>(umask 077; touch file1000)</code></td>
+</tr>
+<tr>
+<td align="left"><code>&#123;&#125;</code></td>
+<td align="left">集合</td>
+<td align="left"><code>touch file&#123;1..9&#125;</code><br /><code>mkdir ./&#123;111,222&#125; mkdir -pv ./&#123;333/&#123;aaa,bbb&#125;,444&#125;</code><br /><code>cp -rv /etc/sysconfig/AAA /etc/sysconfig/BBB</code><br />可以写为<code>cp -rv /etc/sysconfig/&#123;AAA,BBB&#125;</code></td>
+</tr>
+<tr>
+<td align="left"><code>\</code></td>
+<td align="left">转义符，让元字符回归本意</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>变量（在后展开）</p>
+</li>
+<li><p>shell script脚本（在后展开）</p>
+</li>
+</ol>
+<p>小知识：用echo输出不同颜色</p>
+<h3 id="shell变量"><a href="#shell变量" class="headerlink" title="shell变量"></a>shell变量</h3><blockquote>
+<p>用一个特定的字符串去表示不固定的内容</p>
+</blockquote>
+<p><strong>“变量名和等号之间不能有空格”</strong></p>
+<p>同时，变量名的<strong>命名规则</strong>：</p>
+<ul>
+<li>命名只能使用英文字母，数字和下划线，首个字符不能以数字开头。</li>
+<li><strong>中间不能有空格，可以使用下划线 _。</strong></li>
+<li>不能使用标点符号。</li>
+<li>不能使用bash里的关键字（可用help命令查看保留关键字）。</li>
+</ul>
+<h4 id="变量的类型"><a href="#变量的类型" class="headerlink" title="变量的类型"></a>变量的类型</h4><ol>
+<li><p>自定义变量</p>
+<ul>
+<li><p>定义变量</p>
+</li>
+<li><p>引用变量：$变量名 或 ${变量名}</p>
+</li>
+<li><p>查看变量：echo $变量名 set(所有变量：包括自定义变量和环境变量)</p>
+</li>
+<li><p>取消变量：unset变量名</p>
+</li>
+<li><p>作用范围：仅在当前shell中生效</p>
+</li>
+</ul>
+</li>
+<li><p>环境变量</p>
+</li>
+<li><p>特殊变量（位置变量和预定义变量）</p>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$0</td>
+<td>当前脚本的文件名(带路径)，basename $0(不带路径)</td>
+</tr>
+<tr>
+<td>$n</td>
+<td>传递给脚本或函数的参数。n 是一个数字，表示第几个参数。例如，第一个参数是$1，第二个参数是$2。</td>
+</tr>
+<tr>
+<td>$#</td>
+<td>传递给脚本或函数的参数个数。</td>
+</tr>
+<tr>
+<td>$*</td>
+<td>传递给脚本或函数的所有参数。</td>
+</tr>
+<tr>
+<td>$@</td>
+<td>传递给脚本或函数的所有参数。被双引号(“ “)包含时，与 $* 稍有不同，下面将会讲到。</td>
+</tr>
+<tr>
+<td>$?</td>
+<td>上个命令的退出状态，或函数的返回值。</td>
+</tr>
+<tr>
+<td>$$</td>
+<td>当前Shell进程PID。对于 Shell 脚本，就是这些脚本所在的进程ID。</td>
+</tr>
+<tr>
+<td>$!</td>
+<td>上个Shell后台进程的PID。</td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<p> <em><em>$</em> 和 $@ 的区别</em>*</p>
+<p>$* 和 $@ 都表示传递给函数或脚本的所有参数，不被双引号(“ “)包含时，都以”$1” “$2” … “$n” 的形式输出所有参数。</p>
+<p>但是当它们被双引号(“ “)包含时，”$*” 会将所有的参数作为一个整体，以”$1 $2 … $n”的形式输出所有参数；”$@” 会将各个参数分开，以”$1” “$2” … “$n” 的形式输出所有参数。</p>
+<p><strong>例子</strong></p>
+<ul>
+<li><p>ping05.sh</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash">如果用户没有加参数</span></span><br><span class="line">if [ $# -eq 0 ];then</span><br><span class="line">        echo &quot;usage: `basename $0` file&quot;</span><br><span class="line">        exit</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">if [ ! -f $1 ];then</span><br><span class="line">        echo &quot;error file!&quot;</span><br><span class="line">        exit</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">for ip in `cat $1`</span><br><span class="line">do</span><br><span class="line">        ping -c1 $ip &amp;&gt;/dev/null</span><br><span class="line">        if [ $? -eq 0 ];then</span><br><span class="line">                echo &quot;$ip is up.&quot;</span><br><span class="line">        else</span><br><span class="line">                echo &quot;$ip is down.&quot;                                         </span><br><span class="line">        fi</span><br><span class="line">done</span><br></pre></td></tr></table></figure></li>
+<li><p>ip.txt</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">www.baidu.com</span><br><span class="line">www.github.com</span><br><span class="line">www.pornhub.com</span><br></pre></td></tr></table></figure></li>
+<li><p>命令行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod a+x ping05.sh </span><br><span class="line">./ping05.sh ip.txt</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="变量的赋值方式"><a href="#变量的赋值方式" class="headerlink" title="变量的赋值方式"></a>变量的赋值方式</h4><ol>
+<li><p>显示赋值</p>
+<p>变量名=变量值</p>
+<p>示例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ip1=192.168.1.251</span><br><span class="line">school=&quot;Beijing 1000phone&quot;</span><br><span class="line">today=`date +%F`   #``表示先执信</span><br><span class="line">today=$(date +%F)</span><br></pre></td></tr></table></figure></li>
+<li><p>read从键盘读入变量值</p>
+<p>read 变量名<br>read -p “提示信息：” 变量名<br>read -t 5 -p “提示信息：” 变量名    （等待5s）<br>read -n 2 变量名    (只要两个字符)</p>
+<p>示例1：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> vim first.sh</span></span><br><span class="line">back_dir1=/var/backup</span><br><span class="line">read -p &quot;请输入你的备份目录： &quot; back_dir2</span><br><span class="line">echo $back_dir1</span><br><span class="line">echo $back_dir2</span><br><span class="line"><span class="meta">#</span><span class="bash"> sh first.sh</span></span><br></pre></td></tr></table></figure>
+
+<p>示例2：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> vim ping2.sh</span></span><br><span class="line"><span class="meta">#</span><span class="bash">/bin/bash</span></span><br><span class="line">read -p &quot;Input IP: &quot; ip</span><br><span class="line">ping -c2 $ip &amp;&gt;/dev/null</span><br><span class="line">if [ $? = 0 ];then</span><br><span class="line">		echo &quot;host $ip is ok&quot;</span><br><span class="line">else</span><br><span class="line">		echo &quot;host $ip is down&quot;</span><br><span class="line">fi</span><br><span class="line"><span class="meta">#</span><span class="bash"> chmod a+x ping2.sh</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ./ping2.sh</span></span><br></pre></td></tr></table></figure></li>
+<li><p>定义或引用变量时注意事项：</p>
+<p>“ “ 弱引用（变量会替换为变量的值）</p>
+<p>‘  ‘ 强引用（是啥就是啥）</p>
+<p>`` 命令替换 等价于$( ) 反引号中的shell命令会被先执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">disk_free3=&quot;df -Ph | grep &#x27;/$&#x27; | awk &#x27;&#123;print $4&#125;&#x27;&quot;(🙅)</span><br><span class="line">disk_free4=`df -Ph | grep &#x27;/$&#x27; | awk &#x27;&#123;print $4&#125;&#x27;`(🙆)</span><br><span class="line">disk_free5=$(df -Ph | grep &#x27;/$&#x27; | awk &#x27;&#123;print $4&#125;&#x27;)(🙆)</span><br></pre></td></tr></table></figure></li>
+<li><p>变量的运算</p>
+</li>
+</ol>
+<ul>
+<li><p>整数运算（方法二、方法四）</p>
+<p>方法一：expr    (+ - \* / % )</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">expr 1 + 2</span><br><span class="line">expr $num1 + $num2</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法二：$(())    (+ - * / % )</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">echo $(($num1+$num2))</span><br><span class="line">echo $((num1+num2))</span><br><span class="line">echo $((5-3*2))</span><br><span class="line">echo $(((5-3)*2))</span><br><span class="line">echo $((2**3))</span><br><span class="line">sum=$((1+2));echo $sum</span><br></pre></td></tr></table></figure>
+
+<p>方法三：$[]    (+ - * / % )</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo $[5+2]</span><br><span class="line">echo $[5**2]</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法四：let</strong>    (+ - * / % )</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let sum=2+3; echo $sum</span><br><span class="line">let i++; echo $i</span><br></pre></td></tr></table></figure></li>
+<li><p>小数运算</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;2*4&quot; |bc</span><br><span class="line">echo &quot;2^4&quot; |bc</span><br><span class="line">echo &quot;scale=2;6/4&quot; |bc</span><br><span class="line">awk &#x27;BEGIN&#123;print 1/2&#125;&#x27;</span><br><span class="line">echo &quot;print 5.0/2&quot; |python</span><br></pre></td></tr></table></figure></li>
+<li><p>变量“内容”的删除和替换（扩展但重要）</p>
+<ul>
+<li><p>“内容”的删除</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">berny@localhost blog % url=www.baidu.com</span><br><span class="line">berny@localhost blog % echo $&#123;#url&#125; # 获取变量值长度</span><br><span class="line">13</span><br><span class="line">berny@localhost blog % echo $&#123;url&#125; # 标准查看</span><br><span class="line">www.baidu.com</span><br><span class="line">berny@localhost blog % echo $&#123;url#*.&#125; # 从前往后，删除最短匹配</span><br><span class="line">baidu.com</span><br><span class="line">berny@localhost blog % echo $&#123;url##*.&#125; # 从前往后，删除最长匹配 贪婪匹配</span><br><span class="line">com</span><br><span class="line">berny@localhost blog % echo $&#123;url%.*&#125;  # 从后往前，删除最短匹配</span><br><span class="line">www.baidu</span><br><span class="line">berny@localhost blog % echo $&#123;url%%.*&#125; # 从后往前，hanchu最长匹配 贪婪匹配</span><br><span class="line">www</span><br><span class="line"></span><br><span class="line">berny@localhost blog % echo $&#123;url:0:5&#125;</span><br><span class="line">www.b</span><br><span class="line">berny@localhost blog % echo $&#123;url:5:5&#125;</span><br><span class="line">aidu.</span><br><span class="line">berny@localhost blog % echo $&#123;url:5&#125;  </span><br><span class="line">aidu.com</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><ul>
+<li><p>“内容”的替换</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">berny@localhost blog % url=www.baidu.com</span><br><span class="line">berny@localhost blog % echo $&#123;url/baidu/sina&#125; </span><br><span class="line">www.sina.com</span><br><span class="line"></span><br><span class="line">berny@localhost blog % url=www.baidu.com</span><br><span class="line">berny@localhost blog % echo $&#123;url/d/D&#125;</span><br><span class="line">www.baiDu.com</span><br><span class="line">berny@localhost blog % echo $&#123;url//m/M&#125; #贪婪匹配</span><br><span class="line">www.baidu.coM</span><br></pre></td></tr></table></figure></li>
+<li><p>变量的替代</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">berny@localhost blog % unset var1 </span><br><span class="line">berny@localhost blog % echo $&#123;var1&#125;</span><br><span class="line"></span><br><span class="line">berny@localhost blog % echo $&#123;var1-aaaaa&#125;</span><br><span class="line">aaaaa</span><br><span class="line">berny@localhost blog % var2=111</span><br><span class="line">berny@localhost blog % echo $&#123;var2-bbbbb&#125;</span><br><span class="line">111</span><br><span class="line">berny@localhost blog % var3=</span><br><span class="line">berny@localhost blog % echo $&#123;var3-ccccc&#125;</span><br></pre></td></tr></table></figure>
+
+<p>${变量名-新的变量值}</p>
+<p>变量没有被赋值：会使用“新的变量值”替代</p>
+<p>变量有被赋值（包括控制）：不会被替代</p>
+</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li><p>i++ 和 ++i</p>
+<p>对变量的值的影响</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">berny@localhost blog % i=1</span><br><span class="line">berny@localhost blog % let i++</span><br><span class="line">berny@localhost blog % echo $i</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<p>对表达式的值的影响</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">berny@localhost blog % unset i</span><br><span class="line">berny@localhost blog % unset j</span><br><span class="line">berny@localhost blog % i=1</span><br><span class="line">berny@localhost blog % j=1</span><br><span class="line">berny@localhost blog % let x=i++</span><br><span class="line">berny@localhost blog % let y=++j</span><br><span class="line">berny@localhost blog % echo $i</span><br><span class="line">2</span><br><span class="line">berny@localhost blog % echo $j</span><br><span class="line">2</span><br><span class="line">berny@localhost blog % echo $x</span><br><span class="line">1</span><br><span class="line">berny@localhost blog % echo $y</span><br><span class="line">2</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="shell条件测试"><a href="#shell条件测试" class="headerlink" title="shell条件测试"></a>shell条件测试</h3><h3 id="shell数值运算"><a href="#shell数值运算" class="headerlink" title="shell数值运算"></a>shell数值运算</h3><h3 id="shell流程控制"><a href="#shell流程控制" class="headerlink" title="shell流程控制"></a>shell流程控制</h3><p>if</p>
+<p>case</p>
+<p>for</p>
+<p>while</p>
+<p>until</p>
+<p>break</p>
+<p>continue</p>
+<p>exit</p>
+<p>shift</p>
+<p>array</p>
+<p>function</p>
+<h3 id="shell-echo命令"><a href="#shell-echo命令" class="headerlink" title="shell echo命令"></a>shell echo命令</h3><p>Shell 的 echo 指令与 PHP 的 echo 指令类似，都是用于字符串的输出。命令格式：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo string</span><br></pre></td></tr></table></figure>
+
+<p>您可以使用echo实现更复杂的输出格式控制。</p>
+<p><strong>参数说明：</strong></p>
+<ul>
+<li>-e：开启转义</li>
+<li>-n：不输出末尾换行符</li>
+<li>-E</li>
+</ul>
+<ol>
+<li><strong>显示普通字符串(双引号完全可以省略):</strong></li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;It is a test&quot;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>显示转义字符</strong></li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;\&quot;It is a test\&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<p>结果将是:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;It is a test&quot;</span><br></pre></td></tr></table></figure>
+
+<p>同样，双引号也可以省略</p>
+<ol start="3">
+<li><strong>显示变量</strong></li>
+</ol>
+<p>read 命令从标准输入中读取一行,并把输入行的每个字段的值指定给 shell 变量</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line">read name </span><br><span class="line">echo &quot;$name It is a test&quot;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码保存为 test.sh，name 接收标准输入的变量，结果将是:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@www ~]# sh test.sh</span><br><span class="line">OK                     #标准输入</span><br><span class="line">OK It is a test        #输出</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li><strong>显示换行</strong></li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo -e &quot;OK! \n&quot; # -e 开启转义</span><br><span class="line">echo &quot;It is a test&quot;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OK!</span><br><span class="line"></span><br><span class="line">It is a test</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li><strong>显示不换行</strong></li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line">echo -e &quot;OK! \c&quot; # -e 开启转义 \c 不换行</span><br><span class="line">echo &quot;It is a test&quot;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OK! It is a test</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li><strong>显示结果定向至文件</strong></li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;It is a test&quot; &gt; myfile</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li><strong>原样输出字符串，不进行转义或取变量(用单引号)</strong></li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &#x27;$name\&quot;&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">name\&quot;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="8">
+<li><strong>显示命令执行结果</strong></li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo `date`</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong> 这里使用的是反引号 <strong>`</strong>, 而不是单引号 **’**。</p>
+<p>结果将显示当前日期</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Thu Jul 24 10:08:46 CST 2014</span><br></pre></td></tr></table></figure>
+
+<ol start="9">
+<li><p>不同颜色输出文本</p>
+<ul>
+<li><p>前景色（文字）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">echo -e &quot;\e[1;31mThis is a red text.&quot;   #红色</span><br><span class="line">echo -e &quot;\e[1;32mThis is a gree text.&quot;   #绿色</span><br><span class="line">echo -e &quot;\e[1;33mThis is a yellow text.&quot;   #黄色</span><br><span class="line">echo -e &quot;\e[1;34mThis is a blue text.&quot;   #蓝色</span><br><span class="line">echo -e &quot;\e[1;0m&quot;   #恢复颜色</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 用法</span></span><br><span class="line">echo -e &quot;\e[1;31mThis is a red text.\e[0m&quot;   #用红色打印This is a red text.后重置</span><br></pre></td></tr></table></figure></li>
+<li><p>背景色</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo -e &quot;\e[1;41mThis is a red text.&quot;   #红色</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<h3 id="Shell-printf命令"><a href="#Shell-printf命令" class="headerlink" title="Shell printf命令"></a>Shell printf命令</h3><blockquote>
+<p>printf 命令模仿 C 程序库（library）里的 printf() 程序。</p>
+<p>printf 由 POSIX 标准所定义，因此使用 printf 的脚本比使用 echo 移植性好。</p>
+<p>printf 使用引用文本或空格分隔的参数，外面可以在 <strong>printf</strong> 中使用格式化字符串，还可以制定字符串的宽度、左右对齐方式等。默认的 printf 不会像 <strong>echo</strong> 自动添加换行符，我们可以手动添加 <strong>\n</strong>。</p>
+</blockquote>
+<p>printf 命令的语法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">printf  format-string  [arguments...]</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明：</strong></p>
+<ul>
+<li><strong>format-string:</strong> 为格式控制字符串</li>
+<li><strong>arguments:</strong> 为参数列表</li>
+</ul>
+<h4 id="实例一"><a href="#实例一" class="headerlink" title="实例一"></a>实例一</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&quot;Hello, Shell&quot;</span></span></span><br><span class="line">Hello, Shell</span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">printf</span> <span class="string">&quot;Hello, Shell\n&quot;</span></span></span><br><span class="line">Hello, Shell</span><br><span class="line"><span class="meta">$</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="实例二"><a href="#实例二" class="headerlink" title="实例二"></a>实例二</h4><p>接下来,我来用一个脚本来体现 printf 的强大功能：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"> </span><br><span class="line">printf &quot;%-10s %-8s %-4s\n&quot; 姓名 性别 体重kg  </span><br><span class="line">printf &quot;%-10s %-8s %-4.2f\n&quot; 郭靖 男 66.1234</span><br><span class="line">printf &quot;%-10s %-8s %-4.2f\n&quot; 杨过 男 48.6543</span><br><span class="line">printf &quot;%-10s %-8s %-4.2f\n&quot; 郭芙 女 47.9876</span><br></pre></td></tr></table></figure>
+
+<p>执行脚本，输出结果如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">姓名     性别   体重kg</span><br><span class="line">郭靖     男      66.12</span><br><span class="line">杨过     男      48.65</span><br><span class="line">郭芙     女      47.99</span><br></pre></td></tr></table></figure>
+
+<p><strong>％s</strong> 输出一个字符串，<strong>％d</strong> 整型输出，<strong>％c</strong> 输出一个字符，<strong>％f</strong> 输出实数，以小数形式输出。</p>
+<p><strong>%-10s</strong> 指一个宽度为 10 个字符（**-** 表示左对齐，没有则表示右对齐），任何字符都会被显示在 10 个字符宽的字符内，如果不足则自动以空格填充，超过也会将内容全部显示出来。</p>
+<p><strong>%-4.2f</strong> 指格式化为小数，其中 <strong>.2</strong> 指保留2位小数。</p>
+<h3 id="Shell-test命令"><a href="#Shell-test命令" class="headerlink" title="Shell test命令"></a>Shell test命令</h3><blockquote>
+<p>shell中的 test 命令用于检查某个条件是否成立，它可以进行数值、字符和文件三个方面的测试。</p>
+</blockquote>
+<h1 id="实战项目"><a href="#实战项目" class="headerlink" title="实战项目"></a>实战项目</h1>
+    </div>
+
+    <div class="about">
+        <h1>关于本文</h1>
+        <p>本文作者 Berny Wang, 许可由 <a
+                target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+    </div>
+
+    
+        
+    
+</article>
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h4 class="title">Blog</h4>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/projects" class="item">Projects</a>
+                
+                <a href="/resume" class="item">Resume</a>
+                
+                <a href="/about" class="item">About</a>
+                
+                <a href="/atom.xml" class="item">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Projects</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/rsa-cli" class="item">RSA CLI</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/hexo-theme-cupertino" class="item">Hexo Theme Cupertino</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/a-calendar" class="item">A Calendar</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/auto-mirroring-bucket" class="item">Auto Mirroring Bucket</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Me</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/bernyw" class="item">GitHub</a>
+                
+                <a target="_blank" rel="noopener" href="https://codepen.io/bernyw" class="item">CodePen</a>
+                
+                <a target="_blank" rel="noopener" href="https://www.zhihu.com/people/ber-16-41" class="item">Patreon</a>
+                
+                <a target="_blank" rel="noopener" href="https://noc.social/@bernyw" class="item">Mastodon</a>
+                
+                <a href="mailto:mr.bernyw@outlook.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2022 Berny Wang<br >驱动由 <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+    </body>
+</html>

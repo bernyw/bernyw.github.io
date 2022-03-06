@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>可搜索加密 - Berny&#39;s blog</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+<link rel="stylesheet" href="/css/waline.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+ 
+  
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+    <body data-color-scheme="auto">
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Blog</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">主页</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-codepen nav-item-icon" href="https://codepen.io/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-patreon nav-item-icon" href="https://www.zhihu.com/people/ber-16-41" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-mastodon nav-item-icon" href="https://noc.social/@bernyw" target="_blank">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        <article class="post">
+    <div class="meta">
+        
+        <div class="date" id="date">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <span>November</span>
+            
+            
+            <span>2,</span>
+            <span>2021</span>
+        </div>
+        
+
+        <h2 class="title">可搜索加密</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><ul>
+<li>为什么需要可搜索加密技术？</li>
+</ul>
+<p> 其实，这个问题的答案是显而易见的。隐私泄露问题备受关注，大家肯定都希望自己的信息以密文的形式上云，而不是以明文的形式上云。但是这就会有个问题，如果需要对数据进行搜索，那怎么办？总不能把云上所有的加密数据都下载下来，然后对其一一解密，再进行搜索吧。如果真是这样，效率显然会很低。因此，可搜索加密技术应运而生。</p>
+<ul>
+<li>什么是可搜索加密技术？</li>
+</ul>
+<p> 可搜索加密技术是搜索技术和加密技术的结合。可搜索加密能够实现将用户的数据进行特殊的加密后上传到云服务器上， 并且可以实现根据<strong>关键字检索</strong>的功能， 有些可搜索加密方案更能实现<strong>范围查询</strong>或<strong>布尔查询</strong>等高级检索功能。在方便用户使用的过程中， 也保护了文件的隐私安全^[1]^。</p>
+<ul>
+<li>可搜索加密技术的分类：</li>
+</ul>
+<p> 目前， 可搜索加密技术一般分为**对称可搜索加密(Searchable Symmetric Encryption， SSE)<strong>和</strong>非对称可搜索加密(Asymmetric Searchable Encryption， ASE)<strong>，非对称可搜索加密目前一般又称为</strong>公钥可搜索加密(Public Key Encryption With Searching， PEKS)**。两者有不同的应用场景和构造方式[1]。</p>
+<p> 对称可搜索加密一般考虑单用户使用的情况， 相当于建立个人加密云盘， 依赖对称加密算法进行方案构造。</p>
+<p> <strong>公钥可搜索加密一般考虑多用户使用的场景例如邮件系统或者多人文件共享系统， 主要依赖公钥加密算法进行构造。</strong></p>
+<h1 id="非对称可加密"><a href="#非对称可加密" class="headerlink" title="非对称可加密"></a>非对称可加密</h1><p> 2004年，Boneh等^[2]^将公钥加密应用到可搜索加密中，基于BDH(BilinearDiffie-Hellman)困难问题假设，首次提出了非对称可搜索加密(PEKS)的概念，其主要目的是为了解决“多对一”的多用户邮件模型。例如Bob，Carol等多人向Alice发送邮件，这些邮件通过Alice的公钥进行加密，Alice可以根据私钥在邮件系统中进行关键字搜索并解密邮件内容并保证邮件服务器对内容一无所知。PEKS算法描述如下：</p>
+<h3 id="定义1-一个PEKS系统由如下四个多项式时间的算法组成："><a href="#定义1-一个PEKS系统由如下四个多项式时间的算法组成：" class="headerlink" title="定义1 一个PEKS系统由如下四个多项式时间的算法组成："></a>定义1 一个PEKS系统由如下四个多项式时间的算法组成：</h3><p><img src="https://img2020.cnblogs.com/blog/1980624/202107/1980624-20210717163109524-1375623223.jpg" alt="img"></p>
+<p>实际上，Boneh等人的PEKS方案可以视为”<strong>在加密文件后附上加密的关键字清单</strong>“，用户可以通过私钥和Test算法与所检索关键字进行匹配，以此进行关键字的搜索。随后2006年Byun^[3]^发现当前PEKS方案存在安全隐患：由于关键字空间远小于密钥空间，敌手可以通过离线关键字猜测攻击轻松破解PEKS体制。随后，这一安全性问题由Tang等人^[4]^提出注册关键字得以解决。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] 刘文心，高莹.对称可搜索加密的安全性研究进展[J].信息安全学报，2021，6(02):73-84.</p>
+<p>[2] Boneh D， Crescenzo G， Ostrovsky R， et al. Public key encryption with keyword search[C]. Proceedings of Eurocrypt 2004， Interlaken， Switzerland， 2004. 506-522.</p>
+<p>[3] Byun J W， Rhee H S， Park H A， et al. Off-Line Keyword Guessing Attacks on Recent Keyword Search Schemes over Encrypted Data[M]. Lecture Notes in Computer Science. Springer Berlin Hei delberg， 2006: 75-83. </p>
+<p>[4] Tang Q， Chen L Q. Public-Key Encryption with Registered Keyword Search[M]. Public Key Infrastructures， Services and Applications. Berlin， Heidelberg: Springer Berlin Heidelberg， 2010:163-178. </p>
+<h1 id="一对多模型和多对多模型"><a href="#一对多模型和多对多模型" class="headerlink" title="一对多模型和多对多模型"></a>一对多模型和多对多模型</h1><p>即一个或多个发送者和多个数据接收者，这种场景下可以使用对称加密或非对称加密。可以通过共享非对称加密的密钥，将多对一拓展到多对多。对称加密也可以通过混合加密或与其它加密方式结合来实现一对多或多对多。</p>
+<p>3）单用户 — 多接收者(单服务器)模型：与上一类型类似，但为单个发送者将加密文件上传至不可信服务器，然后多个接收者共享数据。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210429161752621.png#pic_center" alt="单对多"></p>
+<p>4）多用户 — 多接受者(单服务器)模型：在多对单模型的基础上，任意用户都可成为接受者，通过访问控制和认证策略后，具备关键词的密文检索方式提取共享文件的能力。只有合法的用户具备基于关键词检索的能力，服务器无法获取明文文件信息，具备广阔的应用前景。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210429161817811.png#pic_center" alt="多对多"></p>
+<p><strong>对称+非对称可搜索加密</strong></p>
+<p>由于非对称SE本身支持最基本形式的隐私数据共享，可通过共享密钥拓展到多对多的应用场景。对称SE虽然使用单用户模型，但计算开销小、速度快，更适用于大型文件数据的加密和共享。通过混合加密与基于属性加密技术相结合，或与代理重加密结合，也可构造共享方案。<br><strong>属性基加密(Attribute-based encryption, ABE)</strong></p>
+<p>它是指通过对用户私钥设置属性集(或访问结构）为数据密文设置访问结构（或属性集），由属性集和访问结构之间的匹配关系确定其解密能力。特别是密文策略的属性基加密（CP-ABE），其密文上的访问策略本身就是一种搜索策略，访问策略的表达能力从一定程度上反映了可搜索能力。</p>
+
+    </div>
+
+    <div class="about">
+        <h1>关于本文</h1>
+        <p>本文作者 Berny Wang, 许可由 <a
+                target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+    </div>
+
+    
+        
+    
+</article>
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h4 class="title">Blog</h4>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/projects" class="item">Projects</a>
+                
+                <a href="/resume" class="item">Resume</a>
+                
+                <a href="/about" class="item">About</a>
+                
+                <a href="/atom.xml" class="item">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Projects</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/rsa-cli" class="item">RSA CLI</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/hexo-theme-cupertino" class="item">Hexo Theme Cupertino</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/a-calendar" class="item">A Calendar</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/auto-mirroring-bucket" class="item">Auto Mirroring Bucket</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Me</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/bernyw" class="item">GitHub</a>
+                
+                <a target="_blank" rel="noopener" href="https://codepen.io/bernyw" class="item">CodePen</a>
+                
+                <a target="_blank" rel="noopener" href="https://www.zhihu.com/people/ber-16-41" class="item">Patreon</a>
+                
+                <a target="_blank" rel="noopener" href="https://noc.social/@bernyw" class="item">Mastodon</a>
+                
+                <a href="mailto:mr.bernyw@outlook.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2022 Berny Wang<br >驱动由 <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+    </body>
+</html>

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>Hyperledger Fabric CA - Berny&#39;s blog</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+<link rel="stylesheet" href="/css/waline.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+ 
+  
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+    <body data-color-scheme="auto">
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Blog</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">主页</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-codepen nav-item-icon" href="https://codepen.io/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-patreon nav-item-icon" href="https://www.zhihu.com/people/ber-16-41" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-mastodon nav-item-icon" href="https://noc.social/@bernyw" target="_blank">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        <article class="post">
+    <div class="meta">
+        
+        <div class="date" id="date">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <span>September</span>
+            
+            
+            
+            
+            <span>22,</span>
+            <span>2021</span>
+        </div>
+        
+
+        <h2 class="title">Hyperledger Fabric CA</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="Hyperledger-Fabric-CA"><a href="#Hyperledger-Fabric-CA" class="headerlink" title="Hyperledger Fabric CA"></a>Hyperledger Fabric CA</h1><h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2><p>Hyperledger Fabric CA 是 Hyperledger Fabric 的证书颁发机构 (CA)。</p>
+<p>它提供以下功能：</p>
+<blockquote>
+<ul>
+<li>注册身份，或连接到 LDAP 作为用户注册表</li>
+<li>颁发注册证书（ECerts）</li>
+<li>证书更新和撤销</li>
+</ul>
+</blockquote>
+<p>Hyperledger Fabric CA 由服务器和客户端组件组成。</p>
+<p>下图说明了 Hyperledger Fabric CA 服务器如何适应整个 Hyperledger Fabric 架构。</p>
+<p><img src="https://hyperledger-fabric-ca.readthedocs.io/en/v1.5.0/_images/fabric-ca.png" alt="_images/fabric-ca.png"></p>
+<p>有两种与 Hyperledger Fabric CA 服务器交互的方式：通过 Hyperledger Fabric CA client or the Fabric SDKs。与 Hyperledger Fabric CA 服务器的所有通信都是通过 REST API 进行的。有关这些 REST API 的 swagger 文档，请参阅fabric-ca/swagger/swagger-fabric-ca.json。您可以通过<a target="_blank" rel="noopener" href="http://editor.swagger.io/">Swagger 在线编辑器</a>查看此文档。</p>
+<p>Hyperledger Fabric CA 客户端或 SDK 可以连接到 Hyperledger Fabric CA 服务器集群中的服务器。这在图表的右上角部分进行了说明。客户端路由到一个 HA 代理端点，该端点将流量负载平衡到一个 fabric-ca-server 集群成员。</p>
+<p>集群中的所有 Hyperledger Fabric CA 服务器共享同一个数据库，用于跟踪身份和证书。如果配置了 LDAP，身份信息将保存在 LDAP 中而不是数据库中。</p>
+<p>一个服务器可能包含多个 CA。每个 CA 要么是根 CA，要么是中间 CA。每个中间 CA 都有一个父 CA，它是根 CA 或另一个中间 CA。</p>
+<h2 id="2-入门"><a href="#2-入门" class="headerlink" title="2. 入门"></a>2. 入门</h2><h3 id="2-1-先决条件"><a href="#2-1-先决条件" class="headerlink" title="2.1 先决条件"></a>2.1 先决条件</h3><ul>
+<li>Go 1.10+ 安装</li>
+<li><code>GOPATH</code> 环境变量设置正确</li>
+<li>安装了 libtool 和 libtdhl-dev 包</li>
+</ul>
+<p>以下在 Ubuntu 上安装 libtool 依赖项：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install libtool libltdl - dev</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-安装"><a href="#2-2-安装" class="headerlink" title="2.2 安装"></a>2.2 安装</h3><p>下面将在 $GOPATH/bin 中安装fabric-ca-server和fabric-ca-client二进制文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go install github.com/hyperledger/fabric-ca/cmd/...@latest</span><br></pre></td></tr></table></figure>
+
+<h4 id="本地启动服务器"><a href="#本地启动服务器" class="headerlink" title="本地启动服务器"></a>本地启动服务器</h4><p>下面以默认设置启动fabric-ca-server。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fabric-ca-server start -b admin:adminpw</span><br></pre></td></tr></table></figure>
+
+<p>该-b选项提供了一个引导管理员报名ID和秘密; 如果未使用“ldap.enabled”设置启用 LDAP，则这是必需的。</p>
+<p>在本地目录中创建了一个名为fabric-ca-server-config.yaml的默认配置文件，该文件可以自定义。</p>
+<h4 id="通过-Docker-启动服务器"><a href="#通过-Docker-启动服务器" class="headerlink" title="通过 Docker 启动服务器"></a>通过 Docker 启动服务器</h4><h5 id="Docker-Hub"><a href="#Docker-Hub" class="headerlink" title="Docker Hub"></a>Docker Hub</h5><p>Go to: <a target="_blank" rel="noopener" href="https://hub.docker.com/r/hyperledger/fabric-ca/tags/">https://hub.docker.com/r/hyperledger/fabric-ca/tags/</a></p>
+<p>找到与您要拉取的fabric-ca 的架构和版本相匹配的标签。</p>
+<p>创建一个docker-compose.yml文件，如下所示。更改image行以反映您之前找到的标签。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">fabric-ca-server:</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">hyperledger/fabric-ca:amd64-1.5.2</span></span><br><span class="line">  <span class="attr">container_name:</span> <span class="string">fabric-ca-server</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&quot;7054:7054&quot;</span></span><br><span class="line">  <span class="attr">environment:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&quot;./fabric-ca-server:/etc/hyperledger/fabric-ca-server&quot;</span></span><br><span class="line">  <span class="attr">command:</span> <span class="string">sh</span> <span class="string">-c</span> <span class="string">&#x27;fabric-ca-server start -b admin:adminpw&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="构建你自己的-Docker-镜像（没搞懂）"><a href="#构建你自己的-Docker-镜像（没搞懂）" class="headerlink" title="构建你自己的 Docker 镜像（没搞懂）"></a>构建你自己的 Docker 镜像（没搞懂）</h5><p>您可以通过 Docker Compose 构建和启动服务器，如下所示。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd $GOPATH/src/github.com/hyperledger/fabric-ca</span><br><span class="line">make docker</span><br><span class="line">cd docker/server</span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<p>hyperledger/fabric-ca Docker 镜像包含fabric-ca-server 和fabric-ca-client。</p>
+<h3 id="2-3-探索-Fabric-CA-CLI"><a href="#2-3-探索-Fabric-CA-CLI" class="headerlink" title="2.3 探索 Fabric CA CLI"></a>2.3 探索 Fabric CA CLI</h3><p>为方便起见，本节仅提供 Fabric CA 服务器和客户端的使用消息。以下部分提供了其他使用信息。</p>
+<p>以下链接显示了<a target="_blank" rel="noopener" href="https://hyperledger-fabric-ca.readthedocs.io/en/v1.5.0/servercli.html">服务器命令行</a>和 <a target="_blank" rel="noopener" href="https://hyperledger-fabric-ca.readthedocs.io/en/v1.5.0/clientcli.html">客户端命令行</a>。</p>
+<h4 id="配置设置"><a href="#配置设置" class="headerlink" title="配置设置"></a>配置设置</h4><p>Fabric CA 提供了 3 种方式来配置 Fabric CA 服务器和客户端上的设置。优先顺序是：</p>
+<blockquote>
+<ol>
+<li>CLI 标志</li>
+<li>环境变量</li>
+<li>配置文件</li>
+</ol>
+</blockquote>
+<p>在本文档的其余部分，我们提到对配置文件进行更改。但是，可以通过环境变量或 CLI 标志覆盖配置文件更改。</p>
+<p>例如，如果我们在客户端配置文件中有以下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">tls:</span><br><span class="line">  # Enable TLS (default: false)</span><br><span class="line">  enabled: false</span><br><span class="line"></span><br><span class="line">  # TLS for the client&#x27;s listenting port (default: false)</span><br><span class="line">  certfiles:</span><br><span class="line">  client:</span><br><span class="line">    certfile: cert.pem</span><br><span class="line">    keyfile:</span><br></pre></td></tr></table></figure>
+
+<p>以下环境变量可用于覆盖<code>cert.pem</code> 配置文件中的设置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export FABRIC_CA_CLIENT_TLS_CLIENT_CERTFILE=cert2.pem</span><br></pre></td></tr></table></figure>
+
+<p>如果我们想覆盖环境变量和配置文件，我们可以使用命令行标志。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fabric-ca-client enroll --tls.client.certfile cert3.pem</span><br></pre></td></tr></table></figure>
+
+<p>相同的方法适用于fabric-ca-server，不同之处在于它不是 <code>FABRIC_CA_CLIENT</code>用作环境变量的前缀 <code>FABRIC_CA_SERVER</code>。</p>
+<h5 id="关于文件路径"><a href="#关于文件路径" class="headerlink" title="关于文件路径"></a>关于文件路径</h5><p>Fabric CA 服务器和客户端配置文件中，指定文件名的所有属性都支持相对路径和绝对路径。</p>
+<p>相对路径相对于配置文件所在的 config 目录：</p>
+<p>例如，如果配置目录是 <code>~/config</code>和所述TLS部，如下所示，该Fabric CA服务器或客户端将在文件<code>~/config</code> 目录中寻找<code>root.pem</code>，<code>~/config/certs</code>目录中的<code>cert.pem</code>文件和 <code>/abs/path</code>目录中的 <code>key.pem</code>文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tls:</span><br><span class="line">  enabled: true</span><br><span class="line">  certfiles:</span><br><span class="line">    - root.pem</span><br><span class="line">  client:</span><br><span class="line">    certfile: certs/cert.pem</span><br><span class="line">    keyfile: /abs/path/key.pem</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-Fabric-CA-Server"><a href="#3-Fabric-CA-Server" class="headerlink" title="3. Fabric CA Server"></a>3. Fabric CA Server</h2><p>本节介绍 Fabric CA 服务器。</p>
+<p>您可以在启动 Fabric CA 服务器之前对其进行初始化。这为您提供了生成默认配置文件的机会，可以在启动服务器之前查看和自定义该文件。</p>
+<p><strong>Fabric CA 服务器的主目录确定如下：</strong></p>
+<ul>
+<li><p>如果设置了 –home 命令行选项，则使用其值</p>
+</li>
+<li><p>否则，如果<code>FABRIC_CA_SERVER_HOME</code>设置了环境变量，则使用其值</p>
+</li>
+<li><p>否则，如果<code>FABRIC_CA_HOME</code>设置了环境变量，则使用其值</p>
+</li>
+<li><p>否则，如果<code>CA_CFG_PATH</code>设置了环境变量，则使用其值</p>
+</li>
+<li><p>否则，使用当前工作目录</p>
+</li>
+</ul>
+<p>对于本服务器部分的其余部分，我们假设您已将<code>FABRIC_CA_HOME</code>环境变量设置为 <code>$HOME/fabric-ca/server</code>。</p>
+<p>以下说明假定服务器配置文件存在于服务器的主目录中。</p>
+<h3 id="初始化服务器"><a href="#初始化服务器" class="headerlink" title="初始化服务器"></a>初始化服务器</h3><p>初始化 Fabric CA 服务器如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fabric-ca-server init -b admin:adminpw</span><br></pre></td></tr></table></figure>
+
+<p>该<code>-b</code>（引导标识）选项是必需的初始化时，LDAP被禁用。至少需要一个引导身份才能启动 Fabric CA 服务器；这个身份就是服务器管理员。</p>
+<p>服务器配置文件包含可以配置的证书签名请求 (CSR) 部分。以下是示例 CSR。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cn: fabric-ca-server</span><br><span class="line">names:</span><br><span class="line">   - C: US</span><br><span class="line">     ST: &quot;North Carolina&quot;</span><br><span class="line">     L:</span><br><span class="line">     O: Hyperledger</span><br><span class="line">     OU: Fabric</span><br><span class="line">hosts:</span><br><span class="line">  - host1.example.com</span><br><span class="line">  - localhost</span><br><span class="line">ca:</span><br><span class="line">   expiry: 131400h</span><br><span class="line">   pathlength: 1</span><br></pre></td></tr></table></figure>
+
+<p>上面的所有字段都属于<code>fabric-ca-server init</code>生成的X.509签名密钥和证书。这对应于服务器配置文件中的<code>ca.certfile</code>和<code>ca.keyfile</code>文件。其中参数含义如下：</p>
+<blockquote>
+<ul>
+<li><strong>cn</strong>是通用名称</li>
+<li><strong>O</strong>是组织名称</li>
+<li><strong>OU</strong>是组织单位</li>
+<li><strong>L</strong>是位置或城市</li>
+<li><strong>ST</strong>是状态</li>
+<li><strong>C</strong>是国家</li>
+</ul>
+</blockquote>
+<ul>
+<li><p>如果需要自定义CSR的值，可以自定义配置文件，删除<code>ca.certfile</code>和<code>ca.keyfile</code> 配置项指定的文件，然后重新执行 命令<code>fabric-ca-server init -b admin:adminpw</code></p>
+</li>
+<li><p>如果指定-u，则服务器的CA证书是由父Fabric CA服务器签名的。为了向父Fabric CA服务器进行身份验证，URL的形式必须为<code>&lt;scheme&gt;://&lt; registrmentid &gt;:&lt;secret&gt;@&lt;host&gt;:&lt;port&gt;</code>，其中<code>&lt; registrmentid &gt;</code>和<code>&lt;secret&gt;</code>对应一个带有’ hf.IntermediateCA ‘的属性，其值等于’ true ‘。</p>
+</li>
+<li><p><code>fabric-ca-server init</code>命令还会在服务器的主目录中生成一个名为<code>fabric-ca-server-config.ymal</code>的默认配置文件。</p>
+</li>
+</ul>
+<p>如果希望Fabric CA服务器使用您提供的CA签名证书和密钥文件，则必须将文件分别放置在<code>ca .certfile</code>和<code>ca .keyfile</code>引用的位置。</p>
+<p>这两个文件必须是pem编码的，并且不能加密。CA证书文件的内容必须以<code>----- BEGIN CERTIFICATE -----</code>开头，密钥文件的内容必须以<code>----- BEGIN PRIVATE KEY -----</code>开头，不能以<code>----- BEGIN ENCRYPTED PRIVATE KEY -----</code>开头。</p>
+<p><strong>算法和key的大小</strong></p>
+<p>可以对CSR进行定制，以生成支持ECDSA的X.509证书和密钥。下面是椭圆曲线数字签名算法(ECDSA)的曲线<code>prime256v1</code>和签名算法<code>ECDSA -with- sha256</code>的实现示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">key:</span><br><span class="line">   algo: ecdsa</span><br><span class="line">   size: 256</span><br></pre></td></tr></table></figure>
+
+<p>算法和密钥大小的选择是基于安全需求的。</p>
+<p>椭圆曲线(ECDSA)提供了以下关键尺寸选项：</p>
+<table>
+<thead>
+<tr>
+<th>size</th>
+<th>ASN1 OID</th>
+<th>Signature Algorithm</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>256</td>
+<td>prime256v1</td>
+<td>ecdsa-with-SHA256</td>
+</tr>
+<tr>
+<td>384</td>
+<td>secp384r1</td>
+<td>ecdsa-with-SHA384</td>
+</tr>
+<tr>
+<td>521</td>
+<td>secp521r1</td>
+<td>ecdsa-with-SHA512</td>
+</tr>
+</tbody></table>
+<h3 id="启动服务器"><a href="#启动服务器" class="headerlink" title="启动服务器"></a>启动服务器</h3><p>按如下方式启动 Fabric CA 服务器：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fabric-ca-server start -b &lt;admin&gt;:&lt;adminpw&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果服务器之前没有初始化，它将在第一次启动时初始化自己。在此初始化期间，服务器将生成ca-cert。pem和ca-key。如果它们不存在，也将创建一个默认配置文件。请参见<a target="_blank" rel="noopener" href="https://hyperledger-fabric-ca.readthedocs.io/en/v1.5.0/users-guide.html#initialize">Initialize the Fabric CA server</a>部分。</p>
+<p>除非将Fabric CA服务器配置为使用LDAP，否则必须配置至少一个预注册的引导标识，以使您能够注册和注册其他标识。<code>-b</code>选项指定引导标识的名称和密码。</p>
+<p>要使Fabric CA服务器侦听<code>https</code>而不是<code>http</code>，请设置<code>tls.enabled</code>为<code>true</code>。</p>
+<p>安全警告:Fabric CA服务器应该总是在启用TLS (<code>tls.enabled</code>为<code>true</code>)。如果不这样做，服务器就容易受到攻击者的攻击，攻击者可以访问网络流量。</p>
+<p>若要限制同一秘密(或密码)可用于注册的次数，请设置注册表。将配置文件中的最大注册值设置为适当的值。</p>
+<ul>
+<li>如果将该值设置为1,Fabric CA服务器只允许对特定注册ID使用一次密码。</li>
+<li>如果将该值设置为-1,Fabric CA服务器将不限制秘密可用于注册的次数。</li>
+<li>默认值为-1。将该值设置为0,Fabric CA服务器将禁用所有身份的注册，并且不允许身份的注册。</li>
+</ul>
+<p>Fabric CA服务器现在应该正在侦听端口7054。</p>
+<p>如果不希望将Fabric CA服务器配置为在集群中运行或使用LDAP，则可以跳过到Fabric CA客户端部分。</p>
+<h3 id="配置数据库"><a href="#配置数据库" class="headerlink" title="配置数据库"></a>配置数据库</h3><p>本节介绍如何配置 Fabric CA 服务器以连接到 PostgreSQL 或 MySQL 数据库。默认数据库是 SQLite，默认数据库文件<code>fabric-ca-server.db</code>位于 Fabric CA 服务器的主目录中。</p>
+<p>如果你不关心在集群中运行 Fabric CA 服务器，你可以跳过这一节；否则，您必须按如下所述配置 PostgreSQL 或 MySQL。Fabric CA 在集群设置中支持以下数据库版本：</p>
+<ul>
+<li>PostgreSQL：9.5.5 或更高版本</li>
+<li>MySQL：5.7 或更高版本</li>
+</ul>
+<h4 id="PostgreSQL"><a href="#PostgreSQL" class="headerlink" title="PostgreSQL"></a>PostgreSQL</h4><p>可以将以下示例添加到服务器的配置文件中以连接到 PostgreSQL 数据库。请务必适当地自定义各种值。数据库名称中允许使用的字符是有限制的。有关详细信息，请参阅以下 Postgres 文档：<a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/static/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS">https</a> : <a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/static/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS">//www.postgresql.org/docs/current/static/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">db:</span><br><span class="line">  type: postgres</span><br><span class="line">  datasource: host=localhost port=5432 user=Username password=Password dbname=fabric_ca sslmode=verify-full</span><br></pre></td></tr></table></figure>
+
+<p>指定<em>sslmode</em>配置 SSL 身份验证的类型。sslmode 的有效值为：</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>disable</td>
+<td>无 SSL</td>
+</tr>
+<tr>
+<td>require</td>
+<td>始终 SSL（跳过验证）</td>
+</tr>
+<tr>
+<td>verify-ca</td>
+<td>始终 SSL（验证服务器提供的证书是否由受信任的 CA 签名）</td>
+</tr>
+<tr>
+<td>verify-full</td>
+<td>与 verify-ca 相同，并验证服务器提供的证书是否由受信任的 CA 签名，并且服务器主机名与证书中的主机名匹配</td>
+</tr>
+</tbody></table>
+<p>如果要使用 TLS，则<code>db.tls</code>必须指定 Fabric CA 服务器配置文件中的部分。如果在 PostgreSQL 服务器上启用了 SSL 客户端身份验证，则还必须在该<code>db.tls.client</code>部分中指定客户端证书和密钥文件。以下是该<code>db.tls</code>部分的示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">db:</span><br><span class="line">  ...</span><br><span class="line">  tls:</span><br><span class="line">      enabled: true</span><br><span class="line">      certfiles:</span><br><span class="line">        - db-server-cert.pem</span><br><span class="line">      client:</span><br><span class="line">            certfile: db-client-cert.pem</span><br><span class="line">            keyfile: db-client-key.pem</span><br></pre></td></tr></table></figure>
+
+<p><strong>certfiles</strong> - PEM 编码的可信根证书文件列表。</p>
+<p><strong>certfile</strong>和<strong>keyfile</strong> - Fabric CA 服务器使用 PEM 编码的证书和密钥文件与 PostgreSQL 服务器进行安全通信</p>
+<h4 id="PostgreSQL-SSL配置"><a href="#PostgreSQL-SSL配置" class="headerlink" title="PostgreSQL SSL配置"></a>PostgreSQL SSL配置</h4><p><strong>在PostgreSQL服务器上配置SSL的基本说明:</strong></p>
+<p>在postgresql.conf中，取消对SSL的注释并设置为” on “ (SSL=on)<br>将证书和密钥文件放到PostgreSQL data目录下。<br>为:<a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/9.5/static/ssl-tcp.html%E7%94%9F%E6%88%90%E8%87%AA%E7%AD%BE%E5%90%8D%E8%AF%81%E4%B9%A6%E7%9A%84%E8%AF%B4%E6%98%8E">https://www.postgresql.org/docs/9.5/static/ssl-tcp.html生成自签名证书的说明</a></p>
+<p>注意：自签名证书用于测试目的，不应在生产环境中使用</p>
+<p><strong>PostgreSQL服务器-需要客户端证书</strong></p>
+<ol>
+<li>将您信任的证书颁发机构 (CA) 的证书放在 PostgreSQL 数据目录中的 root.crt 文件中</li>
+<li>在 postgresql.conf 中，设置“ssl_ca_file”指向客户端的根证书（CA cert）</li>
+<li>在 pg_hba.conf 中相应的 hostssl 行上将 clientcert 参数设置为 1。</li>
+</ol>
+<p>关于在PostgreSQL服务器上配置SSL的详细信息，请参考以下PostgreSQL文档:<a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/9.4/static/libpq-ssl.html">https://www.postgresql.org/docs/9.4/static/libpq-ssl.html</a></p>
+<h2 id="4-Fabric-CA-Client"><a href="#4-Fabric-CA-Client" class="headerlink" title="4. Fabric CA Client"></a>4. Fabric CA Client</h2><p>本节介绍如何使用fabric-ca-client 命令。</p>
+<p>Fabric CA 客户端的主目录确定如下：</p>
+<ul>
+<li>如果设置了 –home 命令行选项，则使用其值</li>
+<li>否则，如果<code>FABRIC_CA_CLIENT_HOME</code>设置了环境变量，则使用其值</li>
+<li>否则，如果<code>FABRIC_CA_HOME</code>设置了环境变量，则使用其值</li>
+<li>否则，如果<code>CA_CFG_PATH</code>设置了环境变量，则使用其值</li>
+<li>否则，使用 <code>$HOME/.fabric-ca-client</code></li>
+</ul>
+<p>以下说明假定客户端配置文件存在于客户端的主目录中。</p>
+<h3 id="注册引导程序身份"><a href="#注册引导程序身份" class="headerlink" title="注册引导程序身份"></a>注册引导程序身份</h3><p>首先，如果需要，自定义客户端配置文件中的 CSR（证书签名请求）部分。请注意，该<code>csr.cn</code>字段必须设置为引导程序标识的 ID。默认 CSR 值如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">csr:</span><br><span class="line">  cn: &lt;&lt;enrollment ID&gt;&gt;</span><br><span class="line">  key:</span><br><span class="line">    algo: ecdsa</span><br><span class="line">    size: 256</span><br><span class="line">  names:</span><br><span class="line">    - C: US</span><br><span class="line">      ST: North Carolina</span><br><span class="line">      L:</span><br><span class="line">      O: Hyperledger Fabric</span><br><span class="line">      OU: Fabric CA</span><br><span class="line">  hosts:</span><br><span class="line">   - &lt;&lt;hostname of the fabric-ca-client&gt;&gt;</span><br><span class="line">  ca:</span><br><span class="line">    pathlen:</span><br><span class="line">    pathlenzero:</span><br><span class="line">    expiry:</span><br></pre></td></tr></table></figure>
+
+<p>有关<a target="_blank" rel="noopener" href="https://hyperledger-fabric-ca.readthedocs.io/en/v1.5.0/users-guide.html#csr-fields">字段</a>的说明，请参阅<a target="_blank" rel="noopener" href="https://hyperledger-fabric-ca.readthedocs.io/en/v1.5.0/users-guide.html#csr-fields">CSR</a>字段。</p>
+<p>然后运行 <code>fabric-ca-client enroll</code> 来注册标识。例如，下面的命令通过调用本地运行在 7054 端口的 Fabric CA 服务器来注册一个 ID 为<strong>admin</strong>，密码为<strong>adminpw</strong>的身份。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export FABRIC_CA_CLIENT_HOME=$HOME/fabric-ca/clients/admin </span><br><span class="line">fabric-ca-client enroll -u http://admin:adminpw@localhost:7054</span><br></pre></td></tr></table></figure>
+
+<p>enroll 命令将注册证书 (ECert)、相应的私钥和 CA 证书链 PEM 文件存储在 Fabric CA 客户端的 msp 目录的子目录中。您将看到指示 PEM 文件存储位置的消息。</p>
+<h3 id="注册新身份"><a href="#注册新身份" class="headerlink" title="注册新身份"></a>注册新身份</h3><p>执行注册请求的身份必须是当前注册的，并且还必须具有注册正在注册的身份类型的适当权限。</p>
+<p>具体来说，Fabric CA 服务器在注册过程中会进行三项授权检查，如下所示：</p>
+<ol>
+<li>注册商（即调用者）必须具有“hf.Registrar.Roles”属性，其中包含一个逗号分隔的值列表，其中一个值等于正在注册的身份类型；例如，如果注册商具有值为“peer”的“hf.Registrar.Roles”属性，则注册商可以注册 peer 类型的身份，但不能注册 client、admin 或 orderer。</li>
+<li>注册服务商的从属关系必须等于注册身份的从属关系或前缀。例如，隶属于“ab”的注册商可以注册隶属于“abc”的身份，但不能注册隶属于“ac”的身份。如果身份需要根隶属关系，则隶属关系请求应为点 (“.”)，并且注册商也必须具有根隶属关系。如果注册请求中未指定从属关系，则注册的身份将被赋予注册服务商的从属关系。</li>
+<li>如果满足以下所有条件，注册商可以注册具有属性的身份：<ul>
+<li>注册器可以注册带有前缀“hf”的 Fabric CA 保留属性。仅当注册商拥有该属性并且它是 hf.Registrar.Attributes 属性值的一部分时。此外，如果属性是列表类型，那么被注册的属性的值必须等于注册商所拥有的值或该值的一个子集。如果属性是布尔类型，则只有当注册商的属性值为“真”时，注册商才能注册该属性。</li>
+<li>注册自定义属性（即名称不以“hf.”开头的任何属性）要求注册商具有“hf.Registar.Attributes”属性以及正在注册的属性或模式的值。唯一支持的模式是末尾带有“<em>”的字符串。例如，“ab</em>”是匹配所有以“ab”开头的属性名称的模式。例如，如果注册商具有 hf.Registrar.Attributes=orgAdmin，那么注册商可以从身份中添加或删除的唯一属性是“orgAdmin”属性。</li>
+<li>如果请求的属性名称是“hf.Registrar.Attributes”，则执行额外的检查以查看该属性的请求值是否等于“hf.Registrar.Attributes”的注册器值或其子集。为此，每个请求的值必须与“hf.Registrar.Attributes”属性的注册商值中的值相匹配。例如，如果注册商的 ‘hf.Registrar.Attributes’ 值为 ‘ab*, xyz’ 并且请求的属性值为 ‘abc, xyz’，则它是有效的，因为 ‘abc’ 匹配 ‘ab*’ 和 ‘xyz’匹配注册商的 ‘xyz’ 值。</li>
+</ul>
+</li>
+</ol>
+
+    </div>
+
+    <div class="about">
+        <h1>关于本文</h1>
+        <p>本文作者 Berny Wang, 许可由 <a
+                target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+    </div>
+
+    
+        
+    
+</article>
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h4 class="title">Blog</h4>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/projects" class="item">Projects</a>
+                
+                <a href="/resume" class="item">Resume</a>
+                
+                <a href="/about" class="item">About</a>
+                
+                <a href="/atom.xml" class="item">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Projects</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/rsa-cli" class="item">RSA CLI</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/hexo-theme-cupertino" class="item">Hexo Theme Cupertino</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/a-calendar" class="item">A Calendar</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/auto-mirroring-bucket" class="item">Auto Mirroring Bucket</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Me</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/bernyw" class="item">GitHub</a>
+                
+                <a target="_blank" rel="noopener" href="https://codepen.io/bernyw" class="item">CodePen</a>
+                
+                <a target="_blank" rel="noopener" href="https://www.zhihu.com/people/ber-16-41" class="item">Patreon</a>
+                
+                <a target="_blank" rel="noopener" href="https://noc.social/@bernyw" class="item">Mastodon</a>
+                
+                <a href="mailto:mr.bernyw@outlook.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2022 Berny Wang<br >驱动由 <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+    </body>
+</html>

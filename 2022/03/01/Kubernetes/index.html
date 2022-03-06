@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>Kubernetes - Berny&#39;s blog</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+<link rel="stylesheet" href="/css/waline.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+ 
+  
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+    <body data-color-scheme="auto">
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Blog</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">主页</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-codepen nav-item-icon" href="https://codepen.io/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-patreon nav-item-icon" href="https://www.zhihu.com/people/ber-16-41" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-mastodon nav-item-icon" href="https://noc.social/@bernyw" target="_blank">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        <article class="post">
+    <div class="meta">
+        
+        <div class="date" id="date">
+            
+            
+            
+            <span>March</span>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <span>1,</span>
+            <span>2022</span>
+        </div>
+        
+
+        <h2 class="title">Kubernetes</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="1-Kubernetes介绍"><a href="#1-Kubernetes介绍" class="headerlink" title="1 Kubernetes介绍"></a>1 Kubernetes介绍</h1><h2 id="1-1-应用部署方式的演变"><a href="#1-1-应用部署方式的演变" class="headerlink" title="1.1 应用部署方式的演变"></a>1.1 应用部署方式的演变</h2><p>在部署应用程序的方式上，主要经历了三个时代：</p>
+<ul>
+<li><p>传统部署：互联网早期，会直接将应用部署在物理机上。</p>
+<blockquote>
+<p>优点：简单，不需要其他的技术参与。</p>
+<p>缺点：不能为应用程序定义资源的使用边界，很难合理的分配计算机资源，而且程序之间容易产生影响。</p>
+</blockquote>
+</li>
+<li><p>虚拟化部署：可以在一台物理机上运行多个虚拟机，每个虚拟机都是独立的一个环境。</p>
+<blockquote>
+<p>优点：程序环境不会相互产生影响，提供了一定程序上的安全性。<br>缺点：增加了操作系统，浪费了部分资源。</p>
+</blockquote>
+</li>
+<li><p>容器化部署：和虚拟化类似，但是共享了操作系统。</p>
+<blockquote>
+<p>优点：</p>
+<ul>
+<li><p>可以保证每个容器拥有自己的文件系统、CPU 、内存和进程空间等。</p>
+</li>
+<li><p>运行应用程序所需要的资源都被容器包装，并和底层基础架构解耦。</p>
+</li>
+<li><p>容器化的应用程序可以跨云服务商、跨 Linux 操作系统发行版进行部署。</p>
+</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<h2 id="1-2-容器化部署方式产生的问题及解决方案"><a href="#1-2-容器化部署方式产生的问题及解决方案" class="headerlink" title="1.2 容器化部署方式产生的问题及解决方案"></a>1.2 容器化部署方式产生的问题及解决方案</h2><p>容器化部署方式带来了很多的便利，但是也会带来一些问题，比如：</p>
+<ul>
+<li>一旦容器故障停机了，怎么让另外一个容器立刻启动去替补停机的容器。</li>
+<li>当并发访问量变大的时候，怎么做到横向扩展容器数量。</li>
+<li>……</li>
+</ul>
+<p>这些容器管理的问题统称为 <code>容器编排问题</code> ，为了解决这些容器编排问题，就产生了一些容器编排的软件：</p>
+<ul>
+<li>Swarm：Docker 自己的容器编排工具。</li>
+<li>Mesos：Apache 的一个资源统一管控的工具，需要和 Marathon 结合。</li>
+<li>Kubernetes：Google 开源的容器编排工具。</li>
+</ul>
+<h2 id="1-3-kubernetes-简介"><a href="#1-3-kubernetes-简介" class="headerlink" title="1.3 kubernetes 简介"></a>1.3 kubernetes 简介</h2><p>Kubernetes，是一个全新的基于容器技术的分布式架构领先方案，是 Google 严格保密十几年的秘密武器– Borg 系统的一个开源版本，于 2014 年 9 月发布第一个版本，2015 年 7 月发布第一个正式版本。</p>
+<p>Kubernetes 的本质是一组服务器集群，它可以在集群的每个节点上运行特定的程序，来对节点中的容器进行管理。它的目的就是实现资源管理的自动化，主要提供了如下的功能：</p>
+<ul>
+<li><strong>自我修复</strong>：一旦某一个容器崩溃，能够在1秒左右迅速启动新的容器。</li>
+<li><strong>弹性伸缩</strong>：可以根据需要，自动对集群中正在运行的容器数量进行调整。</li>
+<li><strong>服务发现</strong>：服务可以通过自动发现的形式找到它所依赖的服务。</li>
+<li><strong>负载均衡</strong>：如果一个服务启动了多个容器，能够自动实现请求的负载均衡。</li>
+<li><strong>版本回退</strong>：如果发现新发布的程序版本有问题，可以立即回退到原来的版本。</li>
+<li><strong>存储编排</strong>：可以根据容器自身的需求自动创建存储卷。</li>
+<li>……</li>
+</ul>
+<h2 id="1-4-kubernetes组件"><a href="#1-4-kubernetes组件" class="headerlink" title="1.4 kubernetes组件"></a>1.4 kubernetes组件</h2><p>一个 kubernetes 集群主要由**控制节点(master)<strong>、</strong>工作节点(node)**构成，每个节点上都会安装不同的组件。</p>
+<p><strong>master：集群的控制平面，负责集群的决策（管理）。</strong></p>
+<blockquote>
+<p>API Server：集群操作的<strong>唯一入口</strong>，接收用户输入的命令，提供认证、授权、API注册和发现等机制。</p>
+<p>Scheduler：负责集群<strong>资源调度</strong>，按照预定的调度策略将 Pod 调度到相应的 node 节点上。</p>
+<p>ControllerManager：负责<strong>维护集群的状态</strong>，比如程序部署安排、故障检测、自动扩展和滚动更新等。</p>
+<p>Etcd：负责存储集群中各种资源对象的信息。</p>
+</blockquote>
+<p><strong>node：集群的数据平面，负责为容器提供运行环境（干活）。</strong></p>
+<blockquote>
+<p>Kubelet：负责<strong>维护容器的生命周期</strong>，即通过控制 Docker ，来创建、更新、销毁容器。</p>
+<p>KubeProxy：负责提供集群内部的<strong>服务发现和负载均衡</strong>。</p>
+<p>Docker：负责节点上容器的各种操作。</p>
+</blockquote>
+<p><img src="Kubernetes.assets/1608888638188-86fad61e-547c-43d9-8424-1d17a0c6d5a2.jpeg" alt="img"></p>
+<p>以部署一个 Nginx 服务来说明 Kubernetes 系统各个组件调用关系：</p>
+<ol>
+<li>首先需要明确，一旦 Kubernetes 环境启动之后，master 和 node 都会将自身的信息存储到etcd数据库中。</li>
+<li>一个Nginx服务的安装请求首先会被发送到 master 节点上的 API Server 组件。</li>
+<li>API Server 组件会调用 Scheduler 组件来决定到底应该把这个服务安装到那个 node 节点上。此时，它会从 etcd 中读取各个 node 节点的信息，然后按照一定的算法进行选择，并将结果告知 API Server 。</li>
+<li>API Server 调用 Controller-Manager 去调用 Node 节点安装 Nginx 服务。</li>
+<li>Kubelet 接收到指令后，会通知 Docker ，然后由 Docker 来启动一个 Nginx 的 Pod 。<strong>Pod 是 Kubernetes 的最小操作单元，容器必须跑在 Pod 中。</strong></li>
+<li>一个 Nginx 服务就运行了，如果需要访问 Nginx ，就需要通过 kube-proxy 来对 Pod 产生访问的代理，这样，外界用户就可以访问集群中的 Nginx 服务了。</li>
+</ol>
+<h2 id="1-5-kubernetes概念"><a href="#1-5-kubernetes概念" class="headerlink" title="1.5 kubernetes概念"></a>1.5 kubernetes概念</h2><p><strong>Master</strong>：集群控制节点，每个集群要求至少有一个 Master 节点来负责集群的管控。</p>
+<p><strong>Node</strong>：工作负载节点，由 Master 分配容器到这些 Node 工作节点上，然后 Node 节点上的 Docker 负责容器的运行。</p>
+<p><strong>Pod</strong>：Kubernetes 的最小控制单元，容器都是运行在 Pod 中的，一个 Pod 中可以有一个或多个容器。</p>
+<p><strong>Controller</strong>(有多种)：控制器，通过它来实现对 Pod 的管理，比如启动 Pod 、停止 Pod 、伸缩 Pod 的数量等等。</p>
+<p><strong>Service</strong>：Pod 对外服务的统一入口，其下面可以维护同一类的多个 Pod 。</p>
+<p><strong>Label</strong>：标签，用于对 Pod 进行分类，同一类 Pod 会拥有相同的标签。</p>
+<p><strong>NameSpace</strong>：命名空间，用来隔离 Pod 的运行环境。</p>
+<h1 id="2-集群环境搭建"><a href="#2-集群环境搭建" class="headerlink" title="2 集群环境搭建"></a>2 集群环境搭建</h1><h2 id="2-1-环境规划"><a href="#2-1-环境规划" class="headerlink" title="2.1 环境规划"></a>2.1 环境规划</h2><h3 id="2-1-1-集群类型"><a href="#2-1-1-集群类型" class="headerlink" title="2.1.1 集群类型"></a>2.1.1 集群类型</h3><p>Kubernetes集群大致分为两类：<strong>一主多从</strong>和<strong>多主多从</strong>。</p>
+<ul>
+<li><p>一主多从：一个Master节点和多台Node节点，搭建简单，但是有单机故障风险，适合用于测试环境。</p>
+</li>
+<li><p>多主多从：多台Master和多台Node节点，搭建麻烦，安全性高，适合用于生产环境。</p>
+</li>
+</ul>
+<p><img src="Kubernetes.assets/1609119870944-20c07dd5-9a76-42c6-b1df-6cc206e516e6.png" alt="img"></p>
+<blockquote>
+<p>为了测试方便，本次搭建的是一主多从类型的集群。</p>
+</blockquote>
+<h3 id="2-1-2-安装方式"><a href="#2-1-2-安装方式" class="headerlink" title="2.1.2 安装方式"></a>2.1.2 安装方式</h3><p>kubernetes有多种部署方式，目前主流的方式有kubeadm、minikube、二进制包。</p>
+<ul>
+<li><p>minikube：一个用于快速搭建<strong>单节点</strong>的kubernetes工具。</p>
+</li>
+<li><p>kubeadm：一个用于快速搭建kubernetes集群的工具。</p>
+</li>
+<li><p>二进制包：从官网上下载每个组件的二进制包，依次去安装，此方式对于理解kubernetes组件更加有效。</p>
+</li>
+</ul>
+<blockquote>
+<p>我们需要安装kubernetes的集群环境，但是又不想过于麻烦，所以选择kubeadm方式。</p>
+</blockquote>
+<h3 id="2-1-3-主机规划"><a href="#2-1-3-主机规划" class="headerlink" title="2.1.3 主机规划"></a>2.1.3 主机规划</h3><table>
+<thead>
+<tr>
+<th>角色</th>
+<th>IP地址</th>
+<th>操作系统</th>
+<th>配置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Master</td>
+<td>10.211.55.3</td>
+<td>Ubuntu20.04+，基础设施服务器</td>
+<td>2核CPU，2G内存，50G硬盘</td>
+</tr>
+<tr>
+<td>Node1</td>
+<td>10.211.55.4</td>
+<td>Ubuntu20.04+，基础设施服务器</td>
+<td>2核CPU，2G内存，50G硬盘</td>
+</tr>
+<tr>
+<td>Node2</td>
+<td>10.211.55.5</td>
+<td>Ubuntu20.04+，基础设施服务器</td>
+<td>2核CPU，2G内存，50G硬盘</td>
+</tr>
+</tbody></table>
+<h2 id="2-2-环境搭建"><a href="#2-2-环境搭建" class="headerlink" title="2.2 环境搭建"></a>2.2 环境搭建</h2><p>本次环境搭建需要三台CentOS服务器（一主二从），然后在每台服务器中分别安装Docker（18.06.3）、kubeadm（1.18.0）、kubectl（1.18.0）和kubelet（1.18.0）程序。</p>
+<h3 id="2-2-1-主机安装"><a href="#2-2-1-主机安装" class="headerlink" title="2.2.1 主机安装"></a>2.2.1 主机安装</h3><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/145102034">虚拟机安装</a></p>
+<p>安装虚拟机过程中注意下面选项的设置“</p>
+<ul>
+<li>操作系统环境：CPU2C    内存2G    硬盘50G</li>
+<li>语言选择：中文简体</li>
+<li>软件选择：基础设置服务器</li>
+<li>分区选择：自动分区</li>
+<li>网络配置：ip配置</li>
+<li>主机名设置：master；node1；node2</li>
+</ul>
+<h3 id="2-2-2-环境初始化"><a href="#2-2-2-环境初始化" class="headerlink" title="2.2.2 环境初始化"></a>2.2.2 环境初始化</h3><ol>
+<li><p>检查操作系统的版本5</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pd</span><br></pre></td></tr></table></figure></li>
+</ol>
+<ol start="2">
+<li><p>主机名解析</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 主机名称解析 编辑三台服务器的/etc/hosts文件，添加下面内容</span></span><br><span class="line">10.211.55.3 master</span><br><span class="line">10.211.55.4 node1</span><br><span class="line">10.211.55.5 node2</span><br></pre></td></tr></table></figure></li>
+</ol>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/51230330">MAC下使用terminal连接到Parallel创建的Linux虚拟机(ubuntu)</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Victor2code/article/details/112476490">Mac上利用iterm2多屏同时操作多个ssh终端</a></li>
+</ul>
+<ol start="3">
+<li><p>时间同步</p>
+<p>kubernetes要求集群中的节点时间必须精确一致，这里直接使用chronyd服务从网络同步时间</p>
+<p>企业中建议配置内部的时间同步服务器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 启动chronyd服务</span></span><br><span class="line">systemctl start chronyd</span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置chronyd服务开机自启</span></span><br><span class="line">systemctl enable chrony</span><br><span class="line"><span class="meta">#</span><span class="bash"> chronyd服务启动稍等几秒钟，就可以使用date命令验证时间了</span></span><br><span class="line">date</span><br></pre></td></tr></table></figure></li>
+<li><p>禁用iptables和firewalld服务</p>
+<p>Kubernetes和docker在运行中会产生大量的iptables规则，为了不让系统规则跟他们混淆，直接关闭系统的规则</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1.关闭firewalld服务</span></span><br><span class="line">sudo ufw disable</span><br><span class="line"><span class="meta">#</span><span class="bash"> 2.卸载iptables服务</span></span><br><span class="line">sudo apt-get remove iptables</span><br></pre></td></tr></table></figure></li>
+<li><p>禁用selinux</p>
+<p>selinux是linux系统下的一个安全服务，如果不关闭它，在安装集群中会产生各种奇葩问题</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ubuntu不需要</span></span><br></pre></td></tr></table></figure></li>
+<li><p>禁用swap分区</p>
+<p>swap分区指的是虚拟内存分区，它的作用是在物理内存使用完后，将磁盘空间虚拟成内存使用</p>
+<p>启用swap设备会对系统的性能产生非常负面的影响，因此kubernetes要求每个节点都要禁用swap设备，但是如果因为某些原因确实不能关闭swap分区，就需要在集群安装过程中通过明确的参数进行配置说明。</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45579994/article/details/113853636">ubuntu20参考</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 卸载swap (耗时)</span></span><br><span class="line">sudo swapoff [swap文件名]</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除自动挂载设置,编辑 /etc/fstab</span></span><br><span class="line">sudo vim /etc/fstab</span><br><span class="line"><span class="meta">#</span><span class="bash"> 然后删除添加的用于自动挂载该swap文件的配置</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除swap文件</span></span><br><span class="line">rm -rf [swap文件名]</span><br></pre></td></tr></table></figure></li>
+<li><p>确保每个机器不会自动suspend</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target</span><br></pre></td></tr></table></figure></li>
+<li><p>修改linux的内核参数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 修改linux的内核参数，添加网桥过滤和地址转发功能</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 编辑/etc/sysctl.d/kubernetes.conf.conf,添加如下配置：</span></span><br><span class="line">net.bridge.bridge-nf-call-ip6tables = 1</span><br><span class="line">net.bridge.bridge-nf-call-iptables = 1</span><br><span class="line">net.ipv4.ip_forward = 1</span><br><span class="line">vm.swappiness = 0</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重新加载配置</span></span><br><span class="line">sysctl -p</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 加载网桥过滤模块</span></span><br><span class="line">sudo modprobe br_netfilter</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看网桥过滤模块是否加载成功</span></span><br><span class="line">lsmod | grep br_netfilter</span><br><span class="line"></span><br><span class="line">br_netfilter           28672  0</span><br><span class="line">bridge                303104  1 br_netfilter</span><br></pre></td></tr></table></figure></li>
+<li><p>配置ipvs</p>
+<p>在kubernetes中service有两种代理模型，一种是基于iptables，另一种是基于ipvs的。ipvs的性能要高于iptables的，但是如果要使用它，需要手动载入ipvs模块。</p>
+<p>在每个节点安装ipset和ipvsadm：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">   #</span><span class="bash"> 1 安装ipset和ipvsadm</span></span><br><span class="line">   sudo apt-get install ipset</span><br><span class="line">   sudo apt-get install ipvsadm</span><br><span class="line">   </span><br><span class="line"><span class="meta">   #</span><span class="bash"> 2 添加需要加载的模块写入脚本文件</span></span><br><span class="line">   sudo mkdir /etc/sysconfig/</span><br><span class="line">   sudo mkdir /etc/sysconfig/modules</span><br><span class="line">   sudo vim /etc/sysconfig/modules/ipvs.modules</span><br><span class="line">   </span><br><span class="line"><span class="meta">   #</span><span class="bash">!/bin/bash</span></span><br><span class="line">   modprobe -- ip_vs</span><br><span class="line">   modprobe -- ip_vs_rr</span><br><span class="line">   modprobe -- ip_vs_wrr</span><br><span class="line">   modprobe -- ip_vs_sh</span><br><span class="line">   modprobe -- nf_conntrack</span><br><span class="line">   </span><br><span class="line"><span class="meta">   #</span><span class="bash"> 3 为脚本文件添加执行权限</span></span><br><span class="line">   sudo chmod 755 /etc/sysconfig/modules/ipvs.modules</span><br><span class="line"><span class="meta">   #</span><span class="bash"> 4 运行</span></span><br><span class="line">   sudo /bin/bash /etc/sysconfig/modules/ipvs.modules</span><br><span class="line"><span class="meta">   #</span><span class="bash"> 5 检查是否加载</span></span><br><span class="line">   sudo lsmod | grep -e ip_vs -e nf_conntrack</span><br><span class="line">   </span><br><span class="line">   ip_vs_sh               20480  0</span><br><span class="line">   ip_vs_wrr              20480  0</span><br><span class="line">   ip_vs_rr               20480  0</span><br><span class="line">   ip_vs                 180224  6 ip_vs_rr,ip_vs_sh,ip_vs_wrr</span><br><span class="line">   nf_conntrack          176128  1 ip_vs</span><br><span class="line">   nf_defrag_ipv6         24576  2 nf_conntrack,ip_vs</span><br><span class="line">   nf_defrag_ipv4         16384  1 nf_conntrack</span><br><span class="line">   libcrc32c              16384  4 nf_conntrack,btrfs,xfs,ip_vs</span><br><span class="line"></span><br><span class="line">10. 重启</span><br><span class="line"></span><br><span class="line">    ```shell</span><br><span class="line">    reboot</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="2-2-3-安装docker"><a href="#2-2-3-安装docker" class="headerlink" title="2.2.3 安装docker"></a>2.2.3 安装docker</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1 使用国内 daocloud 一键安装命令</span></span><br><span class="line">curl -sSL https://get.daocloud.io/docker | sh</span><br><span class="line"><span class="meta">#</span><span class="bash"> 2 查看版本</span></span><br><span class="line">docker --version</span><br><span class="line"><span class="meta">#</span><span class="bash"> 3 添加一个配置文件</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> docker在默认情况下使用的 Cgroup Driver为cgroupfs，而k8s推荐使用systemd来代替cgroupfs</span></span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-&#x27;EOF&#x27;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],	</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://du3ia00u.mirror.aliyuncs.com&quot;],	</span><br><span class="line">  &quot;live-restore&quot;: true,</span><br><span class="line">  &quot;log-driver&quot;:&quot;json-file&quot;,</span><br><span class="line">  &quot;log-opts&quot;: &#123;&quot;max-size&quot;:&quot;500m&quot;, &quot;max-file&quot;:&quot;3&quot;&#125;,</span><br><span class="line">  &quot;storage-driver&quot;: &quot;overlay2&quot;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"><span class="meta">#</span><span class="bash"> 4 启动docker</span></span><br><span class="line">systemctl restart docker</span><br><span class="line"><span class="meta">#</span><span class="bash"> 5 自启动</span></span><br><span class="line">systemctl enable docker</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-4-安装kubernetes组件"><a href="#2-2-4-安装kubernetes组件" class="headerlink" title="2.2.4 安装kubernetes组件"></a>2.2.4 安装kubernetes组件</h3><ol>
+<li>安装和启动</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 安装</span></span><br><span class="line">sudo apt-get update &amp;&amp; sudo apt-get install -y ca-certificates curl software-properties-common apt-transport-https curl</span><br><span class="line">curl -s https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | sudo apt-key add -</span><br><span class="line"></span><br><span class="line">sudo tee /etc/apt/sources.list.d/kubernetes.list &lt;&lt;EOF </span><br><span class="line">deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install -y kubelet kubeadm kubectl</span><br><span class="line">sudo apt-mark hold kubelet kubeadm kubectl</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动</span></span><br><span class="line">systemctl enable kubelet &amp;&amp; systemctl start kubelet</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 可以参考https://blog.csdn.net/weixin_40165163/article/details/104546284</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置kubelet自启动</span></span><br><span class="line">systemctl enable kubelet</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>配置kubelet的cgroup</p>
+<ul>
+<li><p>教程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1 配置kubelet的cgroup</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 为了实现Docker使用的cgroup drvier和kubelet使用的cgroup driver一致，建议修改<span class="string">&quot;/etc/systemd/system/kubelet.service.d/10-kubeadm.conf&quot;</span>文件的内容：</span></span><br><span class="line">Environment=&quot;KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --cgroup-driver=systemd&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2 配置kubelet的cgroup</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 编辑/etc/sysconfig/kubelet,添加如下配置：</span></span><br><span class="line">KUBELET_EXTRA_ARGS=&quot;--cgroup-driver=systemd&quot;</span><br><span class="line">KUBE_PROXY_MODE=&quot;ipvs&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 3 准备镜像</span></span><br><span class="line">kubeadm config images list</span><br></pre></td></tr></table></figure></li>
+<li><p>博客</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1 导出kubeadm创建环境文件</span></span><br><span class="line">kubeadm config print init-defaults --kubeconfig ClusterConfiguration &gt; kubeadm.yml</span><br><span class="line"><span class="meta">#</span><span class="bash"> 2 需要修改内容已加注释如下</span></span><br><span class="line">apiVersion: kubeadm.k8s.io/v1beta2</span><br><span class="line">bootstrapTokens:</span><br><span class="line">- groups:</span><br><span class="line">  - system:bootstrappers:kubeadm:default-node-token</span><br><span class="line">  token: abcdef.0123456789abcdef</span><br><span class="line">  ttl: 24h0m0s</span><br><span class="line">  usages:</span><br><span class="line">  - signing</span><br><span class="line">  - authentication</span><br><span class="line">kind: InitConfiguration</span><br><span class="line">localAPIEndpoint:</span><br><span class="line"><span class="meta">  #</span><span class="bash">当前节点ip或者hostname</span></span><br><span class="line">  advertiseAddress: 192.168.8.51</span><br><span class="line">  bindPort: 6443</span><br><span class="line">nodeRegistration:</span><br><span class="line"><span class="meta">  #</span><span class="bash">criSocket: unix:///var/run/dockershim.sock</span></span><br><span class="line"><span class="meta">  #</span><span class="bash">重点修改为crio运行时</span></span><br><span class="line">  criSocket: unix:///var/run/crio/crio.sock</span><br><span class="line">  name: my</span><br><span class="line">  taints:</span><br><span class="line">  - effect: NoSchedule</span><br><span class="line">    key: node-role.kubernetes.io/master</span><br><span class="line">---</span><br><span class="line">apiServer:</span><br><span class="line">  timeoutForControlPlane: 4m0s</span><br><span class="line">apiVersion: kubeadm.k8s.io/v1beta2</span><br><span class="line">certificatesDir: /etc/kubernetes/pki</span><br><span class="line">clusterName: kubernetes</span><br><span class="line">controllerManager: &#123;&#125;</span><br><span class="line">dns:</span><br><span class="line">  type: CoreDNS</span><br><span class="line">etcd:</span><br><span class="line">  local:</span><br><span class="line">    dataDir: /var/lib/etcd</span><br><span class="line"><span class="meta">#</span><span class="bash">配置阿里云k8s仓库</span></span><br><span class="line">imageRepository: registry.aliyuncs.com/google_containers</span><br><span class="line">kind: ClusterConfiguration</span><br><span class="line">kubernetesVersion: v1.20.0</span><br><span class="line">networking:</span><br><span class="line">  dnsDomain: cluster.local</span><br><span class="line">  serviceSubnet: 10.96.0.0/12</span><br><span class="line">scheduler: &#123;&#125;</span><br><span class="line">---</span><br><span class="line">apiVersion: kubelet.config.k8s.io/v1beta1</span><br><span class="line">kind: KubeletConfiguration</span><br><span class="line">cgroupDriver: systemd</span><br><span class="line">---</span><br><span class="line"><span class="meta">#</span><span class="bash"> 开启 IPVS 模式</span></span><br><span class="line"><span class="meta">#</span><span class="bash">apiVersion: kubeproxy.config.k8s.io/v1alpha1</span></span><br><span class="line"><span class="meta">#</span><span class="bash">kind: KubeProxyConfiguration</span></span><br><span class="line"><span class="meta">#</span><span class="bash">featureGates:</span></span><br><span class="line"><span class="meta">  #</span><span class="bash">SupportIPVSProxyMode: <span class="literal">true</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">mode: ipvs</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 3 准备镜像</span></span><br><span class="line">kubeadm config images list --config kubeadm-config.yaml</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="2-2-5-准备集群镜像"><a href="#2-2-5-准备集群镜像" class="headerlink" title="2.2.5 准备集群镜像"></a>2.2.5 准备集群镜像</h3><blockquote>
+<p>安装集群的过程就是安装一系列组件的过程</p>
+</blockquote>
+<ol>
+<li><p>在安装k8s集群之前，必须要提前准备好集群需要的镜像，所需镜像可以通过下面命令查看：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 教程</span></span><br><span class="line">kubeadm config images list</span><br><span class="line"><span class="meta">#</span><span class="bash"> 博客</span></span><br><span class="line">kubeadm config images pull --config kubeadm-config.yaml</span><br></pre></td></tr></table></figure></li>
+<li><p>下载镜像</p>
+<p>此镜像在k8s仓库中，由于网络原因无法连接，下面提供了一种代替方案。</p>
+<p>建立一个sh文件，将下面文件放入文件，添加执行权限，并运行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">images=(</span><br><span class="line">    kube-apiserver:v1.23.4</span><br><span class="line">    kube-controller-manager:v1.23.4</span><br><span class="line">    kube-scheduler:v1.23.4</span><br><span class="line">    kube-proxy:v1.23.4</span><br><span class="line">    pause:3.6</span><br><span class="line">    etcd:3.5.1-0</span><br><span class="line">    coredns/coredns:v1.8.6</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">for imageName in $&#123;images[@]&#125; ; do</span><br><span class="line">    docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/$imageName</span><br><span class="line">    docker tag registry.cn-hangzhou.aliyuncs.com/google_containers/$imageName k8s.grc.io/$imageName</span><br><span class="line">    docker rmi registry.cn-hangzhou.aliyuncs.com/google_containers/$imageName</span><br><span class="line">done</span><br></pre></td></tr></table></figure></li>
+<li><p>检查镜像文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="2-2-6-集群初始化"><a href="#2-2-6-集群初始化" class="headerlink" title="2.2.6 集群初始化"></a>2.2.6 集群初始化</h3><p>下面开始对集群进行初始化，并将node节点加入到集群中</p>
+<blockquote>
+<p>下面的操作只需要在<code>master</code>节点上执行即可</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建集群</span></span><br><span class="line">kubeadm init --kubernetes-version=v1.23.4 --pod-network-cidr=10.244.0.0/16 --service-cidr=10.96.0.0/12 --apiserver-advertise-address=10.211.55.3  --image-repository=registry.aliyuncs.com/google_containers</span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除多余镜像registry.aliyuncs.com/google_containers/XXX</span></span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/kube-scheduler:v1.23.4</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/coredns:v1.8.6</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/etcd:3.5.1-0</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/kube-controller-manager:v1.23.4</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/kube-proxy:v1.23.4</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/kube-apiserver:v1.23.4</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/pause:3.6</span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果要用云服务器的建议买三台放到同一个子网里面，最好不要用没有绑定到网卡上的公网ip来配置</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 根据终端init的提示：创建必要文件</span></span><br><span class="line">mkdir -p $HOME/.kube</span><br><span class="line">sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</span><br><span class="line">sudo chown $(id -u):$(id -g) $HOME/.kube/config</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 检查</span></span><br><span class="line">root@master:~# kubectl get nodes</span><br><span class="line">NAME     STATUS     ROLES                  AGE   VERSION</span><br><span class="line">master   NotReady   control-plane,master   63s   v1.23.4</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>部署<code>node</code>节点</p>
+</blockquote>
+<p>根据终端init的提示，在node1和node2上添加如下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">kubeadm join 10.211.55.3:6443 --token hmkavp.lmh1h4t00qo0ffns \</span><br><span class="line">	--discovery-token-ca-cert-hash sha256:c3df8bbf416ca1e2f2f8a90b8b6240e7866182ffe202baeef8980fcb184ad9bb</span><br><span class="line"><span class="meta">	</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 检查</span>	</span><br><span class="line">root@master:~# kubectl get nodes</span><br><span class="line">NAME     STATUS     ROLES                  AGE   VERSION</span><br><span class="line">master   NotReady   control-plane,master   26m   v1.23.4</span><br><span class="line">node1    NotReady   &lt;none&gt;                 23m   v1.23.4</span><br><span class="line">node2    NotReady   &lt;none&gt;                 23m   v1.23.4</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-7-安装网络插件"><a href="#2-2-7-安装网络插件" class="headerlink" title="2.2.7 安装网络插件"></a>2.2.7 安装网络插件</h3><p>kubernetes支持多种网络插件，比如flannel、calico、canal等等，任选一种即可，本次选择flannel</p>
+<blockquote>
+<p>下面操作只在<code>master</code>节点执行，插件使用的是DaemonSet的控制器，它会在每个节点上都运行</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 获取fannel的配置文件</span></span><br><span class="line">wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml</span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果连接不上，参考：https://blog.csdn.net/m0_52650517/article/details/119831630</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使用配置文件启动fannel</span></span><br><span class="line">kubectl apply -f kube-flannel.yml</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 部署CNI网络插件进度，查看pod, 可以看到flannel组件已经运行起来了. 默认系统组件都安装在 kube-system 这个命名空间(namespace)下</span></span><br><span class="line">root@master:~# kubectl get pod -n kube-system</span><br><span class="line">NAME                             READY   STATUS    RESTARTS   AGE</span><br><span class="line">coredns-6d8c4cb4d-c2xzj          1/1     Running   0          51m</span><br><span class="line">coredns-6d8c4cb4d-jh7cw          1/1     Running   0          51m</span><br><span class="line">etcd-master                      1/1     Running   0          51m</span><br><span class="line">kube-apiserver-master            1/1     Running   0          51m</span><br><span class="line">kube-controller-manager-master   1/1     Running   0          51m</span><br><span class="line">kube-flannel-ds-4hx2l            1/1     Running   0          5m14s</span><br><span class="line">kube-flannel-ds-66fkg            1/1     Running   0          5m14s</span><br><span class="line">kube-flannel-ds-jbxz7            1/1     Running   0          5m14s</span><br><span class="line">kube-proxy-4p8bc                 1/1     Running   0          48m</span><br><span class="line">kube-proxy-mhsfc                 1/1     Running   0          51m</span><br><span class="line">kube-proxy-qp2k7                 1/1     Running   0          48m</span><br><span class="line">kube-scheduler-master            1/1     Running   0          51m</span><br><span class="line"><span class="meta">#</span><span class="bash"> 稍等片刻，再次查看集群节点的状态</span></span><br><span class="line">root@master:~# kubectl get node</span><br><span class="line">NAME     STATUS   ROLES                  AGE   VERSION</span><br><span class="line">master   Ready    control-plane,master   51m   v1.23.4</span><br><span class="line">node1    Ready    &lt;none&gt;                 49m   v1.23.4</span><br><span class="line">node2    Ready    &lt;none&gt;                 48m   v1.23.4</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看集群健康状态</span></span><br><span class="line">kubectl get cs</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>也可以卸载 flannel.yml （delete ）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete -f kube-flannel.yml</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-3-服务部署"><a href="#2-3-服务部署" class="headerlink" title="2.3 服务部署"></a>2.3 服务部署</h2><p>接下来在kubernetes集群中部署一个nginx程序，测试下集群事都在正常工作。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 部署nginx</span></span><br><span class="line">kubectl create deployment nginx --image=nginx:1.14-alpine</span><br><span class="line"><span class="meta">#</span><span class="bash"> 暴露端口</span></span><br><span class="line">kubectl expose deployment nginx --port=80 --type=NodePort</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看服务状态</span></span><br><span class="line">kubectl get pods,svc</span><br><span class="line"></span><br><span class="line">NAME                         READY   STATUS    RESTARTS   AGE</span><br><span class="line">pod/nginx-7cbb8cd5d8-g24d8   1/1     Running   0          105s</span><br><span class="line">NAME                 TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE</span><br><span class="line">service/kubernetes   ClusterIP   10.96.0.1      &lt;none&gt;        443/TCP        63m</span><br><span class="line">service/nginx        NodePort    10.109.86.34   &lt;none&gt;        80:31850/TCP   89s</span><br></pre></td></tr></table></figure>
+
+<p>![截屏2022-03-05 15.00.05](Kubernetes.assets/截屏2022-03-05 15.00.05.png)</p>
+<h2 id="2-4-kubernetes中kubectl命令自动补全"><a href="#2-4-kubernetes中kubectl命令自动补全" class="headerlink" title="2.4 kubernetes中kubectl命令自动补全"></a>2.4 kubernetes中kubectl命令自动补全</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">apt install -y bash-completion</span><br><span class="line">source /usr/share/bash-completion/bash_completion</span><br><span class="line">source &lt;(kubectl completion bash)</span><br><span class="line">echo “source &lt;(kubectl completion bash)” &gt;&gt; ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-资源管理"><a href="#3-资源管理" class="headerlink" title="3 资源管理"></a>3 资源管理</h1><p>本章节主要介绍yaml语法和kubernetes的资源管理方式</p>
+<h2 id="3-1-资源管理介绍"><a href="#3-1-资源管理介绍" class="headerlink" title="3.1 资源管理介绍"></a>3.1 资源管理介绍</h2><p>在Kubernetes中，所有的内容都抽象为资源，用户需要通过操作资源来管理Kubernetes。</p>
+<blockquote>
+<p>Kubernetes的本质就是一个集群系统，用户可以在集群中部署各种服务。所谓的部署服务，其实就是在Kubernetes集群中运行一个个的容器，并将指定的程序跑在容器中。</p>
+<p>Kubernetes的最小管理单元是Pod而不是容器，所以只能将容器放在<code>Pod</code>中，而Kubernetes一般也不会直接管理Pod，而是通过<code>Pod控制器</code>来管理Pod的。</p>
+<p>Pod提供服务之后，就需要考虑如何访问Pod中的服务，Kubernetes提供了<code>Service</code>资源实现这个功能。</p>
+<p>当然，如果Pod中程序的数据需要持久化，Kubernetes还提供了各种<code>存储</code>系统。</p>
+</blockquote>
+<p><img src="Kubernetes.assets/1609132417114-28600d3c-185f-4ded-9f5e-c0d77fb86d80.png" alt="img"></p>
+<blockquote>
+<p>学习kubernets的核心，就是学习如何对集群中的<code>Pod</code>、<code>Pod控制器</code>、<code>Service</code>、<code>存储</code>等各种资源进行操作。</p>
+</blockquote>
+<h2 id="3-2-YAML语法介绍"><a href="#3-2-YAML语法介绍" class="headerlink" title="3.2 YAML语法介绍"></a>3.2 YAML语法介绍</h2><p>YAML是一个类似于XML、JSON的标记性语言。它强调的是以“数据”为中心，并不是以标记语言为重点。因而YAML本身的定义比较简单，号称是“一种人性化的数据格式语言”。</p>
+<p>YAML的语法比较简单，主要有下面的几个：</p>
+<ul>
+<li><p>大小写敏感。</p>
+</li>
+<li><p>使用缩进表示层级关系。</p>
+</li>
+<li><p>缩进不允许使用tab，只允许空格（低版本限制）。</p>
+</li>
+<li><p>缩进的空格数不重要，只要相同层级的元素左对齐即可。</p>
+</li>
+<li><p>‘#’表示注释。</p>
+</li>
+</ul>
+<p>YAML支持以下几种数据类型：</p>
+<ul>
+<li>常量：单个的、不能再分的值。</li>
+<li>对象：键值对的集合，又称为映射/哈希/字典。</li>
+<li>数组：一组按次序排列的值，又称为序列/列表。</li>
+</ul>
+<h3 id="3-2-1-YAML语法示例"><a href="#3-2-1-YAML语法示例" class="headerlink" title="3.2.1 YAML语法示例"></a>3.2.1 YAML语法示例</h3><ol>
+<li><p>YAML常量</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#常量，就是指的是一个简单的值，字符串、布尔值、整数、浮点数、NUll、时间、日期</span></span><br><span class="line"><span class="comment"># 布尔类型</span></span><br><span class="line"><span class="attr">c1:</span> <span class="literal">true</span></span><br><span class="line"><span class="comment"># 整型</span></span><br><span class="line"><span class="attr">c2:</span> <span class="number">123456</span></span><br><span class="line"><span class="comment"># 浮点类型</span></span><br><span class="line"><span class="attr">c3:</span> <span class="number">3.14</span></span><br><span class="line"><span class="comment"># null类型</span></span><br><span class="line"><span class="attr">c4:</span> <span class="string">~</span> <span class="comment"># 使用~表示null</span></span><br><span class="line"><span class="comment"># 日期类型</span></span><br><span class="line"><span class="attr">c5:</span> <span class="number">2019-11-11</span> <span class="comment"># 日期类型必须使用ISO 8601格式，即yyyy-MM-dd</span></span><br><span class="line"><span class="comment"># 时间类型</span></span><br><span class="line"><span class="attr">c6:</span> <span class="number">2019-11-11T15:02:31+08</span><span class="number">.00</span> <span class="comment"># 时间类型使用ISO 8601格式，时间和日期之间使用T连接，最后使用+代表时区</span></span><br><span class="line"><span class="comment"># 字符串类型</span></span><br><span class="line"><span class="attr">c7:</span> <span class="string">haha</span> <span class="comment"># 简单写法，直接写值，如果字符串中间有特殊符号，必须使用双引号或单引号包裹</span></span><br><span class="line"><span class="attr">c8:</span> <span class="string">line1</span></span><br><span class="line">    <span class="string">line2</span> <span class="comment"># 字符串过多的情况可以折成多行，每一行都会转换成一个空格</span></span><br></pre></td></tr></table></figure></li>
+<li><p>对象</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 对象</span></span><br><span class="line"><span class="comment"># 形式一（推荐）：</span></span><br><span class="line"><span class="attr">xudaxian:</span>	</span><br><span class="line">	<span class="attr">name:</span> <span class="string">许大仙</span></span><br><span class="line">	<span class="attr">age:</span> <span class="number">16</span></span><br><span class="line"><span class="comment"># 形式二（了解）：</span></span><br><span class="line"><span class="attr">xuxian:</span> &#123; <span class="attr">name:</span> <span class="string">许仙</span>, <span class="attr">age:</span> <span class="number">18</span> &#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>数组</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 数组</span></span><br><span class="line"><span class="comment"># 形式一（推荐）：</span></span><br><span class="line"><span class="attr">address:</span></span><br><span class="line">	<span class="bullet">-</span> <span class="string">江苏</span></span><br><span class="line">	<span class="bullet">-</span> <span class="string">北京</span></span><br><span class="line"><span class="comment"># 形式二（了解）：</span></span><br><span class="line"><span class="attr">address:</span> [<span class="string">江苏</span>,<span class="string">上海</span>]</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="3-3-资源管理方式"><a href="#3-3-资源管理方式" class="headerlink" title="3.3 资源管理方式"></a>3.3 资源管理方式</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>操作</th>
+<th>适用场景</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>命令式对象管理</td>
+<td>对象</td>
+<td>测试</td>
+<td>简单</td>
+<td>只能操作活动对象，无法审计、跟踪</td>
+</tr>
+<tr>
+<td>命令式对象配置</td>
+<td>文件</td>
+<td>开发</td>
+<td>可以审计、跟踪</td>
+<td>项目大的时候，配置文件多，操作麻烦</td>
+</tr>
+<tr>
+<td>声明式对象配置</td>
+<td>目录</td>
+<td>开发</td>
+<td>支持目录操作</td>
+<td>意外情况下难以调试</td>
+</tr>
+</tbody></table>
+<ol>
+<li><p>命令式对象管理</p>
+<p>直接使用命令去操作kubernetes的资源</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">kubectl</span> <span class="string">run</span> <span class="string">nginx-pod</span> <span class="string">--image=nginx:1.17.1</span> <span class="string">--port=80</span></span><br></pre></td></tr></table></figure></li>
+<li><p>命令式对象配置</p>
+<p>通过命令配置和配置文件去操作kubernetes的资源</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">kubectl</span> <span class="string">create/patch</span> <span class="string">-f</span> <span class="string">nginx-pod.yaml</span></span><br></pre></td></tr></table></figure></li>
+<li><p>声明式对象配置</p>
+<p>通过apply命令和配置文件去操作kubernetes的资源</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">kubectl</span> <span class="string">apply</span> <span class="string">-f</span> <span class="string">nginx-pod.yaml</span> <span class="comment">#只用于创建和更新资源</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="3-3-1-命令式对象管理"><a href="#3-3-1-命令式对象管理" class="headerlink" title="3.3.1 命令式对象管理"></a>3.3.1 命令式对象管理</h3><h4 id="kubectl命令"><a href="#kubectl命令" class="headerlink" title="kubectl命令"></a>kubectl命令</h4><p>kubectl是kubernetes集群的命令行工具，通过它能够对集群本身进行管理，并能够在集群上进行容器化应用的安装和部署。</p>
+<p>kubectl命令的语法如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl [command] [type] [name] [flags]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>command：指定要对资源执行的操作，比如create、get、delete。</p>
+</li>
+<li><p>type：指定资源的类型，比如deployment、pod、service。</p>
+</li>
+<li><p>name：指定资源的名称，名称大小写敏感。</p>
+</li>
+<li><p>flags：指定额外的可选参数。</p>
+</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看所有pod</span></span><br><span class="line">kubectl get pods</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看某个pod</span></span><br><span class="line">kubectl get pod pod_name</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看某个pod，以yaml格式展示结果</span></span><br><span class="line">kubectl get pod pod_name -o yaml</span><br></pre></td></tr></table></figure>
+
+<h4 id="资源类型"><a href="#资源类型" class="headerlink" title="资源类型"></a>资源类型</h4><p>kubernetes中所有的内容都抽象为资源，可以通过下面的命令进行查看：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl api-resources</span><br></pre></td></tr></table></figure>
+
+<p>经常使用的资源有下面这些：</p>
+<ol>
+<li>集群级别资源</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>资源名称</th>
+<th>缩写</th>
+<th>资源作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nodes</td>
+<td>no</td>
+<td>集群组成部分</td>
+</tr>
+<tr>
+<td>namespaces</td>
+<td>ns</td>
+<td>隔离Pod</td>
+</tr>
+</tbody></table>
+<ol start="2">
+<li><p>pod资源</p>
+<table>
+<thead>
+<tr>
+<th>资源名称</th>
+<th>缩写</th>
+<th>资源作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Pods</td>
+<td>po</td>
+<td>装载容器</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>pod资源控制器</p>
+<table>
+<thead>
+<tr>
+<th>资源名称</th>
+<th>缩写</th>
+<th>资源作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>replicationcontrollers</td>
+<td>rc</td>
+<td>控制Pod资源</td>
+</tr>
+<tr>
+<td>replicasets</td>
+<td>rs</td>
+<td>控制Pod资源</td>
+</tr>
+<tr>
+<td>deployments</td>
+<td>deploy</td>
+<td>控制Pod资源</td>
+</tr>
+<tr>
+<td>daemonsets</td>
+<td>ds</td>
+<td>控制Pod资源</td>
+</tr>
+<tr>
+<td>jobs</td>
+<td></td>
+<td>控制Pod资源</td>
+</tr>
+<tr>
+<td>cronjobs</td>
+<td>cj</td>
+<td>控制Pod资源</td>
+</tr>
+<tr>
+<td>horizontalpodautoscalers</td>
+<td>hpa</td>
+<td>控制Pod资源</td>
+</tr>
+<tr>
+<td>statefulsets</td>
+<td>sts</td>
+<td>控制Pod资源</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>服务发现资源</p>
+<table>
+<thead>
+<tr>
+<th>资源名称</th>
+<th>缩写</th>
+<th>资源作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>services</td>
+<td>svc</td>
+<td>统一Pod对外接口</td>
+</tr>
+<tr>
+<td>ingress</td>
+<td>ing</td>
+<td>统一Pod对外接口</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>存储资源</p>
+<table>
+<thead>
+<tr>
+<th>资源名称</th>
+<th>缩写</th>
+<th>资源作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>volumeattachments</td>
+<td></td>
+<td>存储</td>
+</tr>
+<tr>
+<td>persistentvolumes</td>
+<td>pv</td>
+<td>存储</td>
+</tr>
+<tr>
+<td>persistentvolumeclaims</td>
+<td>pvc</td>
+<td>存储</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>配置资源</p>
+<table>
+<thead>
+<tr>
+<th>资源名称</th>
+<th>缩写</th>
+<th>资源作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>configmaps</td>
+<td>cm</td>
+<td>配置</td>
+</tr>
+<tr>
+<td>secrets</td>
+<td></td>
+<td>配置</td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<h4 id="操作（command）"><a href="#操作（command）" class="headerlink" title="操作（command）"></a>操作（command）</h4><p>kubernetes允许对资源进行多种操作，可以通过–help查看详细的操作命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl --help</span><br></pre></td></tr></table></figure>
+
+<p>经常使用的操作如下所示：</p>
+<ol>
+<li><p>基本命令</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>翻译</th>
+<th>命令作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>create</td>
+<td>创建</td>
+<td>创建一个资源</td>
+</tr>
+<tr>
+<td>edit</td>
+<td>编辑</td>
+<td>编辑一个资源</td>
+</tr>
+<tr>
+<td>get</td>
+<td>获取</td>
+<td>获取一个资源</td>
+</tr>
+<tr>
+<td>patch</td>
+<td>更新</td>
+<td>更新一个资源</td>
+</tr>
+<tr>
+<td>delete</td>
+<td>删除</td>
+<td>删除一个资源</td>
+</tr>
+<tr>
+<td>explain</td>
+<td>解释</td>
+<td>展示资源文档</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>运行和调试</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>翻译</th>
+<th>命令作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>run</td>
+<td>运行</td>
+<td>在集群中运行一个指定的镜像</td>
+</tr>
+<tr>
+<td>expose</td>
+<td>暴露</td>
+<td>暴露资源为Service</td>
+</tr>
+<tr>
+<td>describe</td>
+<td>描述</td>
+<td>显示资源内部信息</td>
+</tr>
+<tr>
+<td>logs</td>
+<td>日志</td>
+<td>输出容器在Pod中的日志</td>
+</tr>
+<tr>
+<td>attach</td>
+<td>缠绕</td>
+<td>进入运行中的容器</td>
+</tr>
+<tr>
+<td>exec</td>
+<td>执行</td>
+<td>执行容器中的一个命令</td>
+</tr>
+<tr>
+<td>cp</td>
+<td>复制</td>
+<td>在Pod内外复制文件</td>
+</tr>
+<tr>
+<td>rollout</td>
+<td>首次展示</td>
+<td>管理资源的发布</td>
+</tr>
+<tr>
+<td>scale</td>
+<td>规模</td>
+<td>扩（缩）容Pod的数量</td>
+</tr>
+<tr>
+<td>autoscale</td>
+<td>自动调整</td>
+<td>自动调整Pod的数量</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>高级命令</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>翻译</th>
+<th>命令作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>apply</td>
+<td>应用</td>
+<td>通过文件对资源进行配置</td>
+</tr>
+<tr>
+<td>label</td>
+<td>标签</td>
+<td>更新资源上的标签</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>其他命令</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>翻译</th>
+<th>命令作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cluster-info</td>
+<td>集群信息</td>
+<td>显示集群信息</td>
+</tr>
+<tr>
+<td>version</td>
+<td>版本</td>
+<td>显示当前Client和Server的版本</td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<h4 id="应用示例"><a href="#应用示例" class="headerlink" title="应用示例"></a>应用示例</h4><blockquote>
+<p>以一个namespace的创建和删除简单演示命令的使用</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建一个namespace</span></span><br><span class="line">kubectl create namespace dev</span><br><span class="line"><span class="meta">#</span><span class="bash"> 获取namespace</span></span><br><span class="line">kubectl get namespace</span><br><span class="line">kubectl get ns</span><br><span class="line"><span class="meta">#</span><span class="bash"> 在刚才创建的namespace下创建并运行一个Nginx的Pod</span></span><br><span class="line">kubectl run nginx --image=nginx:1.17.1 -n dev</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看名为dev的namespace下的所有Pod，如果不加-n，默认就是default的namespace</span></span><br><span class="line">kubectl get pods -n dev</span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除指定namespace下的指定Pod</span></span><br><span class="line">kubectl delete pod nginx -n dev</span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除指定的namespace</span></span><br><span class="line">kubectl delete namespace dev</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-2-命令式对象配置"><a href="#3-3-2-命令式对象配置" class="headerlink" title="3.3.2 命令式对象配置"></a>3.3.2 命令式对象配置</h3><p>通过命令配置和配置文件去操作kubernetes的资源</p>
+<h4 id="应用示例-1"><a href="#应用示例-1" class="headerlink" title="应用示例"></a>应用示例</h4><ol>
+<li><p>创建一个nginxpod.yaml，内容如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Namespace</span><br><span class="line">metadata:</span><br><span class="line">  name: dev</span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: nginxpod</span><br><span class="line">  namespace: dev</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">    - name: nginx-containers</span><br><span class="line">      image: nginx:1.17.1</span><br></pre></td></tr></table></figure></li>
+<li><p>执行create命令，创建资源：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create -f nginxpod.yaml</span><br></pre></td></tr></table></figure></li>
+<li><p>执行get命令，查看资源：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get -f nginxpod.yaml</span><br></pre></td></tr></table></figure></li>
+<li><p>执行delete命令，删除资源：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete -f nginxpod.yaml</span><br></pre></td></tr></table></figure></li>
+</ol>
+<blockquote>
+<p>命令式对象配置的方式操作资源，可以简单的认为：命令+yaml配置文件（里面是命令需要的各种参数）</p>
+</blockquote>
+<h3 id="3-3-3-声明式对象配置"><a href="#3-3-3-声明式对象配置" class="headerlink" title="3.3.3 声明式对象配置"></a>3.3.3 声明式对象配置</h3><p>通过apply命令和配置文件去操作kubernetes的资源。</p>
+<ul>
+<li>声明式对象配置和命令式对象配置类似，只不过它只有一个apply命令。</li>
+<li>apply相当于create和patch。</li>
+</ul>
+<h4 id="应用示例-2"><a href="#应用示例-2" class="headerlink" title="应用示例"></a>应用示例</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f nginxpod.yaml</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>声明式对象配置就是使用apply描述一个资源的最终状态（在yaml中定义状态）。</p>
+<p>使用apply操作资源：</p>
+<ul>
+<li>如果资源不存在，就创建，相当于kubectl create。</li>
+<li>如果资源存在，就更新，相当于kubectl patch。</li>
+</ul>
+</blockquote>
+<h3 id="3-3-4-使用方式推荐"><a href="#3-3-4-使用方式推荐" class="headerlink" title="3.3.4 使用方式推荐"></a>3.3.4 使用方式推荐</h3><ul>
+<li><p>创建和更新资源使用<code>声明式对象配置</code>：kubectl apply -f xxx.yaml。</p>
+</li>
+<li><p>删除资源使用<code>命令式对象配置</code>：kubectl delete -f xxx.yaml。</p>
+</li>
+<li><p>查询资源使用<code>命令式对象管理</code>：kubectl get(describe) 资源名称。</p>
+</li>
+</ul>
+<h3 id="3-3-5-扩展：kubectl可以在Node上运行"><a href="#3-3-5-扩展：kubectl可以在Node上运行" class="headerlink" title="3.3.5 扩展：kubectl可以在Node上运行"></a>3.3.5 扩展：kubectl可以在Node上运行</h3><p>kubectl的运行需要进行配置，它的配置文件是$HOME/.kube，如果想要在Node节点上运行此命令，需要将Master节点的.kube文件夹复制到Node节点上，即在Master节点上执行下面的操作：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r $HOME/.kube node1:$HOME</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-4-如何快速的编写yaml文件"><a href="#3-4-如何快速的编写yaml文件" class="headerlink" title="3.4 如何快速的编写yaml文件"></a>3.4 如何快速的编写yaml文件</h2><h3 id="3-4-1-使用kubectl-create命令生成yaml文件"><a href="#3-4-1-使用kubectl-create命令生成yaml文件" class="headerlink" title="3.4.1 使用kubectl create命令生成yaml文件"></a>3.4.1 使用kubectl create命令生成yaml文件</h3><p>此种方式适用于没有真正部署资源。</p>
+<p>使用kubectl create命令生成yaml文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create deployment nginx --image=nginx:1.17.1 --dry-run=client -n dev -o yaml</span><br></pre></td></tr></table></figure>
+
+<p>如果yaml文件太长，可以写入到指定的文件中</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create deployment nginx --image=nginx:1.17.1 --dry-run=client -n dev -o yaml &gt; test.yaml</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-实战入门"><a href="#4-实战入门" class="headerlink" title="4 实战入门"></a>4 实战入门</h1><blockquote>
+<p>介绍如何在kubernetes集群中部署一个Nginx服务，并且能够对其访问。</p>
+</blockquote>
+<h2 id="4-1-Namespace"><a href="#4-1-Namespace" class="headerlink" title="4.1 Namespace"></a>4.1 Namespace</h2><p>Namespace是kubernetes系统中一种非常重要的资源，它的主要作用是用来实现<code>多套系统的资源隔离</code>或者<code>多租户的资源隔离</code>。</p>
+<p>默认情况下，kubernetes集群中的所有Pod都是可以相互访问的。但是在实际中，可能不想让两个Pod之间进行互相的访问，那么此时就可以将两个Pod划分到不同的Namespace下。kubernetes通过将集群内部的资源分配到不同的Namespace中，可以形成逻辑上的“组”，以方便不同的组的资源进行隔离使用和管理。</p>
+<p>可以通过kubernetes的<code>授权机制</code>，将不同的Namespace交给不同租户进行管理，这样就实现了多租户的资源隔离。此时还能结合kubernetes的<code>资源配额机制</code>，限定不同租户能占用的资源，例如CPU使用量、内存使用量等等，来实现租户可用资源的管理。</p>
+<p><img src="Kubernetes.assets/IMG_6AF9B0211F55-1.jpeg" alt="IMG_6AF9B0211F55-1"></p>
+<p>kubernetes在集群启动之后，会默认创建几个namespace。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get namespace</span><br></pre></td></tr></table></figure>
+
+<p>![截屏2022-03-06 00.49.57](Kubernetes.assets/截屏2022-03-06 00.49.57.png)</p>
+<ul>
+<li><p>default：所有未指定的Namespace的对象都会被分配在default命名空间。</p>
+</li>
+<li><p>kube-node-lease：集群节点之间的心跳维护，v1.13开始引入。</p>
+</li>
+<li><p>kube-public：此命名空间的资源可以被所有人访问（包括未认证用户）。</p>
+</li>
+<li><p>kube-system：所有由kubernetes系统创建的资源都处于这个命名空间。</p>
+</li>
+</ul>
+<h3 id="命令解析"><a href="#命令解析" class="headerlink" title="命令解析"></a>命令解析</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看所有命名空间</span></span><br><span class="line">kubectl get namespace</span><br><span class="line">kubectl get ns</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看指定的命名空间</span></span><br><span class="line">kubectl get namespace default</span><br><span class="line">kubectl get ns default</span><br><span class="line"><span class="meta">#</span><span class="bash"> 指定命名空间的输出格式</span></span><br><span class="line">kubectl get ns default -o wide</span><br><span class="line">kubectl get ns default -o json</span><br><span class="line">kubectl get ns default -o yaml</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看命名空间的详情</span></span><br><span class="line">kubectl describe namespace default</span><br><span class="line">kubectl describe ns default</span><br><span class="line"><span class="meta">	#</span><span class="bash"><span class="comment"># Active:表示命名空间正在使用中</span></span></span><br><span class="line"><span class="meta">	#</span><span class="bash"><span class="comment"># Terminating:表示正在删除命名空间</span></span></span><br><span class="line"><span class="meta">	#</span><span class="bash"><span class="comment"># No resourse quota:针对命名空间做的资源限制</span></span></span><br><span class="line"><span class="meta">	#</span><span class="bash"><span class="comment"># No LimitRange resource:针对命名空间中的每个组件做的资源限制</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 创建命名空间</span></span><br><span class="line">kubectl create namespace dev</span><br><span class="line">kubectl create ns dev</span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除命名空间</span></span><br><span class="line">kubectl delete ns dev</span><br></pre></td></tr></table></figure>
+
+<h3 id="应用示例-3"><a href="#应用示例-3" class="headerlink" title="应用示例"></a>应用示例</h3><p>命令式对象配置</p>
+<ol>
+<li><p>新建ns-dev.yaml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Namespace</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">dev</span></span><br></pre></td></tr></table></figure></li>
+<li><p>通过命令式对象配置进行创建和删除</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl create -f ns-dev.yaml</span><br><span class="line">kubectl delete -f ns-dev.yaml</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="4-2-Pod"><a href="#4-2-Pod" class="headerlink" title="4.2 Pod"></a>4.2 Pod</h2><p>Pod是kubernetes集群进行管理的最小单元，程序要运行必须部署在容器中，而容器必须存在于Pod中。</p>
+<p>Pod可以认为是容器的封装，一个Pod中可以存在一个或多个容器。</p>
+<p><img src="Kubernetes.assets/IMG_F1169D99BA72-1.jpeg" alt="IMG_F1169D99BA72-1"></p>
+<p>kubernetes在集群启动之后，集群中的各个组件也是以Pod方式运行的，可以通过下面的命令查看：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods -n kube-system</span><br></pre></td></tr></table></figure>
+
+<h3 id="命令解析-1"><a href="#命令解析-1" class="headerlink" title="命令解析"></a>命令解析</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建并运行Pod</span></span><br><span class="line">kubectl run (Pod的名称) [参数]</span><br><span class="line"><span class="meta">	#</span><span class="bash"> --image 指定Pod的镜像</span></span><br><span class="line"><span class="meta">	#</span><span class="bash"> --port 指定端口</span></span><br><span class="line"><span class="meta">	#</span><span class="bash"> --namespace 指定namespace</span></span><br><span class="line"><span class="meta">  #</span><span class="bash"> 示例：在名称为dev的namespace下创建一个Nginx的Pod</span></span><br><span class="line">  kubectl run nginx --image=nginx:1.17.1 --port=80 --namespace=dev</span><br><span class="line"><span class="meta">  </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查询所有Pod的基本信息</span></span><br><span class="line">kubectl get pods [-n 命名空间的名称]</span><br><span class="line"><span class="meta">  #</span><span class="bash"> 示例：查询名称为dev的namespace下的所有Pod的基本信息</span></span><br><span class="line">  kubectl get pods -n dev</span><br><span class="line"><span class="meta">  </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看Pod的详细信息</span></span><br><span class="line">kubectl describe pod pod的名称 [-n 命名空间名称]</span><br><span class="line"><span class="meta">  #</span><span class="bash"> 示例：查看名称为dev的namespace下的Pod的名称为nginx的详细信息</span></span><br><span class="line">  kubectl describe pod nginx -n dev</span><br><span class="line"><span class="meta">  </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Pod的访问</span></span><br><span class="line"><span class="meta">	#</span><span class="bash"> 获取Pod的IP</span></span><br><span class="line">	kubectl get pods [-n dev] -o wide</span><br><span class="line"><span class="meta">	#</span><span class="bash"> 通过curl访问</span></span><br><span class="line">	curl ip:端口</span><br><span class="line"><span class="meta">	#</span><span class="bash"> 示例：访问Nginx的Pod</span></span><br><span class="line">  kubectl get pods -n dev -o wide</span><br><span class="line">  curl 10.244.2.7:80</span><br><span class="line"><span class="meta">  </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除指定的Pod</span></span><br><span class="line">kubectl delete pod pod的名称 [-n 命名空间]</span><br><span class="line"><span class="meta">	#</span><span class="bash"> 示例：删除Nginx的Pod</span></span><br><span class="line">	kubectl delete pod nginx -n dev</span><br></pre></td></tr></table></figure>
+
+<h3 id="应用示例-4"><a href="#应用示例-4" class="headerlink" title="应用示例"></a>应用示例</h3><ol>
+<li><p>新建pod-nginx.yaml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">dev</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">image:</span> <span class="string">nginx:1.17.1</span></span><br><span class="line">    <span class="attr">imagePullPolicy:</span> <span class="string">IfNotPresent</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">pod</span></span><br><span class="line">    <span class="attr">ports:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx-port</span></span><br><span class="line">      <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">protocol:</span> <span class="string">TCP</span></span><br></pre></td></tr></table></figure></li>
+<li><p>执行创建和删除命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl create -f pod-nginx.yaml</span><br><span class="line">kubectl delete -f pod-nginx.yaml</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="4-3-Label"><a href="#4-3-Label" class="headerlink" title="4.3 Label"></a>4.3 Label</h2><p>Label是kubernetes的一个重要概念。它的作用就是在资源上添加标识，用来对它们进行区分和选择。</p>
+<p>Label的特点：</p>
+<ul>
+<li>一个Label会以key/value键值对的形式附加到各种对象上，如Node、Pod、Service等。</li>
+<li>一个资源对象可以定义任意数量的Label，同一个Label也可以被添加到任意数量的资源对象上去。</li>
+<li>Label通常在资源对象定义时确定，当然也可以在对象创建后动态的添加或删除。</li>
+</ul>
+<p>可以通过Label实现资源的多纬度分组，以便灵活、方便地进行资源分配、调度、配置和部署等管理工作。</p>
+<blockquote>
+<p>一些常用的Label标签示例如下：</p>
+<ul>
+<li><p>版本标签：“version”:”release”,”version”:”stable”。。。</p>
+</li>
+<li><p>环境标签：“environment”:”dev”,“environment”:”test”,“environment”:”pro”。。。</p>
+</li>
+<li><p>架构标签：“tier”:”frontend”,”tier”:”backend”。。。</p>
+</li>
+</ul>
+</blockquote>
+<p>标签定义完毕之后，还要考虑到标签的选择，这就要用到Label Selector，即：</p>
+<ul>
+<li>Label用于给某个资源对象定义标识。</li>
+<li>Label Selector用于查询和筛选拥有某些标签的资源对象。</li>
+</ul>
+<p>当前有两种Label Selector：</p>
+<ul>
+<li><p>基于等式的Label Selector。</p>
+<ul>
+<li>name=slave：选择所有包含Label中的key=“name”并且value=“slave”的对象。</li>
+<li>env!=production：选择所有包含Label中的key=“env”并且value!=“production”的对象。</li>
+</ul>
+</li>
+<li><p>基于集合的Label Selector。</p>
+<ul>
+<li>name in (master,slave)：选择所有包含Label中的key=“name”并且value=“master”或value=“slave”的对象。</li>
+<li>name not in (master,slave)：选择所有包含Label中的key=“name”并且value!=“master”和value!=“slave”的对象。</li>
+</ul>
+</li>
+</ul>
+<p>标签的选择条件可以使用多个，此时将多个Label Selector进行组合，使用逗号（,）进行分隔即可。</p>
+<ul>
+<li>name=salve,env!=production。</li>
+<li>name not in (master,slave),env!=production。</li>
+</ul>
+<h3 id="命令解释"><a href="#命令解释" class="headerlink" title="命令解释"></a>命令解释</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 为资源打标签</span></span><br><span class="line">kubectl label pod xxx key=value [-n 命名空间]</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 更新资源的标签</span></span><br><span class="line">kubectl label pod xxx key=value [-n 命名空间] --overwrite</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看标签</span></span><br><span class="line">kubectl get pod xxx [-n 命名空间] --show-labels</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 筛选标签</span></span><br><span class="line">kubectl get pod -l key=value [-n 命名空间] --show-labels</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除标签</span></span><br><span class="line">kubectl label pod xxx key- [-n 命名空间]</span><br></pre></td></tr></table></figure>
+
+<h3 id="应用示例-5"><a href="#应用示例-5" class="headerlink" title="应用示例"></a>应用示例</h3><ol>
+<li><p>新建pod-nginx.yaml</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx</span><br><span class="line">  namespace: dev</span><br><span class="line">  labels:</span><br><span class="line">    version: &quot;3.0&quot;</span><br><span class="line">    env: &quot;test&quot;        </span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - image: nginx:1.17.1</span><br><span class="line">    imagePullPolicy: IfNotPresent</span><br><span class="line">    name: pod</span><br><span class="line">    ports: </span><br><span class="line">    - name: nginx-port</span><br><span class="line">      containerPort: 80</span><br><span class="line">      protocol: TCP</span><br></pre></td></tr></table></figure></li>
+<li><p>执行创建和删除命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl create -f pod-nginx.yaml</span><br><span class="line">kubectl delete -f pod-nginx.yaml</span><br></pre></td></tr></table></figure></li>
+<li><p>为Nginx的Pod打上标签</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl label pod nginx version=1.0 -n dev</span><br></pre></td></tr></table></figure></li>
+<li><p>为Nginx的Pod更新标签</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl label pod nginx version=2.0 -n dev --overwrite</span><br></pre></td></tr></table></figure></li>
+<li><p>显示Nginx的Pod的标签</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pod nginx -n dev --show-labels</span><br></pre></td></tr></table></figure></li>
+<li><p>筛选版本号是2.0的在名称为dev的namespace下的Pod</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pod -l version=2.0 -n dev --show-labels</span><br></pre></td></tr></table></figure></li>
+<li><p>删除名称为dev的namespace下的Nginx的Pod上的标签</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl label pod nginx version- -n dev</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="4-4-Deployment"><a href="#4-4-Deployment" class="headerlink" title="4.4 Deployment"></a>4.4 Deployment</h2><p>在kubernetes中，Pod是最小的控制单元，但是kubernetes很少直接控制Pod，一般都是通过Pod控制器来完成的。</p>
+<p>Pod控制器用于Pod的管理，确保Pod资源符合预期的状态，当Pod的资源出现故障的时候，会尝试进行重启或重建Pod。</p>
+<p>在kubernetes中Pod控制器的种类有很多，本章节只介绍一种：Deployment。</p>
+<p><img src="Kubernetes.assets/IMG_798FF1CC2A4B-1.jpeg" alt="IMG_798FF1CC2A4B-1"></p>
+<h3 id="命令解析-2"><a href="#命令解析-2" class="headerlink" title="命令解析"></a>命令解析</h3><blockquote>
+<p>特别注意：在v1.18版之后，kubectl run nginx –image=nginx –replicas=2 –port=80，会反馈Flag –replicas has been deprecated, has no effect and will be removed in the future，并且只会创建一个Nginx容器实例。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建指定名称的deployement</span></span><br><span class="line">kubectl create deployment xxx [-n 命名空间]</span><br><span class="line">kubectl create deploy xxx [-n 命名空间]</span><br><span class="line"><span class="meta">	#</span><span class="bash"> 在名称为<span class="built_in">test</span>的命名空间下创建名为nginx的deployment</span></span><br><span class="line">	kubectl create deployment nginx --image=nginx:1.17.1 -n test</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 根据指定的deplyment创建Pod</span></span><br><span class="line">kubectl scale deployment xxx [--replicas=正整数] [-n 命名空间]</span><br><span class="line"><span class="meta">	#</span><span class="bash"> 在名称为<span class="built_in">test</span>的命名空间下根据名为nginx的deployment创建4个Pod</span></span><br><span class="line">	kubectl scale deployment nginx --replicas=4 -n dev</span><br><span class="line"><span class="meta">	</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看deployment的信息</span></span><br><span class="line">kubectl get deployment [-n 命名空间]</span><br><span class="line">kubectl get deploy [-n 命名空间]</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看deployment的详细信息</span></span><br><span class="line">kubectl describe deployment xxx [-n 命名空间]</span><br><span class="line">kubectl describe deploy xxx [-n 命名空间]</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除deployment</span></span><br><span class="line">kubectl delete deployment xxx [-n 命名空间]</span><br><span class="line">kubectl delete deploy xxx [-n 命名空间]</span><br></pre></td></tr></table></figure>
+
+<h3 id="应用示例-6"><a href="#应用示例-6" class="headerlink" title="应用示例"></a>应用示例</h3><p>命令式对象配置</p>
+<ol>
+<li><p>创建一个deploy-nginx.yaml，内容如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">dev</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">3</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">run:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">image:</span> <span class="string">nginx:1.17.1</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line">          <span class="attr">protocol:</span> <span class="string">TCP</span></span><br></pre></td></tr></table></figure></li>
+<li><p>执行创建和删除命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl create -f deploy-nginx.yaml</span><br><span class="line">kubectl delete -f deploy-nginx.yaml</span><br></pre></td></tr></table></figure></li>
+<li><p>查看名称为dev的namespace下通过deployment创建的3个Pod</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods -n dev</span><br></pre></td></tr></table></figure></li>
+<li><p>查看名称为dev的namespace下的deployment</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get deployment -n dev</span><br></pre></td></tr></table></figure></li>
+<li><p>查看名为dev的namespace下的名为nginx的deployment的详细信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe deployment nginx -n dev</span><br></pre></td></tr></table></figure></li>
+<li><p>删除名为dev的namespace下的名为nginx的deployment</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete deployment nginx -n dev</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="4-5-Service"><a href="#4-5-Service" class="headerlink" title="4.5 Service"></a>4.5 Service</h2><p>我们已经能够利用Deployment来创建一组Pod来提供具有高可用性的服务，虽然每个Pod都会分配一个单独的Pod的IP地址，但是却存在如下的问题：</p>
+<ul>
+<li><p>Pod的IP会随着Pod的重建产生变化。</p>
+</li>
+<li><p>Pod的IP仅仅是集群内部可见的虚拟的IP，外部无法访问。</p>
+</li>
+</ul>
+<p>这样对于访问这个服务带来了难度，因此，kubernetes设计了Service来解决这个问题。</p>
+<p><img src="Kubernetes.assets/IMG_CDAEACCEE311-1.jpeg" alt="IMG_CDAEACCEE311-1"></p>
+<p>Service可以看做是一组同类的Pod对外的访问接口，借助Service，应用可以方便的实现服务发现和负载均衡。</p>
+<h3 id="命令解析-3"><a href="#命令解析-3" class="headerlink" title="命令解析"></a>命令解析</h3><ol>
+<li>创建集群内部可访问的Service</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 暴露Service</span></span><br><span class="line">kubectl expose deployment xxx --name=服务名 --type=ClusterIP --port=暴露的端口 --target-port=指向集群中的Pod的端口 [-n 命名空间]</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 会产生一个CLUSTER-IP，这个就是service的IP，在Service的生命周期内，这个地址是不会变化的</span></span></span><br><span class="line"><span class="meta">	#</span><span class="bash"> 暴露名为<span class="built_in">test</span>的namespace下的名为nginx的deployment，并设置服务名为svc-nginx1</span></span><br><span class="line">	kubectl expose deployment nginx --name=svc-nginx1 --type=ClusterIP --port=80 --target-port=80 -n test</span><br><span class="line"><span class="meta">	</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看Service</span></span><br><span class="line">kubectl get service [-n 命名空间] [-o wide]</span><br><span class="line"><span class="meta">	#</span><span class="bash"> 查看名为<span class="built_in">test</span>的命名空间的所有Service</span></span><br><span class="line">	kubectl get service -n test</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>创建集群外部可访问的Service</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 暴露Service</span></span><br><span class="line">kubectl expose deployment xxx --name=服务名 --type=NodePort --port=暴露的端口 --target-port=指向集群中的Pod的端口 [-n 命名空间]</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 会产生一个外部也可以访问的Service</span></span></span><br><span class="line"><span class="meta">	#</span><span class="bash"> 暴露名为<span class="built_in">test</span>的namespace下的名为nginx的deployment，并设置服务名为svc-nginx2</span></span><br><span class="line">	kubectl expose deploy nginx --name=svc-nginx2 --type=NodePort --port=80 --target-port=80 -n test</span><br><span class="line"><span class="meta">	</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看Service</span></span><br><span class="line">kubectl get service [-n 命名空间] [-o wide]</span><br><span class="line"><span class="meta">	#</span><span class="bash"> 查看名为<span class="built_in">test</span>的命名空间的所有Service</span></span><br><span class="line">	kubectl get service -n test</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>删除服务</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete service xxx [-n 命名空间]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例</span></span><br><span class="line">kubectl delete service svc-nginx1 -n test</span><br></pre></td></tr></table></figure>
+
+<h3 id="应用示例-7"><a href="#应用示例-7" class="headerlink" title="应用示例"></a>应用示例</h3><p>对象配置方式</p>
+<ol>
+<li><p>新建svc-nginx.yaml，内容如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">svc-nginx</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">dev</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">clusterIP:</span> <span class="number">10.109</span><span class="number">.179</span><span class="number">.231</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">    <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">    <span class="attr">targetPort:</span> <span class="number">80</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">run:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">ClusterIP</span></span><br></pre></td></tr></table></figure></li>
+<li><p>执行创建和删除命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl  create  -f  svc-nginx.yaml</span><br><span class="line">kubectl  delete  -f  svc-nginx.yaml</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="5-Pod详解"><a href="#5-Pod详解" class="headerlink" title="5 Pod详解"></a>5 Pod详解</h1>
+    </div>
+
+    <div class="about">
+        <h1>关于本文</h1>
+        <p>本文作者 Berny Wang, 许可由 <a
+                target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+    </div>
+
+    
+        
+    
+</article>
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h4 class="title">Blog</h4>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/projects" class="item">Projects</a>
+                
+                <a href="/resume" class="item">Resume</a>
+                
+                <a href="/about" class="item">About</a>
+                
+                <a href="/atom.xml" class="item">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Projects</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/rsa-cli" class="item">RSA CLI</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/hexo-theme-cupertino" class="item">Hexo Theme Cupertino</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/a-calendar" class="item">A Calendar</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/auto-mirroring-bucket" class="item">Auto Mirroring Bucket</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Me</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/bernyw" class="item">GitHub</a>
+                
+                <a target="_blank" rel="noopener" href="https://codepen.io/bernyw" class="item">CodePen</a>
+                
+                <a target="_blank" rel="noopener" href="https://www.zhihu.com/people/ber-16-41" class="item">Patreon</a>
+                
+                <a target="_blank" rel="noopener" href="https://noc.social/@bernyw" class="item">Mastodon</a>
+                
+                <a href="mailto:mr.bernyw@outlook.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2022 Berny Wang<br >驱动由 <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+    </body>
+</html>

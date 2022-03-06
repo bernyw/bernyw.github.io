@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>Docker - Berny&#39;s blog</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+<link rel="stylesheet" href="/css/waline.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+ 
+  
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+    <body data-color-scheme="auto">
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Blog</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">主页</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-codepen nav-item-icon" href="https://codepen.io/bernyw" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-patreon nav-item-icon" href="https://www.zhihu.com/people/ber-16-41" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-mastodon nav-item-icon" href="https://noc.social/@bernyw" target="_blank">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        <article class="post">
+    <div class="meta">
+        
+        <div class="date" id="date">
+            
+            
+            <span>February</span>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <span>7,</span>
+            <span>2022</span>
+        </div>
+        
+
+        <h2 class="title">Docker</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>DockerFile build run 手动操作，单个容器</p>
+<p>微服务，上百个微服务还存在依赖关系！</p>
+<p>Docker Compose 来轻松高效的管理容器，定义运行多个容器。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.docker.com/compose/">官方介绍</a></p>
+</blockquote>
+<p>定义、运行多个容器；YAML file配置文件；single command</p>
+<p>Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration. To learn more about all the features of Compose, see <a target="_blank" rel="noopener" href="https://docs.docker.com/compose/#features">the list of features</a>.</p>
+<p>Compose works in all environments: production, staging, development, testing, as well as CI workflows. You can learn more about each case in <a target="_blank" rel="noopener" href="https://docs.docker.com/compose/#common-use-cases">Common Use Cases</a>.</p>
+<p><strong>三步骤：</strong></p>
+<p>Using Compose is basically a three-step process:</p>
+<ol>
+<li>Define your app’s environment with a <code>Dockerfile</code> so it can be reproduced anywhere.<ul>
+<li>Dockerfile保证我们项目在任何地方可以运行</li>
+</ul>
+</li>
+<li>Define the services that make up your app in <code>docker-compose.yml</code> so they can be run together in an isolated environment.<ul>
+<li>services什么服务</li>
+<li>docker-compose.yml文件怎么写</li>
+</ul>
+</li>
+<li>Run <code>docker compose up</code> and the <a target="_blank" rel="noopener" href="https://docs.docker.com/compose/cli-command/">Docker compose command</a> starts and runs your entire app. You can alternatively run <code>docker-compose up</code> using the docker-compose binary.<ul>
+<li>启动项目</li>
+</ul>
+</li>
+</ol>
+<p><strong>作用：</strong>批量容器编排</p>
+<blockquote>
+<p>自己理解</p>
+</blockquote>
+<p>Compose是Docker官方的开源项目。需要安装！</p>
+<p><code>Dockerfile</code>让程序在任何地方运行。web服务中，redies，mysql，nginx…多个容器。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&quot;3.9&quot;</span>  <span class="comment"># optional since v1.27.0</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">build:</span> <span class="string">.</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;5000:5000&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">.:/code</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">logvolume01:/var/log</span></span><br><span class="line">    <span class="attr">links:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">redis</span></span><br><span class="line">  <span class="attr">redis:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">redis</span></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">logvolume01:</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>服务services：容器，应用（web、redies、mysql）</li>
+<li>项目project，一组关联的容器。</li>
+</ul>
+<h2 id="Install-Docker-Compose"><a href="#Install-Docker-Compose" class="headerlink" title="Install Docker Compose"></a>Install Docker Compose</h2><ol>
+<li><p>下载</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo curl -L &quot;https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 换用国内源下载</span></span><br><span class="line">sudo curl -L https://get.daocloud.io/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` &gt; /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
+
+<p>![截屏2022-02-07 下午12.29.06](Docker Compose.assets/截屏2022-02-07 下午12.29.06.png)</p>
+</li>
+<li><p>授权</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod +x /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
+
+<p>![截屏2022-02-07 下午12.31.43](Docker Compose.assets/截屏2022-02-07 下午12.31.43.png)</p>
+</li>
+</ol>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.docker.com/compose/install/">多看官网</a></p>
+</blockquote>
+<h2 id="Getting-started"><a href="#Getting-started" class="headerlink" title="Getting started"></a>Getting started</h2><p>地址：<a target="_blank" rel="noopener" href="https://docs.docker.com/compose/gettingstarted/">https://docs.docker.com/compose/gettingstarted/</a></p>
+<p>Python应用：计数器，redies。</p>
+<h3 id="Step-1-Setup"><a href="#Step-1-Setup" class="headerlink" title="Step 1: Setup"></a>Step 1: Setup</h3><ol>
+<li><p>Create a directory for the project:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir composetest</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> composetest</span></span><br></pre></td></tr></table></figure></li>
+<li><p>Create a file called <code>app.py</code> in your project directory and paste this in:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">import time</span><br><span class="line"></span><br><span class="line">import redis</span><br><span class="line">from flask import Flask</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">cache = redis.Redis(host=&#x27;redis&#x27;, port=6379)</span><br><span class="line"></span><br><span class="line">def get_hit_count():</span><br><span class="line">    retries = 5</span><br><span class="line">    while True:</span><br><span class="line">        try:</span><br><span class="line">            return cache.incr(&#x27;hits&#x27;)</span><br><span class="line">        except redis.exceptions.ConnectionError as exc:</span><br><span class="line">            if retries == 0:</span><br><span class="line">                raise exc</span><br><span class="line">            retries -= 1</span><br><span class="line">            time.sleep(0.5)</span><br><span class="line"></span><br><span class="line">@app.route(&#x27;/&#x27;)</span><br><span class="line">def hello():</span><br><span class="line">    count = get_hit_count()</span><br><span class="line">    return &#x27;Hello World! I have been seen &#123;&#125; times.\n&#x27;.format(count)</span><br></pre></td></tr></table></figure>
+
+<p>In this example, <code>redis</code> is the hostname of the redis container on the application’s network. We use the default port for Redis, <code>6379</code>.</p>
+<blockquote>
+<p>Handling transient errors</p>
+<p>Note the way the <code>get_hit_count</code> function is written. This basic retry loop lets us attempt our request multiple times if the redis service is not available. This is useful at startup while the application comes online, but also makes our application more resilient if the Redis service needs to be restarted anytime during the app’s lifetime. In a cluster, this also helps handling momentary connection drops between nodes.</p>
+</blockquote>
+</li>
+<li><p>Create another file called <code>requirements.txt</code> in your project directory and paste this in:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">flask</span><br><span class="line">redis</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Step-2-Create-a-Dockerfile"><a href="#Step-2-Create-a-Dockerfile" class="headerlink" title="Step 2: Create a Dockerfile"></a>Step 2: Create a Dockerfile</h3><p>In this step, you write a Dockerfile that builds a Docker image. The image contains all the dependencies the Python application requires, including Python itself.</p>
+<p>In your project directory, create a file named <code>Dockerfile</code> and paste the following:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> syntax=docker/dockerfile:1</span></span><br><span class="line">FROM python:3.7-alpine</span><br><span class="line">WORKDIR /code</span><br><span class="line">ENV FLASK_APP=app.py</span><br><span class="line">ENV FLASK_RUN_HOST=0.0.0.0</span><br><span class="line">RUN apk add --no-cache gcc musl-dev linux-headers</span><br><span class="line">COPY requirements.txt requirements.txt</span><br><span class="line">RUN pip install -r requirements.txt</span><br><span class="line">EXPOSE 5000</span><br><span class="line">COPY . .</span><br><span class="line">CMD [&quot;flask&quot;, &quot;run&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>This tells Docker to:</p>
+<ul>
+<li>Build an image starting with the Python 3.7 image.</li>
+<li>Set the working directory to <code>/code</code>.</li>
+<li>Set environment variables used by the <code>flask</code> command.</li>
+<li>Install gcc and other dependencies</li>
+<li>Copy <code>requirements.txt</code> and install the Python dependencies.</li>
+<li>Add metadata to the image to describe that the container is listening on port 5000</li>
+<li>Copy the current directory <code>.</code> in the project to the workdir <code>.</code> in the image.</li>
+<li>Set the default command for the container to <code>flask run</code>.</li>
+</ul>
+<p>For more information on how to write Dockerfiles, see the <a target="_blank" rel="noopener" href="https://docs.docker.com/develop/">Docker user guide</a> and the <a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/builder/">Dockerfile reference</a>.</p>
+<h3 id="Step-3-Define-services-in-a-Compose-file"><a href="#Step-3-Define-services-in-a-Compose-file" class="headerlink" title="Step 3: Define services in a Compose file"></a>Step 3: Define services in a Compose file</h3><p>Create a file called <code>docker-compose.yml</code> in your project directory and paste the following:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3.9&quot;</span><br><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    build: .</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;5000:5000&quot;</span><br><span class="line">  redis:</span><br><span class="line">    image: &quot;redis:alpine&quot;</span><br></pre></td></tr></table></figure>
+
+<p>This Compose file defines two services: <code>web</code> and <code>redis</code>.</p>
+<h3 id="Web-service"><a href="#Web-service" class="headerlink" title="Web service"></a>Web service</h3><p>The <code>web</code> service uses an image that’s built from the <code>Dockerfile</code> in the current directory. It then binds the container and the host machine to the exposed port, <code>5000</code>. This example service uses the default port for the Flask web server, <code>5000</code>.</p>
+<h3 id="Redis-service"><a href="#Redis-service" class="headerlink" title="Redis service"></a>Redis service</h3><p>The <code>redis</code> service uses a public <a target="_blank" rel="noopener" href="https://registry.hub.docker.com/_/redis/">Redis</a> image pulled from the Docker Hub registry.</p>
+<h3 id="Step-4-Build-and-run-your-app-with-Compose"><a href="#Step-4-Build-and-run-your-app-with-Compose" class="headerlink" title="Step 4: Build and run your app with Compose"></a>Step 4: Build and run your app with Compose</h3><ol>
+<li><p>From your project directory, start up your application by running <code>docker-compose up</code>.</p>
+</li>
+<li><p>Enter <a target="_blank" rel="noopener" href="http://localhost:5000/">http://localhost:5000/</a> in a browser to see the application running.</p>
+</li>
+<li><p>Refresh the page.The number should increment.</p>
+</li>
+<li><p>Switch to another terminal window, and type <code>docker image ls</code> to list local images.</p>
+<p>Listing images at this point should return <code>redis</code> and <code>web</code>.</p>
+</li>
+<li><p>Stop the application, either by running <code>docker-compose down</code> from within your project directory in the second terminal, or by hitting CTRL+C in the original terminal where you started the app.</p>
+</li>
+</ol>
+<h3 id="Step-8-Experiment-with-some-other-commands"><a href="#Step-8-Experiment-with-some-other-commands" class="headerlink" title="Step 8: Experiment with some other commands"></a>Step 8: Experiment with some other commands</h3><p>If you started Compose with <code>docker-compose up -d</code>, stop your services once you’ve finished with them:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker-compose stop</span><br><span class="line">ctrl+c</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>重点关注流程</p>
+</blockquote>
+<ol>
+<li><p>创建网络</p>
+</li>
+<li><p>执行Docker-compose yaml</p>
+</li>
+<li><p>启动服务</p>
+<p>Creating composetest_web_1  … done</p>
+<p>Creating composetest_redis_1 … done</p>
+</li>
+</ol>
+<blockquote>
+<p>命名方式</p>
+</blockquote>
+<p>默认服务名：文件名_服务名_num</p>
+<p>实用场景下是集群服务，有多个服务器集群，_num代表的是副本数量</p>
+<p>集群状态，服务不可能只有一个运行实例。</p>
+<blockquote>
+<p>网络规则</p>
+</blockquote>
+<p>![截屏2022-02-07 下午4.46.01](Docker Compose.assets/截屏2022-02-07 下午4.46.01.png)</p>
+<p>例如一个服务有10个项目，compose启动会自动维护一个网络（项目中的内容都在同个网络下<strong>可域名访问</strong>）</p>
+<p>![截屏2022-02-07 下午4.51.04](Docker Compose.assets/截屏2022-02-07 下午4.51.04.png)</p>
+<p>访问时不会将ip写死，而是使用域名mysql:3306，进行动态访问（防止服务挂了，重启后ip更改）</p>
+<p>Docker小结：</p>
+<ol>
+<li>Docker镜像 run ==&gt; 容器</li>
+<li>DockerFile构建镜像（服务打包）</li>
+<li>docker-compose 启动项目（编排多个微服务/环境）</li>
+</ol>
+<h2 id="Docker-Compose管理MySQL和Tomcat容器"><a href="#Docker-Compose管理MySQL和Tomcat容器" class="headerlink" title="Docker-Compose管理MySQL和Tomcat容器"></a>Docker-Compose管理MySQL和Tomcat容器</h2><blockquote>
+<p>yml文件以key:value方式指定配置信息</p>
+<p>多个配置信息以换行+缩进的方式来区分</p>
+<p>docker-compose.yml文件中，不要使用制表符</p>
+<p>关键词：后面都是有一个空格的，比如：restart: always</p>
+</blockquote>
+<p>以一个管理mysql+tomcat的yaml的容器为例</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">version:&#x27;3.1&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">mysql:</span>                     <span class="comment"># 服务的名称</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span>          <span class="comment"># 代表只要Docker启动，那么这个容器就跟着一起启动</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">daocloud.io/library/mysql:5.7.4</span>     <span class="comment"># 指定镜像路径</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">mysql</span>    <span class="comment"># 指定容器名称</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">3306</span><span class="string">:3306</span>        <span class="comment"># 指定端口号的映射</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="string">root</span>         <span class="comment"># 指定MySQL的ROOT用户登录密码</span></span><br><span class="line">      <span class="attr">TZ:</span> <span class="string">Asia/Shanghai</span>                 <span class="comment"># 指定时区</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/opt/docker_mysql-tomcat/mysql_data:/var/lib/mysql</span>        <span class="comment"># 映射数据卷</span></span><br><span class="line">  <span class="attr">tomcat:</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span>          <span class="comment"># 代表只要Docker启动，那么这个容器就跟着一起启动</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">daocloud.io/library/tomcat:8.5.15-jre8</span>     <span class="comment"># 指定镜像路径</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">tomcat</span>    <span class="comment"># 指定容器名称</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8080</span><span class="string">:8080</span>        <span class="comment"># 指定端口号的映射</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="string">root</span>         <span class="comment"># 指定MySQL的ROOT用户登录密码</span></span><br><span class="line">      <span class="attr">TZ:</span> <span class="string">Asia/Shanghai</span>                 <span class="comment"># 指定时区</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/opt/docker_mysql-tomcat/tomcat_webapps:/usr/local/tomcat/webapps</span>        <span class="comment"># 映射数据卷</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/opt/docker_mysql-tomcat/tomcat_logs:/usr/local/tomcat/logs</span>        <span class="comment"># 映射数据卷</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="常用管理命令总结"><a href="#常用管理命令总结" class="headerlink" title="常用管理命令总结"></a>常用管理命令总结</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1. 基于docker-compose.yml启动管理的容器</span></span><br><span class="line">docker-compose up -d</span><br><span class="line"><span class="meta">#</span><span class="bash"> 2. 关闭并删除容器</span></span><br><span class="line">docker-compose down</span><br><span class="line"><span class="meta">#</span><span class="bash"> 3. 开启|关闭|重启已经存在的由docker-compose维护的容器</span></span><br><span class="line">docker-compose start|stop|restart</span><br><span class="line"><span class="meta">#</span><span class="bash"> 4. 查看由docker-compose管理的容器</span></span><br><span class="line">docker-compose ps</span><br><span class="line"><span class="meta">#</span><span class="bash"> 5. 查看日志</span></span><br><span class="line">docker-compose logs -f</span><br></pre></td></tr></table></figure>
+
+<h2 id="yaml规则（跟着官网写就行）"><a href="#yaml规则（跟着官网写就行）" class="headerlink" title="yaml规则（跟着官网写就行）"></a>yaml规则（跟着官网写就行）</h2><p>官网：<a target="_blank" rel="noopener" href="https://docs.docker.com/compose/compose-file/compose-file-v3/">https://docs.docker.com/compose/compose-file/compose-file-v3/</a><br>注意compose高版本是向下兼容的。<br>简单理解分为3层：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;&#x27;</span> <span class="comment"># 版本</span></span><br><span class="line"><span class="attr">services:</span> </span><br><span class="line">  <span class="string">服务1:</span> <span class="string">web</span></span><br><span class="line">    <span class="comment"># 服务配置</span></span><br><span class="line">    <span class="string">images</span></span><br><span class="line">    <span class="string">build</span></span><br><span class="line">    <span class="string">network</span></span><br><span class="line">    <span class="string">...</span></span><br><span class="line">  <span class="string">服务2:</span> </span><br><span class="line">  <span class="string">服务3:</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># 其他配置：网络/卷/全局规则</span></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line"><span class="attr">configs:</span></span><br></pre></td></tr></table></figure>
+
+<p>![截屏2022-02-07 下午6.45.20](Docker Compose.assets/截屏2022-02-07 下午6.45.20.png)</p>
+<ul>
+<li>中间为官方例子</li>
+<li>右侧为命令</li>
+</ul>
+<h2 id="实例：一键部署博客"><a href="#实例：一键部署博客" class="headerlink" title="实例：一键部署博客"></a>实例：一键部署博客</h2><p>略</p>
+<h1 id="Docker-Swarm"><a href="#Docker-Swarm" class="headerlink" title="Docker Swarm"></a>Docker Swarm</h1><p>集群方式的部署、n台阿里云服务</p>
+
+    </div>
+
+    <div class="about">
+        <h1>关于本文</h1>
+        <p>本文作者 Berny Wang, 许可由 <a
+                target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+    </div>
+
+    
+        
+    
+</article>
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h4 class="title">Blog</h4>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/projects" class="item">Projects</a>
+                
+                <a href="/resume" class="item">Resume</a>
+                
+                <a href="/about" class="item">About</a>
+                
+                <a href="/atom.xml" class="item">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Projects</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/rsa-cli" class="item">RSA CLI</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/hexo-theme-cupertino" class="item">Hexo Theme Cupertino</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/a-calendar" class="item">A Calendar</a>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/MrWillCom/auto-mirroring-bucket" class="item">Auto Mirroring Bucket</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Me</h4>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/bernyw" class="item">GitHub</a>
+                
+                <a target="_blank" rel="noopener" href="https://codepen.io/bernyw" class="item">CodePen</a>
+                
+                <a target="_blank" rel="noopener" href="https://www.zhihu.com/people/ber-16-41" class="item">Patreon</a>
+                
+                <a target="_blank" rel="noopener" href="https://noc.social/@bernyw" class="item">Mastodon</a>
+                
+                <a href="mailto:mr.bernyw@outlook.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2022 Berny Wang<br >驱动由 <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+    </body>
+</html>
